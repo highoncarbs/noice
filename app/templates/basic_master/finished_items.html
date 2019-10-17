@@ -1,0 +1,82 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+{% include 'basic_master/product_category.html' %}
+
+<div class="container">
+    <p class="is-size-4 has-text-weight-bold">Finished Goods Item</p>
+    <br>
+    <div id="basic_master">
+        <div class="tabs">
+            <ul>
+
+                <li>
+                    <router-link to="/product_category">Product Category</router-link>
+                </li>
+                <li>
+                    <router-link to="/fabric_combination">Fabric Combination</router-link>
+                </li>
+                <li>
+                    <router-link to="/print_technique">Print Technique</router-link>
+                </li>
+                <li>
+                    <router-link to="/design_number">Design Number</router-link>
+                </li>
+                <li>
+                    <router-link to="/size_master">Size Master</router-link>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <!-- route outlet -->
+        <!-- component matched by the route will render here -->
+        <router-view></router-view>
+
+
+    </div>
+
+    <script src="{{ url_for('static' , filename ='js/basic_master/product_category.js' )}}"></script>
+
+</div>
+
+<script>
+    // import { Edit2Icon } from 'vue-feather-icons'
+
+    // 2. Define some routes
+    // Each route should map to a component. The "component" can
+    // either be an actual component constructor created via
+    // `Vue.extend()`, or just a component options object.
+    // We'll talk about nested routes later.
+
+    const routes = [
+        { path: '', component: ProductCategoryForm },
+        { path: '/', component: ProductCategoryForm },
+
+        { path: '/product_category', component: ProductCategoryForm },
+        // { path: '/fabric_combination', component: FabricCombinationForm },
+        // { path: '/print_technique', component: PrintTechniqueForm },
+        // { path: '/design_number', component: DesignNumberForm },
+        // { path: '/size_master', component: SizeMasterForm },
+
+    ]
+
+    // 3. Create the router instance and pass the `routes` option
+    // You can pass in additional options here, but let's
+    // keep it simple for now.
+    const router = new VueRouter({
+        routes // short for `routes: routes`
+    })
+
+    // 4. Create and mount the root instance.
+    // Make sure to inject the router with the router option to make the
+    // whole app router-aware.
+    const app = new Vue({
+        router,
+        components: {
+            'product_category': ProductCategoryForm,
+        }
+    }).$mount('#basic_master')
+
+
+</script>
+{% endblock %}

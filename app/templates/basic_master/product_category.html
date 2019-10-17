@@ -1,0 +1,205 @@
+{% include 'components/image-upload.html'%}
+
+<template id="product_category_form">
+
+
+    <div>
+
+
+        <!-- Image Viewer -->
+        <div class="modal animated is-active fadeIn" v-show="viewUpload">
+            <div class="modal-background" @click="viewUpload = !viewUpload"></div>
+            <div class="modal-content">
+                <figure class="image">
+                    <img :src="fileSrc" alt="">
+                </figure>
+                <button class="modal-close is-large" aria-label="close" @click="viewUpload = !viewUpload"></button>
+
+            </div>
+
+        </div>
+        <!-- END image View -->
+
+        <!-- Edit Modal -->
+        <div class="modal animated fadeIn" :class="{ 'is-active' : modal == true}">
+            <div class="modal-background" @click="modal = !modal"></div>
+            <div class="modal-content">
+                <div class="card">
+
+                    <div class="card-content">
+
+
+                        <div class="content">
+                            <p class="has-text-weight-bold is-size-5">Edit Product Category</p>
+                            <div class="field">
+
+                                <div class="control ">
+                                    <label for="" class="label">Product Category</label>
+                                    <input type="text" class="input" v-model="edit.name" ref="name"
+                                        placeholder="Enter Product Category"
+                                        :class="{ 'is-danger': edit.errors.length != 0}">
+                                </div>
+
+
+
+                                <div class="control">
+                                    <label for="" class="label">Description</label>
+                                    <textarea type="text" class="input textarea" v-model="edit.desc"
+                                        placeholder="Enter Description"
+                                        :class="{ 'is-danger': edit.errors.length != 0}"></textarea>
+                                </div>
+
+                                <label for="" class="label">Upload Reference File</label>
+                                <image-input v-model="edit.image" v-on:remove-input="removeImage()"></image-input>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item" @click="saveEditData"><span class="icon icon-btn icon-btn-in">
+                                <feather type="refresh-cw" size="1.2rem"></feather>
+                            </span> Update</a>
+                        <a class="card-footer-item has-text-grey" @click="modal = !modal"><span
+                                class="icon icon-btn icon-btn-in">
+                                <feather type="x" size="1.2rem"></feather>
+                            </span> Close</a>
+                    </footer>
+
+                </div>
+
+                <button class="modal-close is-large" aria-label="close" @click="modal = !modal"></button>
+
+            </div>
+
+        </div>
+
+        <!-- Entry Form -->
+
+
+        <form id="data_entry" novalidate="true" @submit="submitData ;" v-show="view">
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+
+                        <div class="control ">
+                            <label for="" class="label">Product Category</label>
+                            <input type="text" class="input" v-model="form.name" ref="name"
+                                placeholder="Enter Product Category" :class="{ 'is-danger': form.errors.length != 0}">
+                        </div>
+
+
+
+                        <div class="control">
+                            <label for="" class="label">Description</label>
+                            <textarea type="text" class="input textarea" v-model="form.desc"
+                                placeholder="Enter Description"
+                                :class="{ 'is-danger': form.errors.length != 0}"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" @click="submitData" class="button is-black"><span
+                                    class="icon icon-btn icon-btn-in">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add</button>
+                        </div>
+                        <div class="control">
+                            <button class="button" v-on:click="view = !view" @click="getData"><span
+                                    class="icon icon-btn icon-btn-in">
+                                    <feather type="eye" size="1.2rem"></feather>
+                                </span> View</button>
+                        </div>
+                        <span class="has-text-danger is-underline" v-if="form.errors.length != 0">Please fix the
+                            errors.</span>
+
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <label for="" class="label">Upload Reference File</label>
+                    <image-input ref="imageUpload" v-model="form.image" v-on:remove-input="removeImage()"></image-input>
+
+                </div>
+            </div>
+
+
+        </form>
+
+
+        <!-- Table  -->
+
+        <div v-show="!view">
+            <div class="control">
+                <button class="button" v-on:click="view = !view ; form.errors = [] ; "><span
+                        class="icon icon-btn icon-btn-in">
+                        <feather type="eye" size="1.2rem"></feather>
+                    </span> View</button>
+            </div>
+            <br>
+            <div class="" id="data_view">
+
+                <table class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th width="44px">Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr v-for="( row ,index ) in data" v-bind:index="index" @click="selectRow(row)"
+                            v:bind:class="selected : isSelected">
+                            <td  @click="viewBig(index)">
+                                <figure class="image is-64">
+                                    <img :src="getStatic(index)" alt="" style="
+                                        border-radius: 50%;">
+                                </figure>
+                            </td>
+                            <td>[[ row.name]]</td>
+                            <td>[[ row.desc]]</td>
+                            <td>
+                                <div class=" buttons">
+                                    <div class="button" @click="editData(row ,index)">Edit</div>
+                                    <div class="dropdown">
+                                        <div class="dropdown is-hoverable">
+                                            <div class="dropdown-trigger">
+                                                <button class="button is-danger" aria-haspopup="true"
+                                                    aria-controls="dropdown-menu4">
+                                                    <span>Delete</span>
+
+                                                </button>
+                                            </div>
+                                            <div class="dropdown-menu" style="z-index:10;" id="dropdown-menu4"
+                                                role="menu">
+                                                <div class="dropdown-content has-background-light">
+                                                    <p class="dropdown-item">
+                                                        Are you sure ?
+                                                    </p>
+                                                    <hr class="dropdown-divider">
+
+                                                    <a class="dropdown-item">
+                                                        <div class="buttons ">
+                                                            <div class="button is-danger is-small"
+                                                                @click="deleteData(row , index)">Delete</div>
+                                                            <div class="button is-small">Cancel</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+</template>

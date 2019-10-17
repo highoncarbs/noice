@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+{% include 'base/head.html'%}
+
+<body class="">
+
+    <!-- Mobile Nav -->
+    <div class="navbar is-hidden-desktop has-navbar-fixed-to" style="z-index: auto !important">
+        <div class="container">
+            <div class="navbar-brand has-background-black ">
+                <a class="navbar-item " href="{{url_for('main.home')}}" style="font-weight:bold;">
+                    <div class="">
+                        <p class="is-size-4 libre has-text-white has-text-weight-light">Noice</p>
+                    </div>
+
+                </a>
+                <span class="navbar-burger burger has-text-white" data-target="navMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navMenu"
+                class="navbar-menu is-shadowless has-background-black has-navbar-fixed-top animated fadeIn">
+
+                <div class="navbar-end is-size-5 is-center" style="padding-left:1rem; padding-top:2rem;">
+                    <aside class="menu" style="margin-bottom:2rem;">
+                        <p class="menu-label">
+                            General
+                        </p>
+
+                    </aside>
+
+
+                    <aside class="menu is-fixed-bottom">
+                        <p class="menu-label">
+                            User
+                        </p>
+                        <ul class="menu-list ">
+                            <li><a href="{{url_for('main.home')}}" class="has-text-white"><span class="icon icon-btn"><i
+                                            data-feather="user"></i></span> {{current_user.username}}</a></li>
+                            <li><a href="{{url_for('auth.logout')}}" class="has-text-white"><span
+                                        class="icon icon-btn"><i data-feather="log-out"></i></span> Logout</a></li>
+
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Burger Navingation  -->
+    <script type="text/javascript">
+        (function () {
+            var burger = document.querySelector('.burger');
+            var nav = document.querySelector('#' + burger.dataset.target);
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('is-active');
+                nav.classList.toggle('is-active');
+            });
+        })();
+    </script>
+
+    <!-- Desktop Nav -->
+    <nav class="navbar is-spaced" id="bellow">
+        <div class="container">
+            <div class="navbar-brand brand" style="margin-right:2rem;">
+                <a href="" class="navbar-item libre is-size-4">Noice</a>
+
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <p href="" class="navbar-item tag is-rounded is-medium has-background-black has-text-white">
+                        <span class="icon icon-btn">
+                            <feather type="user" size="1.3rem"></feather>
+                        </span>
+                        {{ current_user.username }}
+                    </p>
+                </div>
+                <div class="navbar-end">
+                    <a href="" class="navbar-item">
+                        <span class="icon icon-btn">
+                            <feather type="zap" size="1.3rem"></feather>
+                        </span>
+                        Reports
+                    </a>
+                    <a href="" class="navbar-item">
+                        <span class="icon icon-btn">
+                            <feather type="plus-square" size="1.3rem"></feather>
+                        </span>
+                        New
+                    </a>
+
+                    <div class="navbar-item has-dropdown is-hoverable" style="margin-right: 1rem;">
+
+                        <a class="navbar-item"> <span class="icon icon-btn">
+                                <feather type="layers" size="1.3rem"></feather>
+                            </span>Basic Master
+                            <span class="icon">
+                                <feather type="chevron-down" size="1.3rem"></feather>
+                            </span></a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{{ url_for( 'basic_master.view_finished_master' )}}">
+                                Finished Goods Item
+                            </a>
+                            <a class="navbar-item" href="">
+                                Raw Materials Item
+                            </a>
+                            <a class="navbar-item" href="">
+                                Unit of Measurement
+                            </a>
+                            <a class="navbar-item" href="">
+                                Location
+                            </a>
+                            <a class="navbar-item" href="">
+                                Firms
+                            </a>
+                            <a class="navbar-item" href="">
+                                Accesories
+                            </a>
+                            <a class="navbar-item" href="">
+                                Other Materials
+                            </a>
+                        </div>
+
+
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable" style="margin-right: 1rem;">
+
+                        <a class="navbar-item"> <span class="icon icon-btn">
+                                <feather type="box" size="1.3rem"></feather>
+                            </span>Main Master
+                            <span class="icon">
+                                <feather type="chevron-down" size="1.3rem">
+                                </feather>
+                            </span>
+
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="">
+                                Finished Goods Item
+                            </a>
+                            <a class="navbar-item" href="">
+                                Raw Materials Item
+                            </a>
+
+                        </div>
+
+
+                    </div>
+                    <a href="" class="navbar-item">
+                        <span class="icon icon-btn">
+                            <feather type="settings" size="1.3rem"></feather>
+                        </span>
+                        Settings
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </nav>
+    <section class="section  is-fullheight">
+        {% block content %}
+        {% endblock %}
+    </section>
+
+
+</body>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#bellow',
+        data() {
+            return {};
+        }
+    })
+
+    Vue.component('vue-feather', VueFeather);
+</script>
