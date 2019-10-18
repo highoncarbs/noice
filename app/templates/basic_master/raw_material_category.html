@@ -1,0 +1,153 @@
+<template id="raw_material_category_form">
+
+
+    <div>
+
+
+        <p class="is-size-5 has-text-weight-bold">Raw Material Category</p>
+        <br>
+        <!-- Edit Modal -->
+        <div class="modal animated fadeIn" :class="{ 'is-active' : modal == true}">
+            <div class="modal-background" @click="modal = !modal"></div>
+            <div class="modal-content">
+                <div class="card">
+
+                    <div class="card-content">
+
+
+                        <div class="content">
+                            <p class="has-text-weight-bold is-size-5">Edit Raw Material Category</p>
+                            <div class="field">
+
+                                <div class="control ">
+                                    <label for="" class="label">Raw Material Category</label>
+                                    <input type="text" class="input" v-model="edit.name" ref="name"
+                                        placeholder="Enter Raw Material Category"
+                                        :class="{ 'is-danger': edit.errors.length != 0}">
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item" @click="saveEditData"><span class="icon icon-btn icon-btn-in">
+                                <feather type="refresh-cw" size="1.2rem"></feather>
+                            </span> Update</a>
+                        <a class="card-footer-item has-text-grey" @click="modal = !modal"><span
+                                class="icon icon-btn icon-btn-in">
+                                <feather type="x" size="1.2rem"></feather>
+                            </span> Close</a>
+                    </footer>
+
+                </div>
+
+                <button class="modal-close is-large" aria-label="close" @click="modal = !modal"></button>
+
+            </div>
+
+        </div>
+
+        <!-- Entry Form -->
+
+
+        <form id="data_entry" class="animated fadeIn" novalidate="true" @submit="submitData ;" v-show="view">
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+
+                        <div class="control ">
+                            <label for="" class="label">Raw Material Category</label>
+                            <input type="text" class="input" v-model="form.name" ref="name"
+                                placeholder="Enter Raw Material Category" :class="{ 'is-danger': form.errors.length != 0}">
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" @click="submitData" class="button is-black"><span
+                                    class="icon icon-btn icon-btn-in">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add</button>
+                        </div>
+                        <div class="control">
+                            <button class="button" v-on:click="view = !view" @click="getData"><span
+                                    class="icon icon-btn icon-btn-in">
+                                    <feather type="eye" size="1.2rem"></feather>
+                                </span> View</button>
+                        </div>
+                        <span class="has-text-danger is-underline" v-if="form.errors.length != 0">Please fix the
+                            errors.</span>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </form>
+
+
+        <!-- Table  -->
+
+        <div v-show="!view" class="animated fadeIn">
+            <div class="control">
+                <button class="button" v-on:click="view = !view ; form.errors = [] ; "><span
+                        class="icon icon-btn icon-btn-in">
+                        <feather type="eye" size="1.2rem"></feather>
+                    </span> View</button>
+            </div>
+
+            <div class="" id="data_view">
+                <hr>
+                <div v-if="data && data.length == 0"
+                    class=" has-text-centered has-text-grey-light has-text-weight-semibold ">
+                    <span class="icon">
+                        <feather type="info" size="1.5rem"></feather>
+                    </span>
+                    <br>
+                    <p class="is-size-5">Theres nothing to see here. Go add some data</p>
+                </div>
+                <table v-if="data && data.length != 0" class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+
+                        <tr v-for="( row ,index ) in data" v-bind:index="index" v:bind:class="selected : isSelected">
+
+                            <td>[[ row.name]]</td>
+                            <td>
+                                <div class=" buttons">
+                                    <div class="button" @click="editData(row ,index)">
+                                        <span class="icon">
+                                            <feather type="edit" size="1.2rem"></feather>
+                                        </span>
+                                    </div>
+                                    <div class="button is-danger" @click="deleteData(row , index)"> <span class="icon">
+                                            <feather type="trash" size="1.2rem"></feather>
+                                        </span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</template>

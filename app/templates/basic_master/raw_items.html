@@ -1,0 +1,89 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+{% include 'basic_master/yarn.html' %}
+{% include 'basic_master/fabric_process.html' %}
+{% include 'basic_master/fabric_width.html' %}
+{% include 'basic_master/fabric_dye.html' %}
+{% include 'basic_master/raw_material_category.html' %}
+{% include 'basic_master/fabric_construction.html' %}
+
+<div class="container">
+    <p class="is-size-4 has-text-weight-bold">Raw Materials Item</p>
+    <br>
+    <div id="basic_master">
+        <div class="tabs">
+            <ul>
+
+                <li>
+                    <router-link to="/yarn">Yarn</router-link>
+                </li>
+                <li>
+                    <router-link to="/fabric_process">Fabric Process</router-link>
+                </li>
+                <li>
+                    <router-link to="/fabric_width">Fabric Width</router-link>
+                </li>
+                <li>
+                    <router-link to="/fabric_dye">Fabric Dye</router-link>
+                </li>
+                <li>
+                    <router-link to="/raw_material_category">Raw Material Category</router-link>
+                </li>
+                <li>
+                    <router-link to="/fabric_construction">Fabric Construction</router-link>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <!-- route outlet -->
+        <!-- component matched by the route will render here -->
+        <router-view></router-view>
+
+
+    </div>
+
+    <script src="{{ url_for('static' , filename ='js/basic_master/yarn.js' )}}"></script>
+    <script src="{{ url_for('static' , filename ='js/basic_master/fabric_process.js' )}}"></script>
+    <script src="{{ url_for('static' , filename ='js/basic_master/fabric_width.js' )}}"></script>
+    <script src="{{ url_for('static' , filename ='js/basic_master/fabric_dye.js' )}}"></script>
+    <script src="{{ url_for('static' , filename ='js/basic_master/raw_material_category.js' )}}"></script>
+    <script src="{{ url_for('static' , filename ='js/basic_master/fabric_construction.js' )}}"></script>
+
+
+</div>
+
+<script>
+    const routes = [
+        { path: '', component: YarnForm },
+        { path: '/', component: YarnForm },
+
+        { path: '/yarn', component: YarnForm },
+        { path: '/fabric_process', component: FabricProcessForm },
+        { path: '/fabric_width', component: FabricWidthForm },
+        { path: '/fabric_dye', component: FabricDyeForm },
+        { path: '/raw_material_category', component: RawMaterialCategoryForm },
+        { path: '/fabric_construction', component: FabricConstructionForm },
+
+
+    ]
+
+
+    const router = new VueRouter({
+        routes // short for `routes: routes`
+    })
+    const app = new Vue({
+        router,
+        components: {
+            'yarn': YarnForm,
+            'fabric_process': FabricProcessForm,
+            'fabric_width': FabricWidthForm,
+            'fabric_dye': FabricDyeForm,
+            'raw_material_category': RawMaterialCategoryForm,
+            'fabric_construction': FabricConstructionForm,
+        }
+    }).$mount('#basic_master')
+
+
+</script>
+{% endblock %}
