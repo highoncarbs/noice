@@ -104,10 +104,18 @@
                         <feather type="eye" size="1.2rem"></feather>
                     </span> View</button>
             </div>
-            <br>
-            <div class="" id="data_view">
 
-                <table class="table is-bordered is-fullwidth">
+            <div class="" id="data_view">
+                <hr>
+                <div v-if="data && data.length == 0"
+                    class=" has-text-centered has-text-grey-light has-text-weight-semibold ">
+                    <span class="icon">
+                        <feather type="info" size="1.5rem"></feather>
+                    </span>
+                    <br>
+                    <p class="is-size-5">Theres nothing to see here. Go add some data</p>
+                </div>
+                <table v-if="data && data.length != 0" class="table is-bordered is-fullwidth">
                     <thead>
                         <tr>
 
@@ -117,6 +125,7 @@
 
                     </thead>
                     <tbody>
+
                         <tr v-for="( row ,index ) in data" v-bind:index="index" v:bind:class="selected : isSelected">
 
                             <td>[[ row.name]]</td>
@@ -134,6 +143,8 @@
                             </td>
                         </tr>
                     </tbody>
+
+
                 </table>
             </div>
         </div>
