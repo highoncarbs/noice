@@ -46,6 +46,9 @@ def create_app(config_class=Config):
         from app.basic_master import bp as basic_master_bp
         app.register_blueprint(basic_master_bp, url_prefix='/basic_master')
 
+        from app.main_master import bp as main_master_bp
+        app.register_blueprint(main_master_bp, url_prefix='/main_master')
+
         # from app.employee import bp as emp_bp
         # app.register_blueprint(emp_bp, url_prefix='/employee')
 

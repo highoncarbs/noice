@@ -29,6 +29,11 @@
                 </button>
             </div>
         </div>
+        <div class="img-loader animated fadeInUp" v-if="loader">
+            <span class="icon icon-btn">
+                <feather type="refresh-cw" animation="spin" size="1.3rem"></feather>
+            </span> Loading
+        </div>
         <div class="image-preview" v-if="imageData.length > 0" @click="viewBig = !viewBig">
             <img class="preview" :src="imageData">
         </div>
@@ -59,7 +64,8 @@
         data: function () {
             return {
                 imageData: "",
-                viewBig: false
+                viewBig: false,
+                loader: false
 
             }
         },
@@ -69,6 +75,7 @@
                 var input = event.target;
                 // Ensure that you have a file before attempting to read it
                 if (input.files && input.files[0]) {
+                    this.loader = true
                     // create a new FileReader to read this image and convert to base64 format
                     var reader = new FileReader();
                     // Define a callback function to run, when FileReader finishes its job
@@ -77,9 +84,10 @@
                         // Read image as base64 and set to imageData
                         this.imageData = e.target.result;
                     }
+                    this.loader = false
                     // Start the reader job - read file as a data url (base64 format)
                     reader.readAsDataURL(input.files[0]);
-                    this.$emit("input" , input.files[0] )
+                    this.$emit("input", input.files[0])
                 }
             },
             removeImage: function (event) {
