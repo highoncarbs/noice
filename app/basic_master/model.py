@@ -8,12 +8,10 @@ from marshmallow_sqlalchemy import field_for
 class ProductCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    desc = db.Column(db.String(250), default=None)
-    image = db.Column(db.String(250), default=None)
+ 
 
-    def __init__(self, name, desc):
+    def __init__(self, name):
         self.name = name
-        self.desc = desc
 
 
 class ProductCategorySchema(ma.ModelSchema):
@@ -24,13 +22,9 @@ class ProductCategorySchema(ma.ModelSchema):
 class FabricCombination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    desc = db.Column(db.String(250), default=None)
-    image = db.Column(db.String(250), default=None)
-
-    def __init__(self, name, desc, image):
+  
+    def __init__(self, name):
         self.name = name
-        self.desc = desc
-        self.image = image
 
 
 class FabricCombinationSchema(ma.ModelSchema):
@@ -41,15 +35,10 @@ class FabricCombinationSchema(ma.ModelSchema):
 class PrintTechnique(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    desc = db.Column(db.String(250), default=None)
-    image = db.Column(db.String(250), default=None)
-
-    def __init__(self, name, desc, image):
+ 
+    def __init__(self, name):
         self.name = name
-        self.desc = desc
-        self.image = image
-
-
+       
 class PrintTechniqueSchema(ma.ModelSchema):
     class Meta:
         model = FabricCombination
@@ -58,13 +47,9 @@ class PrintTechniqueSchema(ma.ModelSchema):
 class DesignNumber(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    desc = db.Column(db.String(250), default=None)
-    image = db.Column(db.String(250), default=None)
-
-    def __init__(self, name, desc, image):
+    
+    def __init__(self, name):
         self.name = name
-        self.desc = desc
-        self.image = image
 
 
 class DesignNumberSchema(ma.ModelSchema):
@@ -74,14 +59,9 @@ class DesignNumberSchema(ma.ModelSchema):
 class SizeMaster(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
-    desc = db.Column(db.String(250), default=None)
-    image = db.Column(db.String(250), default=None)
-
-    def __init__(self, name, desc, image):
+    
+    def __init__(self, name):
         self.name = name
-        self.desc = desc
-        self.image = image
-
 
 class SizeMasterSchema(ma.ModelSchema):
     class Meta:

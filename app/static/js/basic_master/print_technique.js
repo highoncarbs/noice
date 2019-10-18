@@ -1,6 +1,6 @@
-const ProductCategoryForm =
+const PrintTechniqueForm =
 {
-    template: "#product_category_form",
+    template: "#print_technique_form",
     data() {
         return {
             view: true,
@@ -36,7 +36,7 @@ const ProductCategoryForm =
                 return true;
             }
             if (!this.form.name) {
-                this.form.errors.push('Product Category required');
+                this.form.errors.push('Print Technique required');
             }
 
 
@@ -49,14 +49,14 @@ const ProductCategoryForm =
             if (this.checkData()) {
 
                 axios
-                    .post('/basic_master/add/product_category', this.form)
+                    .post('/basic_master/add/print_technique', this.form)
                     .then(function (response) {
 
                         if (response.data.success) {
                             formdata.form.name = null;
 
                             formdata.$buefy.snackbar.open({
-                                duration: 40000,
+                                duration: 4000,
                                 message: response.data.success,
                                 type: 'is-light',
                                 position: 'is-top-right',
@@ -96,7 +96,7 @@ const ProductCategoryForm =
             const formdata = this;
 
             axios
-                .get('/basic_master/get/product_category')
+                .get('/basic_master/get/print_technique')
                 .then(function (response) {
                     console.log(response);
                     formdata.data = response['data']
@@ -125,7 +125,7 @@ const ProductCategoryForm =
             if (this.edit.name) {
 
                 axios
-                    .post('/basic_master/edit/product_category', this.edit)
+                    .post('/basic_master/edit/print_technique', this.edit)
                     .then(function (response) {
                         console.log(response.data.success)
 
@@ -187,7 +187,7 @@ const ProductCategoryForm =
             let dataList = this.data;
             let formdata = this
             axios
-                .post('/basic_master/delete/product_category', data)
+                .post('/basic_master/delete/print_technique', data)
                 .then(function (response) {
                     if (response.data.success) {
                         dataList.splice(index, 1)

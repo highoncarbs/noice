@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, redirect, url_for, request, session, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.basic_master import bp
-from app.basic_master.model import ProductCategory, ProductCategorySchema
+from app.basic_master.model import PrintTechnique, PrintTechniqueSchema
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -15,31 +15,31 @@ from app.utils import allowed_file
 UPLOAD_FOLDER = os.path.abspath(current_app.config['UPLOAD_FOLDER'])
 
 
-@bp.route('/get/product_category', methods=['GET'])
+@bp.route('/get/print_technique', methods=['GET'])
 @login_required
-def get_product_category():
+def get_print_technique():
     if request.method == 'GET':
 
-        data_schema = ProductCategorySchema(many=True)
-        data = ProductCategory.query.all()
+        data_schema = PrintTechniqueSchema(many=True)
+        data = PrintTechnique.query.all()
         json_data = data_schema.dump(data)
         return jsonify(json_data)
 
 
-@bp.route('/add/product_category', methods=['POST'])
+@bp.route('/add/print_technique', methods=['POST'])
 @login_required
-def add_product_category():
+def add_print_technique():
     if request.method == 'POST':
         payload = request.json
         print(payload)
         if len(payload['name']) != 0:
 
-            check_data = ProductCategory.query.filter_by(name=payload['name'])
+            check_data = PrintTechnique.query.filter_by(name=payload['name'])
             if check_data.first():
-                return jsonify({'message': 'Product Category - '+check_data.first().name+' already exists.'})
+                return jsonify({'message': 'Print Technique - '+check_data.first().name+' already exists.'})
             else:
                 try:
-                    new_data = ProductCategory(
+                    new_data = PrintTechnique(
                         payload['name'])
 
                     db.session.add(new_data)
@@ -58,21 +58,21 @@ def add_product_category():
         return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
-@bp.route('/edit/product_category', methods=['POST'])
+@bp.route('/edit/print_technique', methods=['POST'])
 @login_required
-def edit_product_category():
+def edit_print_technique():
     if request.method == 'POST':
         
         payload = request.json
         if payload['name'] is not None:
 
-            check_data = ProductCategory.query.filter_by(
+            check_data = PrintTechnique.query.filter_by(
                 name=payload['name']).first()
             if check_data and check_data.name != payload['name']:
-                return jsonify({'message': 'ProductCategory - '+check_data.name+' already exists.'})
+                return jsonify({'message': 'Print Technique - '+check_data.name+' already exists.'})
             else:
                 try:
-                    new_data = ProductCategory.query.filter_by(
+                    new_data = PrintTechnique.query.filter_by(
                         id=payload['id']).first()
                     new_data.name = payload['name']
                     db.session.commit()
@@ -91,14 +91,13 @@ def edit_product_category():
         return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
-@bp.route('/delete/product_category', methods=['POST'])
+@bp.route('/delete/print_technique', methods=['POST'])
 @login_required
-def delete_product_category():
+def delete_print_technique():
     if request.method == 'POST':
         payload = request.json
-        check_data = ProductCategory.query.filter_by(id=payload['id'])
+        check_data = PrintTechnique.query.filter_by(id=payload['id'])
         if check_data.first():
-            # if len(check_data.first().company_location) is int(0):
 
             try:
                 check_data.delete()

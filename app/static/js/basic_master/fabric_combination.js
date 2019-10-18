@@ -1,6 +1,6 @@
-const ProductCategoryForm =
+const FabricCombinationForm =
 {
-    template: "#product_category_form",
+    template: "#fabric_combination_form",
     data() {
         return {
             view: true,
@@ -36,7 +36,7 @@ const ProductCategoryForm =
                 return true;
             }
             if (!this.form.name) {
-                this.form.errors.push('Product Category required');
+                this.form.errors.push('Fabric Combination required');
             }
 
 
@@ -49,7 +49,7 @@ const ProductCategoryForm =
             if (this.checkData()) {
 
                 axios
-                    .post('/basic_master/add/product_category', this.form)
+                    .post('/basic_master/add/fabric_combination', this.form)
                     .then(function (response) {
 
                         if (response.data.success) {
@@ -96,7 +96,7 @@ const ProductCategoryForm =
             const formdata = this;
 
             axios
-                .get('/basic_master/get/product_category')
+                .get('/basic_master/get/fabric_combination')
                 .then(function (response) {
                     console.log(response);
                     formdata.data = response['data']
@@ -125,7 +125,7 @@ const ProductCategoryForm =
             if (this.edit.name) {
 
                 axios
-                    .post('/basic_master/edit/product_category', this.edit)
+                    .post('/basic_master/edit/fabric_combination', this.edit)
                     .then(function (response) {
                         console.log(response.data.success)
 
@@ -187,7 +187,7 @@ const ProductCategoryForm =
             let dataList = this.data;
             let formdata = this
             axios
-                .post('/basic_master/delete/product_category', data)
+                .post('/basic_master/delete/fabric_combination', data)
                 .then(function (response) {
                     if (response.data.success) {
                         dataList.splice(index, 1)
