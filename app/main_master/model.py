@@ -2,7 +2,7 @@ from app import db
 from app import ma
 from datetime import datetime
 from app.basic_master.model import ProductCategorySchema, FabricCombinationSchema, DesignNumberSchema,  PrintTechniqueSchema, UomSchema
-from app.basic_master.model import YarnSchema, FabricProcessSchema, FabricWidthSchema,  PrintTechniqueSchema, RawMaterialCategorySchema, FabricConstructionSchema , FabricDyeSchema
+from app.basic_master.model import YarnSchema, FabricProcessSchema, FabricWidthSchema,  PrintTechniqueSchema, RawMaterialCategorySchema, FabricConstructionSchema, FabricDyeSchema
 from marshmallow_sqlalchemy import field_for
 
 
@@ -118,7 +118,7 @@ class RawGoods(db.Model):
     raw_material_category = db.relationship(
         'RawMaterialCategory', cascade="all,delete", secondary='raw_material_category_goods', backref='raw_material_category_goods', lazy='joined')
     fabric_construction = db.relationship('FabricConstruction', cascade="all,delete",
-                                         secondary='fabric_construction_goods', backref='fabric_construction_goods', lazy='joined')
+                                          secondary='fabric_construction_goods', backref='fabric_construction_goods', lazy='joined')
 
     alt_name = db.Column(db.String(100), default=None)
     yarn_id = db.Column(db.Integer, nullable=False)
@@ -213,3 +213,45 @@ class RawGoodsSchema(ma.ModelSchema):
 
     class meta:
         model = RawGoods
+
+
+class Accessories(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+    desc = db.Column(db.String(100))
+    image = db.Column(db.String(250))
+
+    def __init__(self, name, desc):
+        self.name = name
+        self.desc = desc
+
+
+class AccessoriesSchema(ma.ModelSchema):
+    id = field_for(Accessories, 'id', dump_only=True)
+    name = field_for(Accessories, 'name', dump_only=True)
+    desc = field_for(Accessories, 'desc', dump_only=True)
+    image = field_for(Accessories, 'image', dump_only=True)
+
+    class meta:
+        model = Accessories
+
+
+class OtherMaterials(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+    desc = db.Column(db.String(100))
+    image = db.Column(db.String(250))
+
+    def __init__(self, name, desc):
+        self.name = name
+        self.desc = desc
+
+
+class OtherMaterialsSchema(ma.ModelSchema):
+    id = field_for(OtherMaterials, 'id', dump_only=True)
+    name = field_for(OtherMaterials, 'name', dump_only=True)
+    desc = field_for(OtherMaterials, 'desc', dump_only=True)
+    image = field_for(OtherMaterials, 'image', dump_only=True)
+
+    class meta:
+        model = OtherMaterials

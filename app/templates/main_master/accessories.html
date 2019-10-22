@@ -1,0 +1,249 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+{% include 'components/image-upload.html' %}
+{% include 'components/image-upload-slim.html' %}
+{% include 'components/image-upload-boxed.html' %}
+
+
+<div class="container" id="accessories_master">
+
+    <!-- Edit Modal -->
+
+    <div class="modal " :class="{ 'is-active' : modal == true}">
+        <div class="modal-background animated fadeIn" @click="modal = !modal"></div>
+        <div class="modal-content animated fadeInUp">
+            <div class="card ">
+                <div class="card-image" v-if="edit.image != null">
+                    <figure class="image is-16by9">
+                        <img style=" position: absolute;  object-fit: cover;
+                        " v-if="edit.image != null" :src="getStatic(edit.index)" alt="Placeholder image">
+                    </figure>
+                </div>
+                <div class="card-content">
+
+
+                    <div class="content">
+                        <p class="has-text-weight-bold is-size-5">Edit Accessories</p>
+                        <div class="field is-grouped is-grouped-multiline">
+                            <div class="control ">
+                                <label for="" class="label">Name</label>
+                                <input type="text" class="input" v-model="edit.name" ref="editname" placeholder="Enter Name"
+                                    :class="{ 'is-danger': edit.errors.length != 0}">
+                            </div>
+                            <div class="control ">
+                                <label for="" class="label">Technical Details</label>
+                                <input type="text" class="input" v-model="edit.desc" placeholder="Enter Details"
+                                    :class="{ 'is-danger': edit.errors.length != 0}">
+                            </div>
+
+                        </div>
+
+                        <div class="field is-grouped ">
+
+
+                            <div class="control">
+                                <label class="label">Change Reference Image</label>
+                                <image-input-slim v-model="edit.image" v-on:remove-input="removeImage()" ref="imageUploadSlim">
+                                </image-input-slim>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item" @click="saveEditData"><span class="icon icon-btn icon-btn-in">
+                            <feather type="refresh-cw" size="1.2rem"></feather>
+                        </span> Update</a>
+                    <a class="card-footer-item has-text-grey" @click="modal = !modal"><span
+                            class="icon icon-btn icon-btn-in">
+                            <feather type="x" size="1.2rem"></feather>
+                        </span> Close</a>
+                </footer>
+
+            </div>
+
+            <button class="modal-close is-large" aria-label="close" @click="modal = !modal"></button>
+
+        </div>
+
+    </div>
+
+    <!-- End EDIT Modal -->
+
+    <p class="is-size-4 has-text-weight-bold">Accessories Master</p>
+    <br>
+    <div id="data_entry" class="animated fadeIn" v-show="view">
+
+
+        <div class="field is-grouped is-grouped-multiline">
+            <div class="control ">
+                <label for="" class="label">Name</label>
+                <input type="text" class="input" v-model="form.name" ref="name" placeholder="Enter Name"
+                    :class="{ 'is-danger': form.errors.length != 0}">
+            </div>
+            <div class="control ">
+                <label for="" class="label">Technical Details</label>
+                <input type="text" class="input" v-model="form.desc" placeholder="Enter Details"
+                    :class="{ 'is-danger': form.errors.length != 0}">
+            </div>
+
+        </div>
+
+
+
+        <div class="control is-expanded">
+
+
+            <div class="control">
+                <label class="label">Upload Image Reference</label>
+
+                <image-input-boxed ref="imageUpload" v-model="form.image" v-on:remove-input="removeImage()">
+                </image-input-boxed>
+            </div>
+            <hr>
+            <div class="field">
+                <button class="button is-info is-outlined" @click="getLastRow()">
+                    <span class="icon icon-btn">
+                        <feather type="copy" size="1.3rem"></feather>
+                    </span>
+                    Copy last data
+
+                </button>
+
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" @click="submitData" class="button is-black"><span
+                            class="icon icon-btn icon-btn-in">
+                            <feather type="plus" size="1.2rem"></feather>
+                        </span> Add</button>
+                </div>
+                <div class="control">
+                    <button class="button" v-on:click="view = !view" @click="getData"><span
+                            class="icon icon-btn icon-btn-in">
+                            <feather type="eye" size="1.2rem"></feather>
+                        </span> View</button>
+                </div>
+                <span class="has-text-danger is-underline " v-if="form.errors.length != 0">Please
+                    fix the
+                    errors.</span>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+    <div v-show="!view" class="animated fadeIn">
+
+        <!-- Image Viewer -->
+        <div class="modal animated is-active fadeIn" v-show="viewUpload">
+            <div class="modal-background" @click="viewUpload = !viewUpload"></div>
+            <div class="modal-content">
+                <figure class="image">
+                    <img :src="fileSrc" alt="">
+                </figure>
+                <button class="modal-close is-large" aria-label="close" @click="viewUpload = !viewUpload"></button>
+
+            </div>
+
+        </div>
+        <!-- END image View -->
+
+        <div class="control">
+            <button class="button" v-on:click="view = !view ; form.errors = [] ; "><span
+                    class="icon icon-btn icon-btn-in">
+                    <feather type="eye" size="1.2rem"></feather>
+                </span> View</button>
+        </div>
+
+        <div class="" id="data_view">
+            <hr>
+            <div v-if="data && data.length == 0"
+                class=" has-text-centered has-text-grey-light has-text-weight-semibold ">
+                <span class="icon">
+                    <feather type="info" size="1.5rem"></feather>
+                </span>
+                <br>
+                <p class="is-size-5">Theres nothing to see here. Go add some data</p>
+            </div>
+            <table v-if="data && data.length != 0" class="table is-bordered is-fullwidth">
+                <thead>
+                    <tr>
+
+                        <th width="64" height="64">Image</th>
+
+                        <th>Name</th>
+                        <th>Details</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr v-for="( row ,index ) in data" v-bind:index="index" v:bind:class="selected : isSelected">
+                        <td style="cursor: pointer;" v-if="row.image != null"
+                            class="has-text-link has-text-weight-semibold is-underline" @click="viewBig(index)">
+                            View
+                        </td>
+                        <td v-if="row.image == null" class="has-text-grey-light ">
+                            None
+                        </td>
+
+
+                        <td>[[ row.name ]]</td>
+                        <td>[[ row.desc ]]</td>
+                        <td>
+                            <div class=" buttons">
+                                <div class="button" @click="editData(row ,index)">
+
+                                    <span class="icon">
+                                        <feather type="edit" size="1.3rem"></feather>
+                                    </span>
+
+                                </div>
+                                <div class="dropdown">
+                                    <div class="dropdown is-hoverable">
+                                        <div class="dropdown-trigger">
+                                            <button class="button is-danger" aria-haspopup="true"
+                                                aria-controls="dropdown-menu4">
+                                                <span class="icon">
+                                                    <feather type="trash" size="1.3rem"></feather>
+                                                </span>
+
+                                            </button>
+                                        </div>
+                                        <div class="dropdown-menu" style="z-index:10;" id="dropdown-menu4" role="menu">
+                                            <div class="dropdown-content has-background-light">
+                                                <p class="dropdown-item">
+                                                    Are you sure ?
+                                                </p>
+                                                <hr class="dropdown-divider">
+
+                                                <a class="dropdown-item">
+                                                    <div class="buttons ">
+                                                        <div class="button is-danger is-small"
+                                                            @click="deleteData(row , index)">Delete</div>
+                                                        <div class="button is-small">Cancel</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static' , filename='js/main_master/accessories.js')}}"></script>
+{% endblock %}

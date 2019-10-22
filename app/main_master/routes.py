@@ -15,3 +15,13 @@ def view_finished_items():
 @login_required
 def view_raw_items():
     return render_template('main_master/raw_items.html')
+
+@bp.route('/accessories', methods=['GET'])
+@login_required
+def view_accessories():
+    return render_template('main_master/accessories.html')
+
+@bp.route('/other_materials', methods=['GET'])
+@login_required
+def view_other_materials():
+    return render_template('main_master/other_materials.html')
