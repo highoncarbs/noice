@@ -2,8 +2,8 @@ from flask import Blueprint
 from flask import render_template, redirect, url_for, request, session, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.main_master import bp
-from app.main_master.model import FinishedGoods, FinishedGoodsSchema
-from app.basic_master.model import ProductCategory, FabricCombination, PrintTechnique, DesignNumber, Uom
+from app.main_master.model import RawGoods, RawGoodsSchema
+from app.basic_master.model import Yarn, FabricProcess, FabricWidth, FabricDye, RawMaterialCategory, FabricConstruction
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -18,30 +18,31 @@ import sqlalchemy.exc
 UPLOAD_FOLDER = os.path.abspath(current_app.config['UPLOAD_FOLDER'])
 
 
-@bp.route('/get/finished_goods', methods=['GET'])
+@bp.route('/get/raw_goods', methods=['GET'])
 @login_required
-def get_finished_goods():
+def get_raw_goods():
     if request.method == 'GET':
 
-        data_schema = FinishedGoodsSchema(many=True)
-        data = FinishedGoods.query.all()
-        json_data = data_schema.dump(data)
-        return jsonify(json_data)
-
-@bp.route('/get/finished_goods/last', methods=['GET'])
-@login_required
-def get_finished_goods_last():
-    if request.method == 'GET':
-
-        data_schema = FinishedGoodsSchema()
-        data = FinishedGoods.query.order_by(FinishedGoods.id.desc()).first()
+        data_schema = RawGoodsSchema(many=True)
+        data = RawGoods.query.all()
         json_data = data_schema.dump(data)
         return jsonify(json_data)
 
 
-@bp.route('/add/finished_goods', methods=['POST'])
+@bp.route('/get/raw_goods/last', methods=['GET'])
 @login_required
-def add_finished_goods():
+def get_raw_goods_last():
+    if request.method == 'GET':
+
+        data_schema = RawGoodsSchema()
+        data = RawGoods.query.order_by(RawGoods.id.desc()).first()
+        json_data = data_schema.dump(data)
+        return jsonify(json_data)
+
+
+@bp.route('/add/raw_goods', methods=['POST'])
+@login_required
+def add_raw_goods():
     if request.method == 'POST':
         print(request.form)
         payload = json.loads(request.form['data'])
@@ -50,23 +51,27 @@ def add_finished_goods():
 
         if payload:
             try:
-                product_category = ProductCategory.query.filter_by(
-                    id=int(payload['product_category'])).first()
-                fabric_combination = FabricCombination.query.filter_by(
-                    id=int(payload['fabric_combination'])).first()
-                print_technique = PrintTechnique.query.filter_by(
-                    id=int(payload['print_technique'])).first()
-                design_number = DesignNumber.query.filter_by(
-                    id=int(payload['design_number'])).first()
-                uom = Uom.query.filter_by(id=int(payload['uom'])).first()
-
-                new_data = FinishedGoods(
-                    payload['alt_name'], int(payload['product_category']), int(payload['fabric_combination']), int(payload['print_technique']), int(payload['design_number']), int(payload['uom']))
-                new_data.product_category.append(product_category)
-                new_data.fabric_combination.append(fabric_combination)
-                new_data.print_technique.append(print_technique)
-                new_data.design_number.append(design_number)
-                new_data.uom.append(uom)
+                yarn = Yarn.query.filter_by(
+                    id=int(payload['yarn'])).first()
+                fabric_process = FabricProcess.query.filter_by(
+                    id=int(payload['fabric_process'])).first()
+                fabric_width = FabricWidth.query.filter_by(
+                    id=int(payload['fabric_width'])).first()
+                fabric_dye = FabricDye.query.filter_by(
+                    id=int(payload['fabric_dye'])).first()
+                raw_material_category = RawMaterialCategory.query.filter_by(
+                    id=int(payload['raw_material_category'])).first()
+                fabric_construction = FabricConstruction.query.filter_by(
+                    id=int(payload['fabric_construction'])).first()
+                new_data = RawGoods(
+                    payload['alt_name'], int(payload['yarn']), int(payload['fabric_process']), int(payload['fabric_width']), int(payload['fabric_dye']), int(payload['raw_material_category']), int(payload['fabric_construction']))
+                
+                new_data.yarn.append(yarn)
+                new_data.fabric_process.append(fabric_process)
+                new_data.fabric_width.append(fabric_width)
+                new_data.fabric_dye.append(fabric_dye)
+                new_data.raw_material_category.append(raw_material_category)
+                new_data.fabric_construction.append(fabric_construction)
 
                 if len(file) != 0:
                     file = request.files['image']
@@ -75,7 +80,7 @@ def add_finished_goods():
                         if file and allowed_file(file.filename):
                             filename = secure_filename(file.filename)
                             foldertemp = os.path.join(
-                                UPLOAD_FOLDER, 'finished_goods')
+                                UPLOAD_FOLDER, 'raw_goods')
 
                             if os.path.exists(foldertemp):
                                 filetemp = os.path.join(
@@ -122,44 +127,52 @@ def add_finished_goods():
         return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
-@bp.route('/edit/finished_goods', methods=['POST'])
+@bp.route('/edit/raw_goods', methods=['POST'])
 @login_required
-def edit_finished_goods():
+def edit_raw_goods():
     if request.method == 'POST':
         payload = json.loads(request.form['data'])
         file = request.files
         print(payload)
         if payload:
             try:
-                new_data = FinishedGoods.query.filter_by(
+                new_data = RawGoods.query.filter_by(
                     id=payload['id']).first()
                 temp_image = new_data.image
                 new_data.alt_name = payload['alt_name']
-                product_category = ProductCategory.query.filter_by(
-                    id=int(payload['product_category'])).first()
-                fabric_combination = FabricCombination.query.filter_by(
-                    id=int(payload['fabric_combination'])).first()
-                print_technique = PrintTechnique.query.filter_by(
-                    id=int(payload['print_technique'])).first()
-                design_number = DesignNumber.query.filter_by(
-                    id=int(payload['design_number'])).first()
-                uom = Uom.query.filter_by(id=int(payload['uom'])).first()
+                yarn = Yarn.query.filter_by(
+                    id=int(payload['yarn'])).first()
+                fabric_process = FabricProcess.query.filter_by(
+                    id=int(payload['fabric_process'])).first()
+                fabric_width = FabricWidth.query.filter_by(
+                    id=int(payload['fabric_width'])).first()
+                fabric_dye = FabricDye.query.filter_by(
+                    id=int(payload['fabric_dye'])).first()
+                raw_material_category = RawMaterialCategory.query.filter_by(
+                    id=int(payload['raw_material_category'])).first()
+                fabric_construction = FabricConstruction.query.filter_by(
+                    id=int(payload['fabric_construction'])).first()
 
-                new_data.product_category_id = product_category.id
-                new_data.fabric_combination_id = fabric_combination.id
-                new_data.print_technique_id = print_technique.id
-                new_data.design_number_id = design_number.id
-                new_data.uom_id = uom.id
-                new_data.product_category = []
-                new_data.print_technique = []
-                new_data.fabric_combination = []
-                new_data.design_number = []
-                new_data.uom = []
-                new_data.product_category.append(product_category)
-                new_data.fabric_combination.append(fabric_combination)
-                new_data.print_technique.append(print_technique)
-                new_data.design_number.append(design_number)
-                new_data.uom.append(uom)
+                new_data.yarn_id = yarn.id
+                new_data.fabric_process_id =fabric_process.id
+                new_data.fabric_width_id = fabric_width.id
+                new_data.fabric_dye_id = fabric_dye.id
+                new_data.raw_material_category_id = raw_material_category.id
+                new_data.fabric_construction_id = fabric_construction.id
+
+                new_data.yarn = []
+                new_data.fabric_process = []
+                new_data.fabric_width = []
+                new_data.fabric_dye = []
+                new_data.raw_material_category = []
+                new_data.fabric_construction = []
+
+                new_data.yarn.append(yarn)
+                new_data.fabric_process.append(fabric_process)
+                new_data.fabric_width.append(fabric_width)
+                new_data.fabric_dye.append(fabric_dye)
+                new_data.raw_material_category.append(raw_material_category)
+                new_data.fabric_construction.append(fabric_construction)
 
                 if len(file) != 0:
                     file = request.files['image']
@@ -168,7 +181,7 @@ def edit_finished_goods():
                         if file and allowed_file(file.filename):
                             filename = secure_filename(file.filename)
                             foldertemp = os.path.join(
-                                UPLOAD_FOLDER, 'finished_goods')
+                                UPLOAD_FOLDER, 'raw_goods')
 
                             if os.path.exists(foldertemp):
                                 filetemp = os.path.join(
@@ -211,12 +224,12 @@ def edit_finished_goods():
         return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
-@bp.route('/delete/finished_goods', methods=['POST'])
+@bp.route('/delete/raw_goods', methods=['POST'])
 @login_required
-def delete_finished_goods():
+def delete_raw_goods():
     if request.method == 'POST':
         payload = request.json
-        check_data = FinishedGoods.query.filter_by(id=payload['id'])
+        check_data = RawGoods.query.filter_by(id=payload['id'])
         if check_data.first():
             # if len(check_data.first().company_location) is int(0):
 

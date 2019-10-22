@@ -1,0 +1,104 @@
+<template id="image-input-boxed">
+    <div>
+
+        <div class="image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
+            <span v-if="!imageData" class="placeholder has-text-centered">
+                <span class="icon">
+                    <feather type="image" size="1.3rem"></feather>
+                </span>
+            </span>
+            
+            <span v-if="imageData" class="has-text-centered placeholder-x" >
+                <span class="button-icon has-text-white" @click="removeImage()">
+                    <feather type="x" size="1.3rem"></feather>
+                </span>
+            </span>
+
+            <input class="file-input" ref="fileInput" type="file" @input="onSelectFile">
+        </div>
+
+
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('image-input-boxed', {
+        template: "#image-input-boxed",
+        props: {
+        },
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                imageData: null
+            }
+        },
+
+        methods: {
+            chooseImage() {
+                this.$refs.fileInput.click()
+            },
+
+            onSelectFile() {
+                const input = this.$refs.fileInput
+                const files = input.files
+                if (files && files[0]) {
+                    const reader = new FileReader
+                    reader.onload = e => {
+                        this.imageData = e.target.result
+                    }
+                    reader.readAsDataURL(files[0])
+                    this.$emit('input', files[0])
+                }
+            },
+            removeImage() {
+                this.imageData = null
+            }
+        }
+
+    })
+</script>
+
+<style>
+    .image-input {
+        display: block;
+        width: 200px;
+        height: 200px;
+        cursor: pointer;
+        background-size: cover;
+        background-position: center center;
+    }
+    
+    .placeholder {
+        border-radius: 3px;
+        background: #f0f0f0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+    }
+    .button-icon{
+        border-radius: 50%;
+        padding: 10px 10px 5px 10px;
+        background-color:rgba(0,0,0,0.5) ;
+    }
+    .placeholder-x {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+    }
+
+    .placeholder:hover {
+        background: #e0e0e0;
+    }
+
+    .file-input {
+        display: none;
+    }
+</style>

@@ -6,7 +6,7 @@
 {% include 'components/image-upload-boxed.html' %}
 
 
-<div class="container" id="finished_items_master">
+<div class="container" id="raw_items_master">
 
     <!-- Edit Modal -->
 
@@ -24,41 +24,47 @@
 
 
                     <div class="content">
-                        <p class="has-text-weight-bold is-size-5">Edit Product Category</p>
+                        <p class="has-text-weight-bold is-size-5">Edit Yarn</p>
                         <div class="field is-grouped is-grouped-multiline">
                             <div class="control is-expanded">
-                                <label for="" class="label">Product Category</label>
-                                <b-autocomplete v-model="edit.product_category" placeholder="Select Product Category"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteProductCategory"
-                                    field="name" @select="getEditProductCategory">
+                                <label for="" class="label">Yarn</label>
+                                <b-autocomplete v-model="edit.yarn" placeholder="Select Yarn"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteYarn"
+                                    field="name" @select="getEditYarn">
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
-                                <label for="" class="label">Fabric Combination</label>
-                                <b-autocomplete v-model="edit.fabric_combination"
-                                    placeholder="Select Fabric Combination" :keep-first='true' :open-on-focus='true'
-                                    :data="autocompleteFabricCombination" field="name"
-                                    @select="getEditFabricCombination">
+                                <label for="" class="label">Fabric Process</label>
+                                <b-autocomplete v-model="edit.fabric_process"
+                                    placeholder="Select Fabric Process" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteFabricProcess" field="name"
+                                    @select="getEditFabricProcess">
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
-                                <label for="" class="label">Print Technique</label>
-                                <b-autocomplete v-model="edit.print_technique" placeholder="Select Print Technique"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompletePrintTechnique"
-                                    field="name" @select="getEditPrintTechnique">
+                                <label for="" class="label">Fabric Width</label>
+                                <b-autocomplete v-model="edit.fabric_width" placeholder="Select Fabric Width"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricWidth"
+                                    field="name" @select="getEditFabricWidth">
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
-                                <label for="" class="label">Design Number</label>
-                                <b-autocomplete v-model="edit.design_number" placeholder="Select Design Number"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteDesignNumber"
-                                    field="name" @select="getEditDesignNumber">
+                                <label for="" class="label">Fabric Dye</label>
+                                <b-autocomplete v-model="edit.fabric_dye" placeholder="Select Fabric Dye"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricDye"
+                                    field="name" @select="getEditFabricDye">
                                 </b-autocomplete>
                             </div>
                             <div class="control">
-                                <label for="" class="label">Uom</label>
-                                <b-autocomplete v-model="edit.uom" placeholder="Select Uom" :keep-first='true'
-                                    :open-on-focus='true' :data="autocompleteUom" field="name" @select="getEditUom">
+                                <label for="" class="label">Raw Material Category</label>
+                                <b-autocomplete v-model="edit.raw_material_category" placeholder="Select Raw Material Category" :keep-first='true'
+                                    :open-on-focus='true' :data="autocompleteRawMaterialCategory" field="name" @select="getEditRawMaterialCategory">
+                                </b-autocomplete>
+                            </div>
+                            <div class="control">
+                                <label for="" class="label">Fabric Construction</label>
+                                <b-autocomplete v-model="edit.fabric_construction" placeholder="Select Fabric Construction" :keep-first='true'
+                                    :open-on-focus='true' :data="autocompleteFabricConstruction" field="name" @select="getEditFabricConstruction">
                                 </b-autocomplete>
                             </div>
 
@@ -74,7 +80,7 @@
 
                             <div class="control">
                                 <label class="label">Change Reference Image</label>
-                                <image-input-slim v-model="editID.image" v-on:remove-input="removeImage()">
+                                <image-input-slim ref="imageUploadSlim" v-model="editID.image" v-on:remove-input="removeImage()">
                                 </image-input-slim>
                             </div>
 
@@ -102,41 +108,47 @@
 
     <!-- End EDIT Modal -->
 
-    <p class="is-size-4 has-text-weight-bold">Finished Goods Master</p>
+    <p class="is-size-4 has-text-weight-bold">Raw Goods Master</p>
     <br>
     <div id="data_entry" class="animated fadeIn" v-show="view">
 
 
         <div class="field is-grouped is-grouped-multiline">
             <div class="control is-expanded">
-                <label for="" class="label">Product Category</label>
-                <b-autocomplete v-model="form.product_category" placeholder="Select Product Category" :keep-first='true'
-                    :open-on-focus='true' :data="autocompleteProductCategory" field="name" @select="getProductCategory">
+                <label for="" class="label">Yarn</label>
+                <b-autocomplete v-model="form.yarn" placeholder="Select Yarn" :keep-first='true'
+                    :open-on-focus='true' :data="autocompleteYarn" field="name" @select="getYarn">
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
-                <label for="" class="label">Fabric Combination</label>
-                <b-autocomplete v-model="form.fabric_combination" placeholder="Select Fabric Combination"
-                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricCombination" field="name"
-                    @select="getFabricCombination">
+                <label for="" class="label">Fabric Process</label>
+                <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process"
+                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricProcess" field="name"
+                    @select="getFabricProcess">
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
-                <label for="" class="label">Print Technique</label>
-                <b-autocomplete v-model="form.print_technique" placeholder="Select Print Technique" :keep-first='true'
-                    :open-on-focus='true' :data="autocompletePrintTechnique" field="name" @select="getPrintTechnique">
+                <label for="" class="label">Fabric Width</label>
+                <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
+                    :open-on-focus='true' :data="autocompleteFabricWidth" field="name" @select="getFabricWidth">
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
-                <label for="" class="label">Design Number</label>
-                <b-autocomplete v-model="form.design_number" placeholder="Select Design Number" :keep-first='true'
-                    :open-on-focus='true' :data="autocompleteDesignNumber" field="name" @select="getDesignNumber">
+                <label for="" class="label">Fabric Dye</label>
+                <b-autocomplete v-model="form.fabric_dye" placeholder="Select Fabric Dye" :keep-first='true'
+                    :open-on-focus='true' :data="autocompleteFabricDye" field="name" @select="getFabricDye">
                 </b-autocomplete>
             </div>
             <div class="control">
-                <label for="" class="label">Uom</label>
-                <b-autocomplete v-model="form.uom" placeholder="Select Uom" :keep-first='true' :open-on-focus='true'
-                    :data="autocompleteUom" field="name" @select="getUom">
+                <label for="" class="label">Raw Material Category</label>
+                <b-autocomplete v-model="form.raw_material_category" placeholder="Select Raw Material Category" :keep-first='true' :open-on-focus='true'
+                    :data="autocompleteRawMaterialCategory" field="name" @select="getRawMaterialCategory">
+                </b-autocomplete>
+            </div>
+            <div class="control">
+                <label for="" class="label">Fabric Construction</label>
+                <b-autocomplete v-model="form.fabric_construction" placeholder="Select Fabric Construction" :keep-first='true' :open-on-focus='true'
+                    :data="autocompleteFabricConstruction" field="name" @select="getFabricConstruction">
                 </b-autocomplete>
             </div>
 
@@ -232,10 +244,12 @@
                         <th width="64" height="64">Image</th>
                         <th>Finished Good</th>
                         <th>Alt. Name</th>
-                        <th>Product Category</th>
-                        <th>Fabric Combination</th>
-                        <th>Print Technique</th>
-                        <th>Design Number</th>
+                        <th>Yarn</th>
+                        <th>Fabric Process</th>
+                        <th>Fabric Width</th>
+                        <th>Fabric Dye</th>
+                        <th>Raw Material Category</th>
+                        <th>Fabric Construction</th>
                         <th>Action</th>
                     </tr>
 
@@ -250,17 +264,19 @@
                             None
                         </td>
                         <td class="has-text-weight-bold">
-                            [[ row.product_category[0].name ]] -
-                            [[ row.fabric_combination[0].name ]] -
-                            [[ row.print_technique[0].name ]] -
-                            [[ row.design_number[0].name ]]
+                            [[ row.yarn[0].name ]] -
+                            [[ row.fabric_process[0].name ]] -
+                            [[ row.fabric_width[0].name ]] -
+                            [[ row.fabric_dye[0].name ]]
                         </td>
                         <td v-if="row.alt_name != null ">[[ row.alt_name ]]</td>
                         <td v-else="row.alt_name == null " class="has-text-grey-light">None</td>
-                        <td>[[ row.product_category[0].name ]]</td>
-                        <td>[[ row.fabric_combination[0].name ]]</td>
-                        <td>[[ row.print_technique[0].name ]]</td>
-                        <td>[[ row.design_number[0].name ]]</td>
+                        <td>[[ row.yarn[0].name ]]</td>
+                        <td>[[ row.fabric_process[0].name ]]</td>
+                        <td>[[ row.fabric_width[0].name ]]</td>
+                        <td>[[ row.fabric_dye[0].name ]]</td>
+                        <td>[[ row.raw_material_category[0].name ]]</td>
+                        <td>[[ row.fabric_construction[0].name ]]</td>
                         <td>
                             <div class=" buttons">
                                 <div class="button" @click="editData(row ,index)">
@@ -309,5 +325,5 @@
     </div>
 </div>
 
-<script src="{{ url_for('static' , filename='js/main_master/finished_items.js')}}"></script>
+<script src="{{ url_for('static' , filename='js/main_master/raw_items.js')}}"></script>
 {% endblock %}

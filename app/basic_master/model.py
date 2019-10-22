@@ -150,7 +150,7 @@ class FabricConstructionSchema(ma.ModelSchema):
         model = FabricConstruction
 
 
-class UOM(db.Model):
+class Uom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
 
@@ -158,6 +158,6 @@ class UOM(db.Model):
         self.name = name
 
 
-class UOMSchema(ma.ModelSchema):
+class UomSchema(ma.ModelSchema):
     class Meta:
-        model = UOM
+        model = Uom

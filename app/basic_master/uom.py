@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, redirect, url_for, request, session, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.basic_master import bp
-from app.basic_master.model import UOM, UOMSchema
+from app.basic_master.model import Uom, UomSchema
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -20,8 +20,9 @@ UPLOAD_FOLDER = os.path.abspath(current_app.config['UPLOAD_FOLDER'])
 def get_uom():
     if request.method == 'GET':
 
-        data_schema = UOMSchema(many=True)
-        data = UOM.query.all()
+        data_schema = UomSchema(many=True)
+        data = Uom.query.all()
+        print(data)
         json_data = data_schema.dump(data)
         return jsonify(json_data)
 
@@ -34,12 +35,12 @@ def add_uom():
         print(payload)
         if len(payload['name']) != 0:
 
-            check_data = UOM.query.filter_by(name=payload['name'])
+            check_data = Uom.query.filter_by(name=payload['name'])
             if check_data.first():
                 return jsonify({'message': 'Product Category - '+check_data.first().name+' already exists.'})
             else:
                 try:
-                    new_data = UOM(
+                    new_data = Uom(
                         payload['name'])
 
                     db.session.add(new_data)
@@ -66,13 +67,13 @@ def edit_uom():
         payload = request.json
         if payload['name'] is not None:
 
-            check_data = UOM.query.filter_by(
+            check_data = Uom.query.filter_by(
                 name=payload['name']).first()
             if check_data and check_data.name != payload['name']:
                 return jsonify({'message': 'Design Number - '+check_data.name+' already exists.'})
             else:
                 try:
-                    new_data = UOM.query.filter_by(
+                    new_data = Uom.query.filter_by(
                         id=payload['id']).first()
                     new_data.name = payload['name']
                     db.session.commit()
@@ -96,7 +97,7 @@ def edit_uom():
 def delete_uom():
     if request.method == 'POST':
         payload = request.json
-        check_data = UOM.query.filter_by(id=payload['id'])
+        check_data = Uom.query.filter_by(id=payload['id'])
         if check_data.first():
             # if len(check_data.first().company_location) is int(0):
 

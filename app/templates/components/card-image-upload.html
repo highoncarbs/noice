@@ -1,0 +1,107 @@
+<template id="image-input">
+        <div>
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+    
+                    <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" @change="previewImage" accept="image/*" type="file" name="ref-file">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <feather type="upload" size="1rem"></feather>
+                                </span>
+                                <span class="file-label">
+                                    Choose a file…
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="control">
+    
+                    <button class="button is-danger is-outlined" @click="removeImage" v-if="imageData.length > 0">
+                        <span class="icon icon-btn">
+                            <feather type="x" size="1rem"></feather>
+                        </span>
+    
+                        Remove
+    
+                    </button>
+                </div>
+            </div>
+            <div class="img-loader animated fadeInUp" v-if="loader">
+                <span class="icon icon-btn">
+                    <feather type="refresh-cw" animation="spin" size="1.3rem"></feather>
+                </span> Loading
+            </div>
+            <div class="image-preview" v-if="imageData.length > 0" @click="viewBig = !viewBig">
+                <img class="preview" :src="imageData">
+            </div>
+            <div class="modal" :class="{'is-active': viewBig == true , 'is-clipped': viewBig == true }">
+                <div class="modal-background" @click="viewBig = !viewBig"></div>
+                <div class="modal-content">
+    
+    
+                    <figure class="image">
+                        <img :src="imageData">
+                    </figure>
+    
+                </div>
+                <button class="modal-close is-large" aria-label="close" @click="viewBig = !viewBig"></button>
+            </div>
+    
+        </div>
+    
+    </template>
+    
+    <script>
+    
+        Vue.component('image-input', {
+            template: "#image-input",
+            props: {
+            },
+            delimiters: ["[[", "]]"],
+            data: function () {
+                return {
+                    imageData: "",
+                    viewBig: false,
+                    loader: false
+    
+                }
+            },
+            methods: {
+                previewImage: function (event) {
+                    // Reference to the DOM input element
+                    var input = event.target;
+                    // Ensure that you have a file before attempting to read it
+                    if (input.files && input.files[0]) {
+                        this.loader = true
+                        // create a new FileReader to read this image and convert to base64 format
+                        var reader = new FileReader();
+                        // Define a callback function to run, when FileReader finishes its job
+                        reader.onload = (e) => {
+                            // Note: arrow function used here, so that "this.imageData" refers to the imageData of Vue component
+                            // Read image as base64 and set to imageData
+                            this.imageData = e.target.result;
+                        }
+                        this.loader = false
+                        // Start the reader job - read file as a data url (base64 format)
+                        reader.readAsDataURL(input.files[0]);
+                        this.$emit("input", input.files[0])
+                    }
+                },
+                removeImage: function (event) {
+                    this.imageData = ""
+                    this.$emit("remove-input")
+    
+                    event.preventDefault();
+                }
+            }
+        })
+    </script>
+    
+    <style>
+        img.preview {
+            padding-top: 1rem;
+        }
+    </style>

@@ -56,7 +56,7 @@ const FabricCombinationForm =
                             formdata.form.name = null;
 
                             formdata.$buefy.snackbar.open({
-                                duration: 40000,
+                                duration: 4000,
                                 message: response.data.success,
                                 type: 'is-light',
                                 position: 'is-top-right',
