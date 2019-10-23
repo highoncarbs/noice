@@ -1,0 +1,164 @@
+<template id="image-input-multiple">
+    <div>
+
+        <div class="image-holder">
+            <div class="file is-info" style="padding: 10px 10px">
+                <label class="file-label">
+                    <input class="file-input" ref="fileInput" type="file" name="resume" @input="onSelectFile"
+                        multiple="multiple">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <feather type="upload" size="1.3rem"></feather>
+                        </span>
+                        <span class="file-label">
+                            Choose a file…
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+
+            <div v-for="(image, key) in images" class=" outer-image">
+
+                <span class="image-input" :style="{ 'background-image': `url(${imageData[key]})` }">
+
+                </span>
+
+            </div>
+        </div>
+        <!-- <div class="image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
+            <span v-if="!imageData" class="placeholder has-text-centered">
+                <span class="icon">
+                    <feather type="image" size="1.3rem"></feather>
+                </span>
+            </span>
+
+            <span v-if="imageData" class="has-text-centered placeholder-x">
+                <span class="button-icon has-text-white" @click="removeImage()">
+                    <feather type="x" size="1.3rem"></feather>
+                </span>
+            </span>
+
+        </div> -->
+
+
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('image-input-multiple', {
+        template: "#image-input-multiple",
+        props: {
+        },
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                files: [],
+                images: [],
+                imageData: []
+            }
+        },
+
+        methods: {
+            chooseImage() {
+                this.$refs.fileInput.click()
+            },
+
+            // onSelectFile() {
+            //     const input = this.$refs.fileInput
+            //     const files = input.files
+            //     if (files && files[0]) {
+            //         const reader = new FileReader
+            //         reader.onload = e => {
+            //             this.imageData = e.target.result
+            //         }
+            //         reader.readAsDataURL(files[0])
+            //         this.$emit('input', files[0])
+            //     }
+            // },
+            onSelectFile(e) {
+                var selectedFiles = e.target.files;
+                for (var i = 0; i < selectedFiles.length; i++) {
+                    this.images.push(selectedFiles[i]);
+                }
+
+                for (var i = 0; i < this.images.length; i++) {
+                    let reader = new FileReader(); //instantiate a new file reader
+                    reader.onload = e => {
+                        this.imageData.push(e.target.result)
+                    }
+
+                    reader.readAsDataURL(this.images[i]);
+                }
+            },
+            removeImage() {
+                this.imageData = null
+            }
+        }
+
+    })
+</script>
+
+<style>
+    .image-input {
+        display: inline-block;
+        width: 200px;
+        border-radius: 5px;
+        height: 200px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-size: cover;
+        background-position: center center;
+    }
+
+    .outer-image {
+        display: inline-block;
+        padding: 10px;
+       
+
+    }
+
+    .placeholder {
+        border-radius: 3px;
+        background: #f0f0f0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .button-icon {
+        border-radius: 50%;
+        padding: 10px 10px 5px 10px;
+        background-color: rgba(51, 0, 117, 0.5);
+    }
+
+    .placeholder-x {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .image-holder {
+        height: 280px;
+        /* background-color:#f0f0f0; */
+        overflow-x: hidden;
+        border: 1px solid lightgrey;
+        border-radius: 5px;
+    }
+
+    .placeholder:hover {
+        background: #e0e0e0;
+    }
+
+    .file-input {
+        display: none;
+    }
+</style>

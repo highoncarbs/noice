@@ -48,6 +48,9 @@ def create_app(config_class=Config):
 
         from app.main_master import bp as main_master_bp
         app.register_blueprint(main_master_bp, url_prefix='/main_master')
+        
+        from app.transaction import bp as transaction_bp
+        app.register_blueprint(transaction_bp, url_prefix='/transaction')
 
         # from app.employee import bp as emp_bp
         # app.register_blueprint(emp_bp, url_prefix='/employee')

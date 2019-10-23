@@ -4,6 +4,7 @@ from datetime import datetime
 from app.basic_master.model import ProductCategorySchema, FabricCombinationSchema, DesignNumberSchema,  PrintTechniqueSchema, UomSchema
 from app.basic_master.model import YarnSchema, FabricProcessSchema, FabricWidthSchema,  PrintTechniqueSchema, RawMaterialCategorySchema, FabricConstructionSchema, FabricDyeSchema
 from marshmallow_sqlalchemy import field_for
+from marshmallow import fields
 
 
 #  Finished Goods Model
@@ -97,7 +98,12 @@ class FinishedGoodsSchema(ma.ModelSchema):
     design_number = ma.Nested(DesignNumberSchema, many=True)
     uom = ma.Nested(UomSchema, many=True)
     image = field_for(FinishedGoods, 'image', dump_only=True)
+    gen_name = fields.Method("get_goods_name")
 
+    def get_goods_name(self , obj):
+        goods_name = "{} - {} - {} - {}".format(
+            obj.product_category[0].name, obj.fabric_combination[0].name, obj.print_technique[0].name, obj.design_number[0].name)
+        return goods_name
     class meta:
         model = FinishedGoods
 
@@ -210,6 +216,13 @@ class RawGoodsSchema(ma.ModelSchema):
     raw_material_category = ma.Nested(RawMaterialCategorySchema, many=True)
     fabric_construction = ma.Nested(FabricConstructionSchema, many=True)
     image = field_for(RawGoods, 'image', dump_only=True)
+    gen_name = fields.Method("get_goods_name")
+
+
+    def get_goods_name(self , obj):
+        goods_name = "{} - {} - {} - {} - {} - {}".format(
+            obj.yarn[0].name, obj.fabric_process[0].name, obj.fabric_width[0].name, obj.fabric_dye[0].name, obj.raw_material_category[0].name, obj.fabric_construction[0].name)
+        return goods_name
 
     class meta:
         model = RawGoods

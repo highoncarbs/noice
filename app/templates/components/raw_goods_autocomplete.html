@@ -1,0 +1,69 @@
+<template id="raw-goods-autocomplete">
+    <div>
+
+        <b-autocomplete :model="query"  placeholder="Select Raw Material" :keep-first='true' :open-on-focus='true'
+            :data="autocompleteRawGoods" field="name" @select="getSelected()">
+        </b-autocomplete>
+
+
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('raw-goods-autocomplete', {
+        template: "#raw-goods-autocomplete",
+        props: {
+        },
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                data_raw_goods: [],
+                selected: null,
+                query: ''
+            }
+        },
+        mounted() {
+            let raw = this
+            axios.get('/main_master/get/raw_goods')
+                .then(function (response) {
+                    raw.data_raw_goods = response.data
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    raw.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: 'Unable to fetch data for Raw Goods',
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+                })
+        },
+        computed: {
+            autocompleteRawGoods() {
+
+                if (this.data_raw_goods.length != 0) {
+                    return this.data_raw_goods.filter((option) => {
+                        return option.name
+                            .toString()
+                            .toLowerCase()
+                            .indexOf(this.query.toLowerCase()) >= 0
+                    })
+                }
+            },
+        },
+
+        methods: {
+            getSelected: function(option){
+                this.selected = option.id
+            }
+        }
+
+    })
+</script>

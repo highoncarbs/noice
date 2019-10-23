@@ -217,7 +217,7 @@
 
         <div class="" id="data_view">
             <hr>
-            <div v-if="data && data.length == 0"
+            <div v-if="(data && data.length == 0) || data == null "
                 class=" has-text-centered has-text-grey-light has-text-weight-semibold ">
                 <span class="icon">
                     <feather type="info" size="1.5rem"></feather>
@@ -225,7 +225,7 @@
                 <br>
                 <p class="is-size-5">Theres nothing to see here. Go add some data</p>
             </div>
-            <table v-if="data && data.length != 0" class="table is-bordered is-fullwidth">
+            <table v-if="data && data.length != 0 && data != null" class="table is-bordered is-fullwidth">
                 <thead>
                     <tr>
 

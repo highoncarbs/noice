@@ -1,0 +1,78 @@
+<template id="basic_form">
+
+
+    <div>
+
+
+        <p class="is-size-5 has-text-weight-bold">Basic Information</p>
+        <br>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <div class="field is-grouped">
+                        <div class="control">
+
+                            <label for="" class="label">Date</label>
+                            <input type="date" class="input">
+                        </div>
+                    </div>
+                    <div class="control">
+                        <label for="" class="label">Finished Product Category</label>
+                        <input type="text" class="input">
+                    </div>
+                    <div class="control">
+                        <label for="" class="label">Description</label>
+                        <textarea type="text" class="input textarea"></textarea>
+                    </div>
+                    <br>
+                    <div class="field is-grouped is-grouped-multiline">
+
+                        <div class="control">
+                            <label for="" class="label">Team Leader</label>
+                            <input type="text" class="input">
+                        </div>
+                        <div class="control is-expanded">
+                            <label for="" class="label">Other Members</label>
+                            <input type="text" class="input">
+                            <!-- Tag Inputs  -->
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-multiline">
+                        <div class="control">
+                            <label for="" class="label">Days Required</label>
+                            <input type="text" class="input">
+                        </div>
+                        <div class="control">
+                            <label for="" class="label">Target Date</label>
+                            <input type="text" class="input">
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="column is-3">
+                <image-input-multiple></image-input-multiple>
+
+            </div>
+        </div>
+
+        <div class="control">
+            <div class="buttons">
+
+                <button class="button is-black">
+                    Next
+                    <span class="icon icon-btn-l">
+                        <feather type="arrow-right" size="1.3rem"></feather>
+                    </span>
+
+                </button>
+                <button class="button is-text">
+                    Proceed to Activity planning
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

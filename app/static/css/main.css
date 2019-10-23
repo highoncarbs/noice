@@ -27,6 +27,11 @@ svg {
     margin-bottom: 2px !important;
     vertical-align: middle !important;
 }
+.icon-btn-l {
+    margin-left: 10px !important;
+    margin-bottom: 2px !important;
+    vertical-align: middle !important;
+}
 
 .icon-btn-in {
     padding: 2px;
