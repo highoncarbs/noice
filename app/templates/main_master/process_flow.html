@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<div class="container" id="process_flow_master">
+    <p class="is-size-4 has-text-weight-bold">Process Flow Master</p>
+    <br>
+
+
+    <div class="animated fadeIn" id="data_entry" v-if="view">
+
+
+        <div class="field is-grouped">
+
+
+            <div class="control">
+
+                <label for="" class="label">Process Flow Name</label>
+                <input type="text" v-model="process_flow_name" class="input" placeholder="Enter Process Flow Name">
+            </div>
+            <div class="control">
+                <label for="" class="label has-text-white">View</label>
+                <button class="button" @click="view = !view"><span class="icon icon-btn">
+                        <feather type="eye" szie="1.3rem"></feather>
+                    </span>
+                    View
+                </button>
+            </div>
+
+        </div>
+        <br>
+        <form @submit.prevent="addRow" novalidate="true">
+            <label for="" class="label"> Add Task</label>
+            <table class="table is-fullwidth box-outline">
+                <colgroup>
+                    <col span="1" style="width: 50%;">
+
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <tbody>
+                    <tr class="animated fadeIn" v-if="errors == true">
+                        <td class="animated shake is-underline has-text-danger" colspan="5">
+                            Please fill up all the fields.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="control">
+                                <label for="" class="label">Process Name</label>
+                                <input type="text" ref="name" v-model="task.name" class="input"
+                                    placeholder="Enter Process Name">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control">
+                                <label for="" class="label">Department</label>
+
+                                <b-autocomplete v-model="query_department" placeholder="Select Department"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
+                                    @select="option => task.department = option">
+                                </b-autocomplete>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control">
+                                <label for="" class="label">Location</label>
+
+                                <b-autocomplete v-model="query_location" placeholder="Select Location"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteLocation" field="name"
+                                    @select="option => task.location = option">
+                                </b-autocomplete>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="control">
+                                <label for="" class="label">Days</label>
+
+                                <input type="text" class="input" v-model="task.days" placeholder="Enter Days">
+                            </div>
+                        </td>
+                        <td>
+                            <label for="" class="label" class="has-text-white">Add More</label>
+
+                            <button class="button is-black" @click="addRow()">
+                                <span class=" icon icon-btn">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add
+                            </button></td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </form>
+        <hr>
+
+        <div class=" has-text-centered notification animated fadeIn" v-if="taskList.length == 0">
+            <p>
+
+                <span class="icon">
+                    <feather type="info" size="1.3rem"></feather>
+                </span>
+            </p>
+            <p class=" has-text-grey is-size-5">
+
+                Add tasks for process flow
+            </p>
+        </div>
+
+        <table class="table is-fullwidth is-bordered" v-if="taskList.length != 0">
+            <colgroup>
+                <col span="1" style="width: 10%;">
+
+                <col span="1" style="width: 50%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+            </colgroup>
+            <thead>
+                <th>No.</th>
+                <th>Process Name</th>
+                <th>Department</th>
+                <th>Location</th>
+                <th>Days</th>
+                <th>Remove</th>
+            </thead>
+            <tbody>
+                <tr v-for="(row , index) in taskList">
+                    <td> [[ index+1 ]] </td>
+                    <td> [[ row.name ]] </td>
+                    <td> [[ row.department.name ]] </td>
+                    <td> [[ row.location.name ]] </td>
+                    <td>
+                        [[ row.days ]]
+                    </td>
+                    <td>
+                        <button class="button is-danger" @click="removeRow(index)">
+                            <span class="icon">
+                                <feather type="x" size="1.3rem"></feather>
+                            </span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        <br>
+        <div class="control">
+            <button @click="submitData" class="button is-black"><span class="icon icon-btn">
+                    <feather type="check" size="1.3rem"></feather>
+
+                </span>
+                Save
+            </button>
+        </div>
+    </div>
+    <div class="animated fadeIn" id="data_view" v-if="!view">
+        <div class="control">
+            <label for="" class="label has-text-white">View</label>
+            <button class="button" @click="view = !view"><span class="icon icon-btn">
+                    <feather type="x" szie="1.3rem"></feather>
+                </span>
+                View
+            </button>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="{{ url_for('static' , filename='js/main_master/process_flow.js')}}"></script>
+
+{% endblock %}

@@ -19,3 +19,13 @@ def view_raw_items():
 @login_required
 def view_uom():
     return render_template('basic_master/uom.html')
+
+@bp.route('/department', methods=['GET'])
+@login_required
+def view_department():
+    return render_template('basic_master/department.html')
+
+@bp.route('/location', methods=['GET'])
+@login_required
+def view_location():
+    return render_template('basic_master/location.html')

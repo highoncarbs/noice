@@ -1,7 +1,7 @@
 <template id="basic_form">
 
 
-    <div>
+    <div class="animated fadeIn">
 
 
         <p class="is-size-5 has-text-weight-bold">Basic Information</p>
@@ -59,18 +59,21 @@
             </div>
         </div>
 
-        <div class="control">
-            <div class="buttons">
+        <div class="field is-grouped is-grouped-multiline">
 
-                <button class="button is-black">
-                    Next
-                    <span class="icon icon-btn-l">
-                        <feather type="arrow-right" size="1.3rem"></feather>
-                    </span>
-
-                </button>
+            <div class="control">
+                <router-link to="/activity">
+                    <button class="button is-black">
+                        Next
+                        <span class="icon icon-btn-l">
+                            <feather type="arrow-right" size="1.3rem"></feather>
+                        </span>
+                    </button>
+                </router-link>
+            </div>
+            <div class="control">
                 <button class="button is-text">
-                    Proceed to Activity planning
+                    Plan activity next
                 </button>
             </div>
         </div>

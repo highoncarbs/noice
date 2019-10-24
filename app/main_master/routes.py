@@ -25,3 +25,8 @@ def view_accessories():
 @login_required
 def view_other_materials():
     return render_template('main_master/other_materials.html')
+
+@bp.route('/process_flow', methods=['GET'])
+@login_required
+def view_process_flow():
+    return render_template('main_master/process_flow.html')

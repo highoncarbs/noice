@@ -36,6 +36,7 @@ const MaterialForm = ({
         axios.get('/main_master/get/raw_goods')
             .then(function (response) {
                 raw.data_raw_goods = response.data
+                raw.dataRawGoods = raw.data_raw_goods
             })
             .catch(function (error) {
                 console.log(error)
@@ -54,6 +55,7 @@ const MaterialForm = ({
         axios.get('/main_master/get/finished_goods')
             .then(function (response) {
                 raw.data_finished_goods = response.data
+                raw.dataFinishedGoods = raw.data_finished_goods
             })
             .catch(function (error) {
                 console.log(error)
@@ -72,6 +74,8 @@ const MaterialForm = ({
         axios.get('/main_master/get/accessories')
             .then(function (response) {
                 raw.data_accessories_goods = response.data
+                raw.dataAccessoriesGoods = raw.data_accessories_goods
+
             })
             .catch(function (error) {
                 console.log(error)
@@ -89,7 +93,11 @@ const MaterialForm = ({
             })
         axios.get('/main_master/get/other_materials')
             .then(function (response) {
+               
+               
                 raw.data_other_materials_goods = response.data
+                raw.dataOtherMaterialsGoods = raw.data_other_materials_goods
+
             })
             .catch(function (error) {
                 console.log(error)
@@ -108,6 +116,9 @@ const MaterialForm = ({
         axios.get('/basic_master/get/uom')
             .then(function (response) {
                 raw.data_uom = response.data
+                raw.dataUom = raw.data_uom
+
+
             })
             .catch(function (error) {
                 console.log(error)
@@ -140,7 +151,7 @@ const MaterialForm = ({
         },
         getRawGoods(name) {
             if (!name.length) {
-                this.dataRawGoods = []
+                this.dataRawGoods = this.data_raw_goods
                 return
             }
             else {
@@ -165,8 +176,8 @@ const MaterialForm = ({
         },
         getFinishedGoods(name) {
             if (!name.length) {
-                this.dataFinishedGoods = []
-                return
+                return this.dataFinishedGoods = this.data_finished_goods
+                
             }
             else {
                 if (this.data_finished_goods.length != 0) {
@@ -190,7 +201,7 @@ const MaterialForm = ({
         },
         getAccessoriesGoods(name) {
             if (!name.length) {
-                this.dataAccessoriesGoods = []
+                this.dataAccessoriesGoods = this.data_accessories_goods
                 return
             }
             else {
@@ -215,7 +226,7 @@ const MaterialForm = ({
         },
         getOtherMaterialsGoods(name) {
             if (!name.length) {
-                this.dataOtherMaterialsGoods = []
+                this.dataOtherMaterialsGoods = this.data_other_materials_goods
                 return
             }
             else {

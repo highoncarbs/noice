@@ -1,3 +1,4 @@
+
 .brand {
     font-family: 'Inter', serif;
     font-weight: 700;
@@ -304,6 +305,8 @@ td img {
     box-shadow: none !important;
     border: 1px solid rgba(0, 0, 0, .12);
     border-radius: 0;
+    display: block;
+    padding: 1rem !important;
 }
 
 .card-image img {

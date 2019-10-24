@@ -3,6 +3,7 @@ from app import ma
 from datetime import datetime
 from app.basic_master.model import ProductCategorySchema, FabricCombinationSchema, DesignNumberSchema,  PrintTechniqueSchema, UomSchema
 from app.basic_master.model import YarnSchema, FabricProcessSchema, FabricWidthSchema,  PrintTechniqueSchema, RawMaterialCategorySchema, FabricConstructionSchema, FabricDyeSchema
+from app.basic_master.model import Location, LocationSchema, Department, DepartmentSchema
 from marshmallow_sqlalchemy import field_for
 from marshmallow import fields
 
@@ -100,10 +101,11 @@ class FinishedGoodsSchema(ma.ModelSchema):
     image = field_for(FinishedGoods, 'image', dump_only=True)
     gen_name = fields.Method("get_goods_name")
 
-    def get_goods_name(self , obj):
+    def get_goods_name(self, obj):
         goods_name = "{} - {} - {} - {}".format(
             obj.product_category[0].name, obj.fabric_combination[0].name, obj.print_technique[0].name, obj.design_number[0].name)
         return goods_name
+
     class meta:
         model = FinishedGoods
 
@@ -218,8 +220,7 @@ class RawGoodsSchema(ma.ModelSchema):
     image = field_for(RawGoods, 'image', dump_only=True)
     gen_name = fields.Method("get_goods_name")
 
-
-    def get_goods_name(self , obj):
+    def get_goods_name(self, obj):
         goods_name = "{} - {} - {} - {} - {} - {}".format(
             obj.yarn[0].name, obj.fabric_process[0].name, obj.fabric_width[0].name, obj.fabric_dye[0].name, obj.raw_material_category[0].name, obj.fabric_construction[0].name)
         return goods_name
@@ -268,3 +269,66 @@ class OtherMaterialsSchema(ma.ModelSchema):
 
     class meta:
         model = OtherMaterials
+
+
+class ProcessFlow(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+    task_items = db.relationship("TaskItem",
+                                 cascade="all, delete",
+                                 backref="processflow")
+    def __init__(self, name):
+        self.name = name
+
+
+class ProcessFlowSchema(ma.ModelSchema):
+    class meta:
+        model = ProcessFlow
+
+
+class TaskItem(db.Model):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer)
+    process_flow_id = db.Column(db.Integer,
+                                db.ForeignKey('process_flow.id', ondelete='SET NULL'))
+    name = db.Column(db.String(100), nullable=False)
+    department = db.relationship(Department,  secondary='task_department',
+                               backref='task_department', cascade='all ,delete', lazy='joined')
+    location = db.relationship(Location, secondary='task_location',
+                               backref='task_location', cascade='all ,delete', lazy='joined')
+    days = db.Column(db.Integer)
+
+    def __init__(self, task_id , name, department , location ,days):
+        self.task_id = task_id
+        self.name = name
+        self.department.append(department)
+        self.location.append(location)
+        self.days = days
+
+    process_flow = db.relationship(ProcessFlow, lazy="joined")
+
+db.Table('task_department',
+         db.Column('task_id', db.Integer, db.ForeignKey('task_item.id', ondelete='SET NULL')),
+         db.Column('department_id', db.Integer, db.ForeignKey('department.id', ondelete='SET NULL'))
+         )
+
+db.Table('task_location',
+         db.Column('task_id', db.Integer, db.ForeignKey('task_item.id', ondelete='SET NULL')),
+         db.Column('location_id', db.Integer, db.ForeignKey('location.id', ondelete='SET NULL'))
+         )
+
+
+class TaskItemSchema(ma.ModelSchema):
+    id = field_for(TaskItem, 'id', dump_only=True)
+    task_id = field_for(TaskItem, 'task_id', dump_only=True)
+    process_flow_id = field_for(TaskItem, 'process_flow_id', dump_only=True)
+    name = field_for(TaskItem, 'name', dump_only=True)
+    days = field_for(TaskItem, 'days', dump_only=True)
+    department = ma.Nested(DepartmentSchema)
+    location = ma.Nested(LocationSchema)
+
+    process_flow = ma.Nested(ProcessFlowSchema)
+
+    class meta:
+        model = TaskItem

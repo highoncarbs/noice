@@ -1,10 +1,38 @@
 <template id="activity_form">
 
 
-    <div>
+    <div class="animated fadeIn">
 
 
         <p class="is-size-5 has-text-weight-bold">Activity Planning</p>
         <br>
+
+        <div class="field is-grouped is-grouped-multiline">
+            <div class="control">
+                <router-link to="/basic">
+                    <button class="button">
+                        <span class="icon icon-btn">
+                            <feather type="arrow-left" size="1.3rem"></feather>
+                        </span>
+                        Previous
+                    </button>
+                </router-link>
+            </div>
+            <div class="control">
+                <router-link to="/material">
+                    <button class="button is-black">
+                        Next
+                        <span class="icon icon-btn-l">
+                            <feather type="arrow-right" size="1.3rem"></feather>
+                        </span>
+                    </button>
+                </router-link>
+            </div>
+            <div class="control">
+                <button class="button is-text">
+                    Add materials required for sample
+                </button>
+            </div>
+        </div>
     </div>
 </template>

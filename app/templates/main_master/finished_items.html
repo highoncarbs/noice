@@ -153,7 +153,8 @@
             <div class="control">
                 <label class="label">Upload Image Reference</label>
 
-                <image-input-boxed ref="imageUpload" v-model="formID.image" v-on:remove-input="removeImage()"></image-input-boxed>
+                <image-input-boxed ref="imageUpload" v-model="formID.image" v-on:remove-input="removeImage()">
+                </image-input-boxed>
             </div>
             <hr>
             <div class="field">
@@ -310,4 +311,5 @@
 </div>
 
 <script src="{{ url_for('static' , filename='js/main_master/finished_items.js')}}"></script>
+
 {% endblock %}
