@@ -22,6 +22,7 @@ def get_process_flow():
 
         data_schema = ProcessFlowSchema(many=True)
         data = ProcessFlow.query.all()
+        print(data)
         json_data = data_schema.dump(data)
         return jsonify(json_data)
 
@@ -120,6 +121,7 @@ def delete_process_flow():
             # if len(check_data.first().company_location) is int(0):
 
             try:
+                check_data.task_items = []
                 check_data.delete()
                 db.session.commit()
                 return jsonify({'success': 'Data deleted'})

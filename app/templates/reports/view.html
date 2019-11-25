@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+{% include 'components/progress-bar.html' %}
+<div id="reports_master">
+    <div class="container">
+        <p class="is-size-4 has-text-weight-bold">Reports</p>
+        <br>
+        <div id="filters">
+            <div class="field is-grouped is-horizontal notification">
+                <div class="field-body">
+                    <!-- <div class="field">
+                        <div class="control">
+
+                            <div class="buttons has-addons">
+                                <button class="button">Open</button>
+                                <button class="button">Closed</button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="field">
+                        <div class="control">
+
+                            <label for="" class="label">Start Date</label>
+                            <input type="date" v-model="filter.start_date" class="input">
+                        </div>
+                    </div>
+                    <div class="field">
+
+                        <div class="control">
+                            <label for="" class="label">End Date</label>
+                            <input type="date" v-model="filter.end_date" class="input">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+
+                            <label for="" class="label">Status</label>
+
+                            <input type="text" class="input" v-model="filter.status" placeholder="Select Status">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+
+                            <label for="" class="label">Category</label>
+                            <input type="text" class="input" v-model="filter.category" placeholder="Search Category">
+
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+
+                            <label for="" class="label">Leader</label>
+
+                            <input type="text" class="input" v-model="filter.leader" placeholder="Search Leader">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+
+                            <label for="" class="label has-text-light">Filter</label>
+                            <button class="button is-black">
+                                <span class="icon icon-btn">
+                                    <feather type="filter" size="1.3rem"></feather>
+                                </span>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <table class="table is-fullwidth is-bordered is-hoverable">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Date</th>
+                    <th>Product Category</th>
+                    <th>Leader</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filteredTransaction">
+                    <td>[[ item.id]]</td>
+                    <td>[[ formatDate(item.basic[0].start_date) ]]</td>
+                    <td>[[ item.basic[0].finished_product_category[0].name ]]</td>
+                    <td>[[ item.basic[0].team_leader]]</td>
+                    <td>
+                        <progress-bar :datalist="item.activity[0].task_items_act"></progress-bar>
+                    </td>
+                    <td>
+                        <span class="tag is-normal is-dark has-text-weight-bold">
+
+                            [[ item.flag.toUpperCase()]]
+                        </span>
+                    </td>
+                    <td>
+                        <div class="buttons">
+                            <a class="button is-small" :href="'/transaction/view/'+ item.id">
+                                <span class="icon">
+                                    <feather type="eye" size="1rem"></feather>
+                                </span>
+                            </a>
+                            <button class="is-danger button is-small">
+                                <span class="icon ">
+                                    <feather type="x" size="1rem"></feather>
+                                </span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script src="{{ url_for('static' , filename ='js/reports/view.js' )}}"></script>
+
+{% endblock %}

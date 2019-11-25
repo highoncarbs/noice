@@ -19,7 +19,7 @@
             </div>
             <div class="control">
                 <label for="" class="label has-text-white">View</label>
-                <button class="button" @click="view = !view"><span class="icon icon-btn">
+                <button class="button" @click="showView"><span class="icon icon-btn">
                         <feather type="eye" szie="1.3rem"></feather>
                     </span>
                     View
@@ -28,94 +28,14 @@
 
         </div>
         <br>
-        <form @submit.prevent="addRow" novalidate="true">
-            <label for="" class="label"> Add Task</label>
-            <table class="table is-fullwidth box-outline">
-                <colgroup>
-                    <col span="1" style="width: 50%;">
 
-                    <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 10%;">
-                    <col span="1" style="width: 10%;">
-                </colgroup>
-                <tbody>
-                    <tr class="animated fadeIn" v-if="errors == true">
-                        <td class="animated shake is-underline has-text-danger" colspan="5">
-                            Please fill up all the fields.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="control">
-                                <label for="" class="label">Process Name</label>
-                                <input type="text" ref="name" v-model="task.name" class="input"
-                                    placeholder="Enter Process Name">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="control">
-                                <label for="" class="label">Department</label>
-
-                                <b-autocomplete v-model="query_department" placeholder="Select Department"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
-                                    @select="option => task.department = option">
-                                </b-autocomplete>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="control">
-                                <label for="" class="label">Location</label>
-
-                                <b-autocomplete v-model="query_location" placeholder="Select Location"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteLocation" field="name"
-                                    @select="option => task.location = option">
-                                </b-autocomplete>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="control">
-                                <label for="" class="label">Days</label>
-
-                                <input type="text" class="input" v-model="task.days" placeholder="Enter Days">
-                            </div>
-                        </td>
-                        <td>
-                            <label for="" class="label" class="has-text-white">Add More</label>
-
-                            <button class="button is-black" @click="addRow()">
-                                <span class=" icon icon-btn">
-                                    <feather type="plus" size="1.2rem"></feather>
-                                </span> Add
-                            </button></td>
-
-                    </tr>
-                </tbody>
-
-            </table>
-        </form>
-        <hr>
-
-        <div class=" has-text-centered notification animated fadeIn" v-if="taskList.length == 0">
-            <p>
-
-                <span class="icon">
-                    <feather type="info" size="1.3rem"></feather>
-                </span>
-            </p>
-            <p class=" has-text-grey is-size-5">
-
-                Add tasks for process flow
-            </p>
-        </div>
-
-        <table class="table is-fullwidth is-bordered" v-if="taskList.length != 0">
+        <table class="table is-fullwidth is-bordered">
             <colgroup>
-                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 4%;">
 
                 <col span="1" style="width: 50%;">
-                <col span="1" style="width: 10%;">
-                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 13%;">
+                <col span="1" style="width: 13%;">
                 <col span="1" style="width: 10%;">
                 <col span="1" style="width: 10%;">
             </colgroup>
@@ -125,7 +45,7 @@
                 <th>Department</th>
                 <th>Location</th>
                 <th>Days</th>
-                <th>Remove</th>
+                <th>Action</th>
             </thead>
             <tbody>
                 <tr v-for="(row , index) in taskList">
@@ -144,18 +64,81 @@
                         </button>
                     </td>
                 </tr>
+                <tr v-if="taskList.length == 0">
+                    <td colspan="6" class="has-text-centered notification has-text-grey">
+
+                        <span class="icon">
+                            <feather type="info" size="1.3rem"></feather>
+                        </span>
+                        <p>
+
+                            Add tasks for process flow
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+                        <div class="control">
+                            <input type="text" ref="name" v-model="task.name" class="input"
+                                placeholder="Enter Process Name">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="control">
+                            <b-autocomplete v-model="query_department" placeholder="Select Department"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
+                                @select="option => task.department = option">
+                            </b-autocomplete>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="control">
+                            <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
+                                :open-on-focus='true' :data="autocompleteLocation" field="name"
+                                @select="option => task.location = option">
+                            </b-autocomplete>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="control">
+                            <input type="text" class="input" v-model="task.days" placeholder="Enter Days">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="button is-black" @click="addRow()">
+                            <span class=" icon icon-btn">
+                                <feather type="plus" size="1.2rem"></feather>
+                            </span> Add
+                        </button></td>
+                </tr>
             </tbody>
 
         </table>
-        <br>
-        <div class="control">
-            <button @click="submitData" class="button is-black"><span class="icon icon-btn">
-                    <feather type="check" size="1.3rem"></feather>
+        <hr>
 
-                </span>
-                Save
-            </button>
+        <div class="field is-grouped is-grouped-multiline">
+
+            <div class="control">
+                <button @click="submitData" class="button is-black"><span class="icon icon-btn">
+                        <feather type="check" size="1.3rem"></feather>
+
+                    </span>
+                    Save
+                </button>
+            </div>
+            <div class="control animated shake" v-if="data_error">
+                <button class="button is-text has-text-danger"><span class="icon icon-btn">
+                        <feather type="x" size="1.3rem"></feather>
+
+                    </span>
+                    Please fill all the fields.
+                </button>
+            </div>
         </div>
+
     </div>
     <div class="animated fadeIn" id="data_view" v-if="!view">
         <div class="control">
@@ -165,6 +148,73 @@
                 </span>
                 View
             </button>
+        </div>
+        <br>
+        <div v-if="process_flow_list.length == 0">
+            <p>
+
+            </p>
+
+        </div>
+        <div v-for="( row , index) in process_flow_list" v-if="process_flow_list.length != 0">
+
+            <b-collapse class="card" aria-id="contentIdForA11y3" :open="false">
+                <div slot="trigger" slot-scope="props" class="card-header" role="button"
+                    aria-controls="contentIdForA11y3">
+                    <p class="card-header-title">
+                        [[ row.name ]]
+                        <span class="has-text-grey" style="padding: 0 1rem"> : </span>
+                        <span class="has-text-grey has-text-weight-normal"> [[ row.task_items.length]] Activities</span>
+                    </p>
+                    <a class="card-header-icon">
+                        <span class="icon" v-if="props.open">
+                            <feather size="1.3rem" type="chevron-down"></feather>
+                        </span>
+                        <span class="icon" v-if="!props.open">
+                            <feather size="1.3rem" type="chevron-up"></feather>
+                        </span>
+
+                    </a>
+                </div>
+                <div class="card-content">
+                    <div class="content">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <th>No.</th>
+                                <th>Process Name</th>
+                                <th>Department</th>
+                                <th>Location</th>
+                                <th>Days</th>
+                            </thead>
+                            <tbody>
+                                <template>
+                                    <tr v-for="(item , index) in row.task_items">
+                                        <td> [[ item.task_id+1 ]] </td>
+                                        <td>[[ item.name ]] </td>
+                                        <td>[[ item.department[0].name ]]</td>
+                                        <td>[[ item.location[0].name ]]</td>
+                                        <td>[[ item.days ]]</td>
+                                    </tr>
+                                </template>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item">
+                        <span class="icon icon-btn">
+                            <feather type="edit" size="1.3rem"></feather>
+                        </span>
+                        Edit</a>
+                    <a class="card-footer-item has-text-danger" @click="deleteData(row.id , index)">
+                        <span class="icon icon-btn">
+                            <feather type="trash" size="1.3rem"></feather>
+                        </span>
+                        Delete</a>
+                </footer>
+            </b-collapse>
+            <br>
         </div>
     </div>
 

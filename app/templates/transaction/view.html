@@ -1,38 +1,39 @@
 {% extends 'base/base.html' %}
 {% block content %}
 
-{% include 'transaction/basic.html' %}
-{% include 'transaction/activity.html' %}
-{% include 'transaction/materials.html' %}
+{% include 'transaction/view-basic.html' %}
+{% include 'transaction/view-activity.html' %}
+{% include 'transaction/view-materials.html' %}
+{% include 'components/image-upload-boxed.html' %}
 
 <div id="transaction_master">
     <div class="container">
 
-        <p class="is-size-4 has-text-weight-bold">New Transaction</p>
+        <p class="is-size-4 has-text-weight-bold"> Transaction - <span ref="pp_no">{{ pp_no }}</span> </p>
         <br>
         <div class="tabs">
             <ul>
 
                 <li>
-                    <router-link to="/basic">
+                    <router-link to="/view-basic">
                         <span class="icon ">
                             <feather type="edit-3" size="1.1rem"></feather>
                         </span>
                         Basic Info</router-link>
                 </li>
                 <li>
-                    <router-link to="/activity">
-                        <span class="icon ">
-                            <feather type="list" size="1.1rem"></feather>
-                        </span>
-                        Activity Planning</router-link>
-                </li>
-                <li>
-                    <router-link to="/material">
+                    <router-link to="/view-material">
                         <span class="icon ">
                             <feather type="shopping-bag" size="1.1rem"></feather>
                         </span>
                         Materials</router-link>
+                </li>
+                <li>
+                    <router-link to="/view-activity">
+                        <span class="icon ">
+                            <feather type="list" size="1.1rem"></feather>
+                        </span>
+                        Activity Planning</router-link>
                 </li>
             </ul>
         </div>
@@ -45,9 +46,9 @@
 </div>
 
 
-<script src="{{ url_for('static' , filename ='js/transaction/basic.js' )}}"></script>
-<script src="{{ url_for('static' , filename ='js/transaction/activity.js' )}}"></script>
-<script src="{{ url_for('static' , filename ='js/transaction/material.js' )}}"></script>
+<script src="{{ url_for('static' , filename ='js/transaction/view-basic.js' )}}"></script>
+<script src="{{ url_for('static' , filename ='js/transaction/view-activity.js' )}}"></script>
+<script src="{{ url_for('static' , filename ='js/transaction/view-material.js' )}}"></script>
 
 
 <script>
@@ -56,9 +57,9 @@
         { path: '', component: BasicForm },
         { path: '/', component: BasicForm },
 
-        { path: '/basic', component: BasicForm },
-        { path: '/activity', component: ActivityForm },
-        { path: '/material', component: MaterialForm },
+        { path: '/view-basic', component: BasicForm },
+        { path: '/view-activity', component: ActivityForm },
+        { path: '/view-material', component: MaterialForm },
 
     ]
 
@@ -66,6 +67,7 @@
     const router = new VueRouter({
         routes // short for `routes: routes`
     })
+
 
     const app = new Vue({
         router,

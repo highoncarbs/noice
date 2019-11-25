@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-IN">
+<html lang="en">
 {% include 'base/head.html'%}
 
 <body class="">
@@ -77,17 +77,17 @@
                     </p>
                 </div>
                 <div class="navbar-end">
-                    <a href="" class="navbar-item">
+                    <a  href="{{ url_for( 'reports.view_reports' )}}" class="navbar-item">
                         <span class="icon icon-btn">
                             <feather type="zap" size="1.3rem"></feather>
                         </span>
                         Reports
                     </a>
-                    <a href="{{ url_for( 'transaction.view_transaction' )}}" class="navbar-item">
+                    <a href="{{ url_for( 'transaction.new_transaction' )}}" class="navbar-item">
                         <span class="icon icon-btn">
                             <feather type="plus-square" size="1.3rem"></feather>
                         </span>
-                        New
+                        Transaction
                     </a>
 
                     <div class="navbar-item has-dropdown is-hoverable" style="margin-right: 1rem;">
@@ -101,10 +101,10 @@
 
                         <div class="navbar-dropdown">
                             <a class="navbar-item" href="{{ url_for( 'basic_master.view_finished_items' )}}">
-                                Finished Goods Item
+                                Finished Goods
                             </a>
                             <a class="navbar-item" href="{{ url_for( 'basic_master.view_raw_items' )}}">
-                                Raw Materials Item
+                                Raw Materials
                             </a>
                             <a class="navbar-item" href="{{ url_for( 'basic_master.view_uom' )}}">
                                 Unit of Measurement

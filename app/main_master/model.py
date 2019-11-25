@@ -281,9 +281,6 @@ class ProcessFlow(db.Model):
         self.name = name
 
 
-class ProcessFlowSchema(ma.ModelSchema):
-    class meta:
-        model = ProcessFlow
 
 
 class TaskItem(db.Model):
@@ -319,16 +316,25 @@ db.Table('task_location',
          )
 
 
+
 class TaskItemSchema(ma.ModelSchema):
     id = field_for(TaskItem, 'id', dump_only=True)
     task_id = field_for(TaskItem, 'task_id', dump_only=True)
     process_flow_id = field_for(TaskItem, 'process_flow_id', dump_only=True)
     name = field_for(TaskItem, 'name', dump_only=True)
     days = field_for(TaskItem, 'days', dump_only=True)
-    department = ma.Nested(DepartmentSchema)
-    location = ma.Nested(LocationSchema)
+    department = ma.Nested(DepartmentSchema ,  many=True)
+    location = ma.Nested(LocationSchema ,  many=True)
 
-    process_flow = ma.Nested(ProcessFlowSchema)
+    # process_flow = ma.Nested(ProcessFlowSchema)
 
     class meta:
         model = TaskItem
+
+class ProcessFlowSchema(ma.ModelSchema):
+    id = field_for(ProcessFlow, 'id', dump_only=True)
+    name = field_for(ProcessFlow, 'name', dump_only=True)
+    task_items = ma.Nested(TaskItemSchema , many=True)
+    
+    class meta:
+        model = ProcessFlow

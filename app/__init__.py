@@ -52,6 +52,9 @@ def create_app(config_class=Config):
         from app.transaction import bp as transaction_bp
         app.register_blueprint(transaction_bp, url_prefix='/transaction')
 
+        from app.reports import bp as reports_bp
+        app.register_blueprint(reports_bp, url_prefix='/reports')
+
         # from app.employee import bp as emp_bp
         # app.register_blueprint(emp_bp, url_prefix='/employee')
 

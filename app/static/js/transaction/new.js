@@ -4,5 +4,6 @@ new Vue({
         return {
             
         }
-    }
+    },
+  
 })

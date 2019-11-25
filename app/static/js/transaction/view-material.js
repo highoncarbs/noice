@@ -32,108 +32,42 @@ const MaterialForm = ({
     },
     delimiters: ['[[', ']]'],
     mounted() {
-        let raw = this
-        axios.get('/main_master/get/raw_goods')
-            .then(function (response) {
-                raw.data_raw_goods = response.data
-                raw.dataRawGoods = raw.data_raw_goods
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Raw Goods',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
+        try {
+            let path_array = window.location.pathname.split("/")
+            let pp_num = path_array[path_array.length - 1]
+
+            let self = this
+            axios.get('/transaction/get/materials/' + String(pp_num))
+                .then(function (response) {
+                    if (response.data) {
+                        payload = JSON.parse(response.data)[0]
+                        
+                        console.log(payload)
+                        self.raw_goods_inputs = payload['raw_materials']
+                        self.finished_goods_inputs = payload['finished_materials']
                     }
                 })
-            })
-        axios.get('/main_master/get/finished_goods')
-            .then(function (response) {
-                raw.data_finished_goods = response.data
-                raw.dataFinishedGoods = raw.data_finished_goods
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Finished Goods',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
+                .catch(function (error) {
+                    console.log(error)
+                    self.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: "Unable to load data",
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+
+
                 })
-            })
-        axios.get('/main_master/get/accessories')
-            .then(function (response) {
-                raw.data_accessories_goods = response.data
-                raw.dataAccessoriesGoods = raw.data_accessories_goods
 
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Finished Goods',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
-                })
-            })
-        axios.get('/main_master/get/other_materials')
-            .then(function (response) {
-
-
-                raw.data_other_materials_goods = response.data
-                raw.dataOtherMaterialsGoods = raw.data_other_materials_goods
-
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Finished Goods',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
-                })
-            })
-        axios.get('/basic_master/get/uom')
-            .then(function (response) {
-                raw.data_uom = response.data
-                raw.dataUom = raw.data_uom
-
-
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for UOM',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
-                })
-            })
+        }
+        catch (error) {
+            console.log("Unable to load data from Endpoint" + String(error))
+        }
     },
     computed: {
 
@@ -257,14 +191,14 @@ const MaterialForm = ({
 
         },
         submitData() {
-            let basic_id= JSON.parse(localStorage.getItem('basic'))[1]
-            let activity_id= JSON.parse(localStorage.getItem('activity'))[0]
-            let self = this 
+            let basic_id = JSON.parse(localStorage.getItem('basic'))[3]
+            let activity_id = JSON.parse(localStorage.getItem('activity'))[0]
+
             let selectedData = []
-            selectedData.push({'raw_inputs':this.raw_goods_inputs })
-            selectedData.push({'finished_inputs': this.finished_goods_inputs })
-            selectedData.push({'accessories_inputs': this.accessories_goods_inputs })
-            selectedData.push({'other_materials_inputs': this.other_materials_goods_inputs })
+            selectedData.push({ 'raw_inputs': this.raw_goods_inputs })
+            selectedData.push({ 'finished_inputs': this.finished_goods_inputs })
+            selectedData.push({ 'accessories_inputs': this.accessories_goods_inputs })
+            selectedData.push({ 'other_materials_inputs': this.other_materials_goods_inputs })
             selectedData.push(basic_id)
             selectedData.push(activity_id)
             axios.post('/transaction/add/materials', JSON.stringify(selectedData), {
@@ -276,34 +210,40 @@ const MaterialForm = ({
                     try {
                         if (response.data.success) {
                             console.log('Yippe kay yaya')
-                            localStorage.removeItem('basic')
-                            localStorage.removeItem('activity')
-                            localStorage.removeItem('material')
-                            window.location.href = '/reports/view'
-                            
+                            self.$router.push('/material')
+
                         }
                     }
                     catch (error) {
                         console.log('Error sending JSON data - activity list' + String(error))
                     }
-            })
+                })
+        },
+
+        next() {
+            try {
+
+
+                this.$router.push('/view-material')
+
+            }
+            catch (error) {
+                console.log('Error sending JSON data - activity list')
+            }
         },
         previous() {
             try {
-                let material = []
-                material.push(this.raw_goods_inputs)
-                material.push(this.finished_goods_inputs)
-                material.push(this.accessories_goods_inputs)
-                material.push(this.other_materials_goods_inputs)
-                localStorage.setItem('material', JSON.stringify(material))
-                this.$router.push('/activity')
+                // if (this.activity_list.length != 0) {
 
+                //     localStorage.setItem('activity', JSON.stringify(this.activity_list))
+                // }
+                this.$router.push('/view-basic')
             }
             catch (error) {
                 console.log('Unable to save data - ' + String(error))
             }
         }
-
+       
 
 
 

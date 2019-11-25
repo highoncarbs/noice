@@ -17,7 +17,8 @@ new Vue({
             data_location: [],
             errors: false,
             data_error: false,
-            view: true
+            view: true,
+            process_flow_list: []
         }
 
     },
@@ -96,6 +97,7 @@ new Vue({
 
         },
         checkData() {
+            this.data_error = false
             if (this.taskList.length != 0 && this.process_flow_name) {
                 return true
             }
@@ -125,35 +127,85 @@ new Vue({
         },
         submitData() {
             let raw = this
-            let payload = JSON.stringify({ 'name': this.process_flow_name, 'task_list': this.taskList })
-            console.log(payload)
-            axios.post('/main_master/add/process_flow', payload, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+
+            if (this.checkData()) {
+                let payload = JSON.stringify({ 'name': this.process_flow_name, 'task_list': this.taskList })
+                axios.post('/main_master/add/process_flow', payload, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(function (response) {
+                        if (response.data.success) {
+                            raw.pushAndClearRow();
+                            raw.process_flow_name = null
+                            raw.taskList = []
+                            raw.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.success,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+
+                        }
+                        else {
+                            raw.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.message,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+                        }
+                    })
+            }
+        },
+        removeRow(index) {
+            this.taskList.splice(index, 1)
+        },
+        showView() {
+            this.data_error = false
+            this.view = !this.view
+            let raw = this
+            axios.get('/main_master/get/process_flow')
+                .then(function (response) {
+                    raw.process_flow_list = response.data
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    raw.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: 'Unable to fetch Process Flow List',
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+                })
+
+        },
+        deleteData(data_id , index) {
+            let raw = this 
+            let payload = {'id' : data_id}
+            axios.post('/main_master/delete/process_flow', payload)
                 .then(function (response) {
                     if (response.data.success) {
-                        raw.pushAndClearRow();
-                        raw.process_flow_name = null
-                        raw.taskList= []
+                        raw.process_flow_list.splice(index , 1)
                         raw.$buefy.snackbar.open({
                             duration: 4000,
-                            message: response.data.success,
-                            type: 'is-light',
-                            position: 'is-top-right',
-                            actionText: 'Close',
-                            queue: true,
-                            onAction: () => {
-                                this.isActive = false;
-                            }
-                        })
-
-                    }
-                    else {
-                        raw.$buefy.snackbar.open({
-                            duration: 4000,
-                            message: response.data.message,
+                            message: 'Data deleted',
                             type: 'is-light',
                             position: 'is-top-right',
                             actionText: 'Close',
@@ -164,10 +216,7 @@ new Vue({
                         })
                     }
                 })
-
-        },
-        removeRow(index) {
-            this.taskList.splice(index, 1)
+            
         }
     }
 })

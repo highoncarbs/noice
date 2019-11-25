@@ -1,4 +1,3 @@
-
 .brand {
     font-family: 'Inter', serif;
     font-weight: 700;
@@ -11,8 +10,19 @@ body, html {
 
 .input {
     font-family: 'Inter', 'Roboto', sans-serif !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
+.image {
+   
+    object-fit: cover ;
+    position: relative;
+}
+
+.image img{
+    width: auto !important    ;
+}
 .libre {
     font-family: 'Libre Baskerville', serif;
 }
@@ -28,6 +38,7 @@ svg {
     margin-bottom: 2px !important;
     vertical-align: middle !important;
 }
+
 .icon-btn-l {
     margin-left: 10px !important;
     margin-bottom: 2px !important;
@@ -70,8 +81,24 @@ i {
     border-bottom: 1px solid #dbdbdb !important;
 }
 
+.box {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid lightgray;
+    /* z-index: 2 !important; */
+    position: relative;
+}
+
+.notification {
+    border-radius: 0 !important;
+    padding: 1rem !important;
+
+}
+
 .button {
-    font-family: 'Inter';
+    font-family: 'Inter' !important;
+    border-radius: 0 !important;
+
 }
 
 .navbar-item.has-dropdown {
@@ -89,6 +116,9 @@ i {
 .is-underline {
     text-decoration: underline;
 }
+.tag {
+    border-radius: 0 !important;
+ }
 
 #mainmenu .menu-list li a:hover {
     background-color: rgb(63, 63, 63);

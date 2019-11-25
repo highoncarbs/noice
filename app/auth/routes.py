@@ -22,7 +22,7 @@ def login():
         print(form.errors)
         session['mssg'] = "Something went wrong."
 
-    return render_template('auth/login.html', title=('Log In'), form=form)
+    return render_template('auth/login.html', title=('Log In'), form=form , mssg = session['mssg'])
 
 
 @bp.route('/logout')
@@ -49,4 +49,4 @@ def register():
         print(form.errors)
         session['mssg'] = "Invalid Key"
     return render_template('auth/register.html', title='Register',
-                           form=form)
+                           form=form , mssg = session['mssg'])

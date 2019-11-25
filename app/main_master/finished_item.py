@@ -47,7 +47,7 @@ def add_finished_goods():
         payload = json.loads(request.form['data'])
         print(payload)
         file = request.files
-
+        print(file)
         if payload:
             try:
                 product_category = ProductCategory.query.filter_by(

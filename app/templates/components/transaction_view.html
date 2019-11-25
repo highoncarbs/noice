@@ -1,0 +1,35 @@
+<template id="transaction-view">
+    <div>
+        <div class="modal" :class="{'is-active': active == true , 'is-clipped': active == true }">
+            <div class="modal-background" @click="active = !active"></div>
+            <div class="modal-content">
+                <div class="box">
+                    a
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" @click="active = !active"></button>
+        </div>
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('transaction-view', {
+        template: "#transaction-view",
+        props: {
+            
+        },
+        delimiters: ["[[", "]]"],
+        data: function () {
+            return {
+                data: null,
+                active: false,
+
+            }
+        },
+        methods: {
+           
+        }
+    })
+</script>

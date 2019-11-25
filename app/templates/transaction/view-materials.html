@@ -1,0 +1,144 @@
+<template id="material_form">
+
+
+    <div class="animated fadeIn">
+        <div class="container">
+
+            <!-- {% include 'components/raw_goods_autocomplete.html'%} -->
+
+            <p class="is-size-5 has-text-weight-bold">Materials Required</p>
+            <br>
+            <p class="is-size-5">Raw Materials </p>
+            <br>
+            <table class="table is-fullwidth is-bordered">
+                <colgroup>
+                    <col span="1" style="width: 60%;">
+
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                </colgroup>
+                <thead >
+                    <th class="has-text-grey">Raw Material</th>
+                    <th class="has-text-grey">Quantity</th>
+                    <th class="has-text-grey">UOM</th>
+
+                </thead>
+
+                <tbody>
+                    <tr v-for="(raw, index) in raw_goods_inputs">
+                        <th v-html="raw.raw_mat[0].gen_name"></th>
+                        <th v-html="raw.quantity"></th>
+                        <th v-html="raw.uom[0].name"></th>
+
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <br>
+            <p class="is-size-5">Finished Materials </p>
+            <br>
+            <table class="table is-fullwidth is-bordered">
+                <colgroup>
+                    <col span="1" style="width: 60%;">
+
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead>
+                    <th class="has-text-grey" >Finished Goods</th>
+                    <th class="has-text-grey">Quantity</th>
+                    <th class="has-text-grey">UOM</th>
+                </thead>
+
+                <tbody>
+                    <tr v-for="(row, index) in finished_goods_inputs">
+                        <th v-html="row.finished_mat[0].gen_name"></th>
+                        <th v-html="row.quantity"></th>
+                        <th v-html="row.uom[0].name"></th>
+
+
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <p class="is-size-5">Accessories </p>
+            <br>
+            <table class="table is-fullwidth is-bordered">
+                <colgroup>
+                    <col span="1" style="width: 60%;">
+
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <th class="has-text-grey">Accessories Goods</th>
+                    <th class="has-text-grey">Quantity</th>
+                    <th class="has-text-grey">UOM</th>
+                </thead>
+
+                <tbody>
+                    <tr v-for="(row, index) in accessories_goods_inputs" class="has-text-weight-bold">
+                        <th v-html="row.accessories_mat[0].gen_name"></th>
+                        <th v-html="row.quantity"></th>
+                        <th v-html="row.uom[0].name"></th>
+
+
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <p class="is-size-5">Other Materials </p>
+            <br>
+            <table class="table is-fullwidth is-bordered">
+                <colgroup>
+                    <col span="1" style="width: 60%;">
+
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <th class="has-text-grey">Other Materials</th>
+                    <th class="has-text-grey">Quantity</th>
+                    <th class="has-text-grey">UOM</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(other_materials, index) in other_materials_goods_inputs">
+                            <th v-html="row.other_mat[0].gen_name"></th>
+                            <th v-html="row.quantity"></th>
+                            <th v-html="row.uom[0].name"></th>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <div class="field is-grouped is-grouped-multiline">
+                    <div class="control">
+                        <button class="button" @click="previous">
+                            <span class="icon icon-btn">
+                                <feather type="arrow-left" size="1.3rem"></feather>
+                            </span>
+                            Previous
+                        </button>
+                    </div>
+                    <div class="control">
+    
+                        <button class="button is-black" @click="next">
+                            Next
+                            <span class="icon icon-btn-l">
+                                <feather type="arrow-right" size="1.3rem"></feather>
+                            </span>
+                        </button>
+    
+                    </div>
+    
+                </div>
+    
+         
+
+        </div>
+    </div>
+</template>

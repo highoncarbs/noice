@@ -1,0 +1,139 @@
+<template id="image-input-list">
+    <div>
+        <div class="box">
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+
+                    <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" @change.prevent="listUploads" accept="image/*" type="file"
+                                name="ref-file" multiple>
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <feather type="upload" size="1rem"></feather>
+                                </span>
+                                <span class="file-label">
+                                    Choose a file…
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <ul>
+                <article class="media" v-for="(file , index) in files">
+
+                    <figure class="media-left">
+
+                        <img v-bind:src="imageUrlArray | getIndexedImage(index)">
+
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="media-right">
+                        <button class="delete" @click.prevent="deleteItem" v-bind:value="index"></button>
+                    </div>
+                </article>
+            </ul>
+        </div>
+
+
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('image-input-list', {
+        template: "#image-input-list",
+        props: {
+        },
+        delimiters: ["[[", "]]"],
+        data: function () {
+            return {
+                files: [],
+                showUploads: false,
+                removeCard: [],
+                imageUrlArray: [],
+                itemToDelete: '',
+                imageData: "",
+                viewBig: false,
+                loader: false
+
+            }
+        },
+        filters: {
+            getIndexedImage(val, index) {
+                // console.log(`This: ${val}`);
+                return val[index];
+            },
+
+            formatBytes(a, b) {
+                if (0 == a) return "0 Bytes";
+                var c = 1024,
+                    d = b || 2,
+                    e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+                    f = Math.floor(Math.log(a) / Math.log(c));
+                return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
+            }
+        },
+        methods: {
+
+            listUploads(e) {
+                this.showUploads = true;
+                let files = e.srcElement.files;
+
+                if (files) {
+                    this.files = files;
+                }
+
+                let self = this;
+
+                for (var index = 0; index < files.length; index++) {
+                    // generate a new FileReader object
+                    var reader = new FileReader();
+
+                    // inject an image with the src url
+                    reader.onload = function (event) {
+                        const imageUrl = event.target.result;
+                        const thumb = document.querySelectorAll('.thumb')[index];
+                        self.imageUrlArray.push(imageUrl);
+                    }
+
+                    // when the file is read it triggers the onload 
+                    // event above.
+                    reader.readAsDataURL(files[index]);
+                }
+            },
+            // deleteItem: function (e) {
+            //     let currentFiles = app.files;
+            //     let target = toString(e.srcElement.value);
+            //     let parentCard = e.srcElement.parentNode.parentNode;
+
+            //     parentCard.classList.toggle('hidden');
+            //     setTimeout(() => {
+            //         parentCard.style.display = 'none';
+            //     }, 1000);
+            // },
+        }
+    })
+</script>
+
+<style>
+    img.preview {
+        padding-top: 1rem;
+        object-fit: cover;
+        position: relative;
+    }
+</style>
