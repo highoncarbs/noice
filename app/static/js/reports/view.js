@@ -11,6 +11,9 @@ new Vue({
             },
             transactions: {
             },
+            status_card_view: false,
+            trans_id: null,
+            progress_data_item: []
         }
     },
     delimiters: ['[[', ']]'],
@@ -27,9 +30,9 @@ new Vue({
         filteredTransaction() {
             let data = {}
             if (this.filter.start_date) {
-                data =  this.transactions.filter(item => {
+                data = this.transactions.filter(item => {
                     let temp_date = Date.parse(item.basic[0].start_date)
-                    
+
                     if (temp_date >= Date.parse(this.filter.start_date)) {
                         return item
                     }
@@ -40,7 +43,7 @@ new Vue({
                 return this.transactions.filter(item => {
                     let momDate = moment(item.basic[0].start_date, 'YYYY-MM-DD')
                     let end_date = momDate.add(Number(item.basic[0].days), 'days').format("YYYY-MM-DD")
-                    console.log(Date.parse(end_date) , Date.parse(this.filter.end_date))
+                    console.log(Date.parse(end_date), Date.parse(this.filter.end_date))
                     if (Date.parse(end_date) <= Date.parse(this.filter.end_date)) {
                         return item
                     }
@@ -54,7 +57,13 @@ new Vue({
     methods: {
         formatDate(data) {
             let date = String(data).split("-")
-            return date[2]+'-'+date[1]+'-'+date[0]
+            return date[2] + '-' + date[1] + '-' + date[0]
+        },
+        getStatus(id, index) {
+            console.log(id, index)
+            this.status_card_view = true
+            this.trans_id = id
+            this.progress_data_item = this.transactions[index].activity[0].task_items_act
         }
     }
 

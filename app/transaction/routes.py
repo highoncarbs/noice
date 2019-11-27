@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, request, session, jsonify,
 from flask_login import login_user, logout_user, current_user, login_required
 from app.transaction import bp
 from app import db, ma
-from app.transaction.model import Transaction, TransactionSchema, TransactionMaterialsSchema, TransactionMaterials
+from app.transaction.model import Transaction, TransactionSchema,  TransactionReportSchema, TransactionMaterialsSchema, TransactionMaterials
 import json
 import os
 from app.utils import allowed_file
@@ -36,11 +36,25 @@ def get_transaction():
     print(json_data)
     return jsonify(json_data)
 
+@bp.route('/get/report/<id>', methods=['GET'])
+@login_required
+def get_transaction_report(id):
+
+    schema = TransactionReportSchema()
+    data = Transaction.query.filter_by(id = int(id)).first()
+    json_data = schema.dumps(data)
+    return jsonify(json_data)
+
 
 @bp.route('/view/<id>', methods=['GET'])
 @login_required
 def view_transaction(id):
     return render_template('transaction/view.html', pp_no=id)
+
+@bp.route('/edit/<id>', methods=['GET'])
+@login_required
+def edit_transaction(id):
+    return render_template('transaction/edit.html', pp_no=id)
 
 
 @bp.route('/update/<id>', methods=['POST'])

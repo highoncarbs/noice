@@ -1,0 +1,139 @@
+<template id="activity_form">
+
+
+    <div class="animated fadeIn">
+
+        <div class="container">
+
+            <p class="is-size-5 has-text-weight-bold">Activity Planning</p>
+            <br>
+
+            <!-- <div class="field">
+                <div class="field is-grouped">
+                    <div class="control">
+
+                        <label for="" class="label">Production Process Flow</label>
+                        <b-autocomplete v-model="base_activity" placeholder="Select Production Process Flow" :keep-first='true'
+                            :open-on-focus='true' :data="autocompleteActivity" field="name" @select="getActivity">
+                        </b-autocomplete>
+                    </div>
+                </div>
+            </div> -->
+            <br>
+
+            <table class="table is-fullwidth is-bordered table-expanded is-narrow">
+                <colgroup>
+                    <col span="1" style="width: 2%;">
+
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 12%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 5%;">
+                </colgroup>
+                <thead>
+                    <th>No</th>
+                    <th>Activity</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Days</th>
+                    <th>Dep. On</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    <th>Remark</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(row , index) in activity_list.task_items_act">
+
+                        <td>[[ index +1]]</td>
+                        <td v-if=" row.task_id != null "> [[ row.name]]</td>
+                        <td v-if=" row.task_id == null">
+                            <input type="text" placeholder="Enter activity"
+                                v-model="activity_list.task_items_act[index].name" class="input">
+                        </td>
+                        <td v-if=" row.task_id != null "> [[ row.department[0].name ]]</td>
+                        <td v-if=" row.task_id == null">
+                            <b-autocomplete v-model="query_department" placeholder="Select Department"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
+                                @select="option => activity_list.task_items_act[index].department = [option]">
+                            </b-autocomplete>
+                        </td>
+                        <td v-if=" row.task_id != null "> [[ row.location[0].name ]]</td>
+                        <td v-if=" row.task_id == null">
+                            <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
+                                :open-on-focus='true' :data="autocompleteLocation" field="name"
+                                @select="option => activity_list.task_items_act[index].location = [option]">
+                            </b-autocomplete>
+                        </td>
+                        <td v-if=" row.task_id != null ">[[ row.days ]]</td>
+                        <td v-if=" row.task_id == null">
+                            <input type="text" placeholder="1" v-model="activity_list.task_items_act[index].days"
+                                v-on:blur="setUpDates" class="input">
+                        </td>
+
+
+                        <td><input type="text" class="input is-narrow" v-model="activity_list.task_items_act[index].depends"
+                                v-on:blur="setUpDates" v-on:input="setUpDates" v-on:keyup="setUpDates" v-on:change="setUpDates" placeholder="?"></td>
+                        <td>
+                            <p  v-html="activity_list.task_items_act[index].start_date"
+                                placeholder="Start Date"></p>
+                        </td>
+                        <td>
+                            <p v-html="activity_list.task_items_act[index].end_date"
+                                placeholder=" End Date"></p>
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Enter Remarks"
+                                v-model="activity_list.task_items_act[index].remarks" class="input">
+                        </td>
+                        <td>
+                            <div class="buttons">
+                                <button class="button is-small" @click="addRow(index)">
+                                    <span class="icon">
+                                        <feather type="plus" size="1.2rem"></feather>
+                                    </span>
+                                </button>
+                                <button class="button is-danger is-small" @click="removeRow(index)"  v-on:click="setUpDates">
+                                    <span class="icon">
+                                        <feather type="trash" size="1.2rem"></feather>
+                                    </span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                    <button class="button" @click="previous">
+                        <span class="icon icon-btn">
+                            <feather type="arrow-left" size="1.3rem"></feather>
+                        </span>
+                        Previous
+                    </button>
+                </div>
+                <div class="control">
+
+                    <button class="button is-black" @click="next">
+                        Next
+                        <span class="icon icon-btn-l">
+                            <feather type="arrow-right" size="1.3rem"></feather>
+                        </span>
+                    </button>
+
+                </div>
+                <div class="control">
+                    <button class="button is-text">
+                        Add materials required for sample
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>

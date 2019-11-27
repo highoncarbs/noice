@@ -1,0 +1,137 @@
+<template id="status-card">
+    <div>
+
+        <div class="modal" :class="{ 'is-active' : view}">
+            <div class="modal-background" @click="view = !view"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <p class="is-size-5 has-text-weight-bold">Transaction - [[ id ]]</p>
+                    <br>
+                    <progress-bar :datalist="progress_data"></progress-bar>
+                    <br>
+                    <div class="notification">
+
+                        <label for="" class="label">Finished Goods Code</label>
+                        <p v-if="result.finised_goods_code  == null">None</p>
+
+                        <p v-if="result.finised_goods_code  != null">[[ result.finised_goods_code ]]</p>
+                    </div>
+
+                    <br>
+                    <table class="table is-bordered is-fullwidth">
+                        <thead>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Report</th>
+
+                        </thead>
+                        <tbody>
+                            <td>[[ formatDate(result.date) ]] </td>
+                            <td>
+                                <p class="tag is-black has-text-weight-bold is-normal">
+                                    [[ result.flag.toUpperCase() ]]
+                                </p>
+                            </td>
+                            <td>
+                                [[ result.report]]
+                            </td>
+                        </tbody>
+                    </table>
+                    <br>
+                    <p class="is-size-6 has-text-weight-bold">Activity List</p>
+                    <br>
+                    <table class="table is-fullwidth is-bordered table-expanded is-narrow">
+                        <colgroup>
+                            <col span="1" style="width: 2%;">
+
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 12%;">
+                            <col span="1" style="width: 15%;">
+                            <col span="1" style="width: 5%;">
+                            <col span="1" style="width: 5%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 10%;">
+                            <col span="1" style="width: 20%;">
+                            <col span="1" style="width: 5%;">
+                        </colgroup>
+                        <thead>
+                            <th>No</th>
+                            <th>Activity</th>
+                            <th>Remark</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+
+                            <tr v-for="(row , index) in progress_data"
+                                :class="{'has-background-info' : row.flag == 'done'}">
+
+                                <td>[[ index +1]]</td>
+                                <td> [[ row.name]]</td>
+
+
+                                <td v-html="row.remarks">
+                                </td>
+                                <td v-if="row.flag == 'not'">
+                                    <button class="button is-small is-link is-outlined " @click="doneRow(index)">
+                                        <span class="icon icon-btn">
+                                            <feather type="circle" size="1rem"></feather>
+                                        </span>
+                                        Done
+                                    </button>
+                                </td>
+                                <td v-if="row.flag == 'done'">
+                                    <button class="button is-small is-link " @click="notRow(index)">
+                                        <span class="icon icon-btn">
+                                            <feather type="check-circle" size="1rem"></feather>
+                                        </span>
+                                        Finished
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <button @click="view = !view" class="modal-close is-large" aria-label="close"></button>
+        </div>
+    </div>
+
+</template>
+
+<script>
+
+    Vue.component('status-card', {
+        template: "#status-card",
+        props: {
+            id: { type: Number },
+            view: { type: Boolean, default: false },
+            progress_data: { type: Array, default: () => [] },
+        },
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                result: null
+            }
+        },
+
+        watch: {
+            view: function (val) {
+                if (val) {
+                    let self = this
+                    axios.get('/transaction/get/report/' + String(this.id))
+                        .then(function (response) {
+                            console.log(response.data)
+                            self.result = JSON.parse(response.data)
+                        })
+                }
+            }
+        },
+        methods: {
+            formatDate(data) {
+                let date = String(data).split("-")
+                return date[2] + '-' + date[1] + '-' + date[0]
+            },
+        }
+
+    })
+</script>

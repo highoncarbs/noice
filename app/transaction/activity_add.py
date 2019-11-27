@@ -45,6 +45,22 @@ def update_activity_item(item_id):
         db.session.rollback()
         db.session.close()
         return jsonify({'message': 'Something went wrong'})
+        
+@bp.route('/update/activity/item/not/<item_id>', methods=['POST'])
+@login_required
+def update_not_activity_item(item_id):
+
+    try:
+        item = TaskItemAct.query.filter_by(id=int(item_id)).first()
+        item.flag = "not"
+        db.session.commit()
+        db.session.close()
+        return jsonify({'success': 'Activity updated'})
+
+    except Exception as e:
+        db.session.rollback()
+        db.session.close()
+        return jsonify({'message': 'Something went wrong'})
 
 
 @bp.route('/add/activity', methods=['POST'])
@@ -58,6 +74,7 @@ def add_activity():
                 new_data = TransactionActivity()
 
                 for key, item in enumerate(payload['task_items']):
+                    print(key , item)
                     department = Department.query.filter_by(
                         id=int(item['department'][0]['id'])).first()
                     location = Location.query.filter_by(

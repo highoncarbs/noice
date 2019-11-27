@@ -376,6 +376,19 @@ class TransactionSchema(ma.ModelSchema):
 
     class meta:
         model = Transaction
+class TransactionReportSchema(ma.ModelSchema):
+    id = field_for(Transaction, 'id', dump_only=True)
+  
+    flag =  field_for(Transaction, 'flag', dump_only=True)
+    date =  field_for(Transaction, 'date', dump_only=True)
+    finished_goods_code =  field_for(Transaction, 'finished_goods_code', dump_only=True)
+    quantity =  field_for(Transaction, 'quantity', dump_only=True)
+    report =  field_for(Transaction, 'report', dump_only=True)
+    image =  field_for(Transaction, 'image', dump_only=True)
+  
+
+    class meta:
+        model = Transaction
 
 
 

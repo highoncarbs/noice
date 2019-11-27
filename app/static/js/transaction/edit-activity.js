@@ -5,13 +5,12 @@ const ActivityForm = ({
             pp_num: null,
             activity_list: [],
             image: null,
-            saved_image: null,
             report: {
-                date: "",
-                status: "",
-                finished_goods_code: "",
-                quantity:"",
-                report: ""
+                date: null,
+                status: null,
+                finished_goods_code: null,
+                quantity: null,
+                report: null
             }
 
         }
@@ -56,35 +55,6 @@ const ActivityForm = ({
 
 
                 })
-            axios.get('/transaction/get/report/' + String(this.pp_num))
-                .then(function (response) {
-                    // console.log(response)
-                    if (response.data) {
-                        payload = JSON.parse(response.data)
-                        self.report.status = payload['flag']
-                        self.report.date = payload['date']
-                        self.report.finished_goods_code = payload['finished_goods_code']
-                        self.report.quantity = payload['quantity']
-                        self.report.report = payload['report']
-                        self.saved_image = self.getStatic(payload['image'])
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    self.$buefy.snackbar.open({
-                        duration: 4000,
-                        message: "Unable to load data",
-                        type: 'is-light',
-                        position: 'is-top-right',
-                        actionText: 'Close',
-                        queue: true,
-                        onAction: () => {
-                            this.isActive = false;
-                        }
-                    })
-
-
-                })
 
         }
         catch (error) {
@@ -92,15 +62,6 @@ const ActivityForm = ({
         }
     },
     methods: {
-        getStatic(filedata) {
-            if (filedata != null) {
-                let fileSrc = String('\\static') + String(filedata).split('\static')[1]
-                return fileSrc
-            }
-            else {
-                return null
-            }
-        },
         checkData(e) {
             console.log("In hereh")
             e.preventDefault();
@@ -115,7 +76,7 @@ const ActivityForm = ({
             }
         },
         saveReport() {
-            if (this.report.status && this.report.date) {
+            if (this.report.status & this.report.date) {
                 let self = this
                 let formData = new FormData()
                 formData.append('data', JSON.stringify(this.report))
@@ -240,6 +201,22 @@ const ActivityForm = ({
                     }
                 })
 
+        },
+        addRow(index) {
+
+            let newObj = {
+                days: null,
+                department: [],
+                location: [],
+                name: null,
+                task_id: null
+
+            }
+            let temp_list = this.activity_list.task_items
+            // this.$set(this.activity_list.task_items, index + 1, newObj)
+            temp_list.splice(index + 1, 0, newObj)
+            this.activity_list.task_items = temp_list
+            // console.log(temp_list)
         },
         previous() {
             try {

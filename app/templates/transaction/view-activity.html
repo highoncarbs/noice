@@ -58,18 +58,20 @@
                         <td v-html="activity_list.task_items_act[index].remarks">
                         </td>
                         <td v-if="row.flag == 'not'">
-                            <button class="button is-link is-outlined " @click="doneRow(index)">
-                                <span class="icon">
-                                    <feather type="check" size="1.2rem"></feather>
+                            <button class="button is-small is-link is-outlined " @click="doneRow(index)">
+                                <span class="icon icon-btn">
+                                    <feather type="circle" size="1rem"></feather>
                                 </span>
-
+                                Done
                             </button>
                         </td>
-                        <td v-if="row.flag != 'not'">
-                            <p class="has-text-weight-bold">
-
-                                Done !
-                            </p>
+                        <td v-if="row.flag == 'done'">
+                            <button class="button is-small is-link " @click="notRow(index)">
+                                <span class="icon icon-btn">
+                                    <feather type="check-circle" size="1rem"></feather>
+                                </span>
+                                Finished
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -118,23 +120,32 @@
                         <div class="field">
                             <div class="control">
                                 <label for="" class="label">Report </label>
-                                <input type="text" class="input textarea" v-model="report.report">
+                                <textarea type="text" class="input textarea" v-model="report.report"></textarea>
                             </div>
                         </div>
+                        <button class="button is-black" @click.prevent="saveReport">
+                            <span class="icon icon-btn">
+
+                                <feather type="check" size="1.3rem"></feather>
+                            </span>
+                            Save
+                        </button>
                     </div>
                     <div class="column">
+                        <div v-if="saved_image != null ">
+                            <label class="label">Saved Image</label>
+                            <figure class="image" style="width: 200px;">
+                                <img :src="saved_image" alt="">
+                            </figure>
 
+                        </div>
+                        <br>
+                        <label class="label">Upload Image</label>
                         <image-input-boxed ref="imageUpload" v-model="image" v-on:remove-input="removeImage()">
                         </image-input-boxed>
                     </div>
                 </div>
-                <button class="button is-black" v-on:click.prevent="saveReport">
-                    <span class="icon icon-btn">
 
-                        <feather type="check" size="1.3rem"></feather>
-                    </span>
-                    Save
-                </button>
             </div>
 
             <div class="field is-grouped is-grouped-multiline">

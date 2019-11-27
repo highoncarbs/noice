@@ -26,12 +26,61 @@ const MaterialForm = ({
             data_other_materials_goods: [],
             dataOtherMaterialsGoods: [],
             current_other_materials: null,
-            current_uom_oth: null
+            current_uom_oth: null,
+            raw_goods_inputs_temp: [],
+            finished_goods_inputs_temp: []
 
         }
     },
     delimiters: ['[[', ']]'],
     mounted() {
+        try {
+            let path_array = window.location.pathname.split("/")
+            let pp_num = path_array[path_array.length - 1]
+
+            let self = this
+            axios.get('/transaction/get/materials/' + String(pp_num))
+                .then(function (response) {
+                    if (response.data) {
+                        payload = JSON.parse(response.data)[0]
+
+                        console.log(payload)
+                        let counter = 0
+                        self.raw_goods_inputs_temp = payload['raw_materials']
+
+                        self.finished_goods_inputs_temp = payload['finished_materials']
+
+                        self.raw_goods_inputs_temp.forEach(function (item) {
+                            console.log(item)
+                            self.getRawGoods(item.raw_mat[0].gen_name)
+                            self.raw_goods_inputs.push({ 'goods': item.raw_mat[0].id ,'qty': item.quantity ,'uom': item.uom[0].id })
+                            counter++
+                        })
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    self.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: "Unable to load data",
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+
+
+                })
+
+        }
+        catch (error) {
+            console.log("Unable to load data from Endpoint" + String(error))
+        }
+
+
         let raw = this
         axios.get('/main_master/get/raw_goods')
             .then(function (response) {
@@ -134,6 +183,7 @@ const MaterialForm = ({
                     }
                 })
             })
+
     },
     computed: {
 
@@ -151,7 +201,6 @@ const MaterialForm = ({
         },
         getRawGoods(name) {
             console.log('HEH - ' + name)
-
             if (!name.length) {
                 this.dataRawGoods = this.data_raw_goods
                 return
@@ -166,7 +215,9 @@ const MaterialForm = ({
             }
 
         },
-       
+        setRawSelected(option) {
+            
+        },
         addFinishedRow() {
             this.finished_goods_inputs.push({
                 goods: '',
@@ -260,14 +311,14 @@ const MaterialForm = ({
 
         },
         submitData() {
-            let basic_id= JSON.parse(localStorage.getItem('basic'))[1]
-            let activity_id= JSON.parse(localStorage.getItem('activity'))[0]
-            let self = this 
+            let basic_id = JSON.parse(localStorage.getItem('basic'))[3]
+            let activity_id = JSON.parse(localStorage.getItem('activity'))[0]
+
             let selectedData = []
-            selectedData.push({'raw_inputs':this.raw_goods_inputs })
-            selectedData.push({'finished_inputs': this.finished_goods_inputs })
-            selectedData.push({'accessories_inputs': this.accessories_goods_inputs })
-            selectedData.push({'other_materials_inputs': this.other_materials_goods_inputs })
+            selectedData.push({ 'raw_inputs': this.raw_goods_inputs })
+            selectedData.push({ 'finished_inputs': this.finished_goods_inputs })
+            selectedData.push({ 'accessories_inputs': this.accessories_goods_inputs })
+            selectedData.push({ 'other_materials_inputs': this.other_materials_goods_inputs })
             selectedData.push(basic_id)
             selectedData.push(activity_id)
             axios.post('/transaction/add/materials', JSON.stringify(selectedData), {
@@ -279,28 +330,34 @@ const MaterialForm = ({
                     try {
                         if (response.data.success) {
                             console.log('Yippe kay yaya')
-                            localStorage.removeItem('basic')
-                            localStorage.removeItem('activity')
-                            localStorage.removeItem('material')
-                            window.location.href = '/reports/view'
-                            
+                            self.$router.push('/material')
+
                         }
                     }
                     catch (error) {
                         console.log('Error sending JSON data - activity list' + String(error))
                     }
-            })
+                })
+        },
+
+        next() {
+            try {
+
+
+                this.$router.push('/view-material')
+
+            }
+            catch (error) {
+                console.log('Error sending JSON data - activity list')
+            }
         },
         previous() {
             try {
-                let material = []
-                material.push(this.raw_goods_inputs)
-                material.push(this.finished_goods_inputs)
-                material.push(this.accessories_goods_inputs)
-                material.push(this.other_materials_goods_inputs)
-                localStorage.setItem('material', JSON.stringify(material))
-                this.$router.push('/activity')
+                // if (this.activity_list.length != 0) {
 
+                //     localStorage.setItem('activity', JSON.stringify(this.activity_list))
+                // }
+                this.$router.push('/view-basic')
             }
             catch (error) {
                 console.log('Unable to save data - ' + String(error))

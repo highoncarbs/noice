@@ -2,6 +2,8 @@
 {% block content %}
 
 {% include 'components/progress-bar.html' %}
+{% include 'components/status-card.html' %}
+
 <div id="reports_master">
     <div class="container">
         <p class="is-size-4 has-text-weight-bold">Reports</p>
@@ -90,7 +92,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in filteredTransaction">
+                <tr v-for="(item , index) in filteredTransaction" @dblclick="getStatus(item.id , index)">
                     <td>[[ item.id]]</td>
                     <td>[[ formatDate(item.basic[0].start_date) ]]</td>
                     <td>[[ item.basic[0].finished_product_category[0].name ]]</td>
@@ -111,6 +113,11 @@
                                     <feather type="eye" size="1rem"></feather>
                                 </span>
                             </a>
+                            <a class="button is-small" :href="'/transaction/edit/'+ item.id">
+                                <span class="icon">
+                                    <feather type="edit" size="1rem"></feather>
+                                </span>
+                            </a>
                             <button class="is-danger button is-small">
                                 <span class="icon ">
                                     <feather type="x" size="1rem"></feather>
@@ -122,6 +129,7 @@
             </tbody>
 
         </table>
+        <status-card :id="trans_id" :view="status_card_view" :progress_data="progress_data_item"></status-card>
     </div>
 </div>
 
