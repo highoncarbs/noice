@@ -11,7 +11,8 @@ from app import db
 @bp.route('/home' , methods=['GET' , 'POST'])
 @login_required
 def home():
-    return render_template('base/base.html', title=('Home'))
+    return redirect(url_for('reports.view_reports'))
+
 
 
 # # Sentry verification

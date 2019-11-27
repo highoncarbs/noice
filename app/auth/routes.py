@@ -17,7 +17,7 @@ def login():
             session['mssg'] = "Invalid Username or Password"
             return redirect(url_for('auth.login'))
         login_user(user)
-        return redirect(url_for('main.home'))
+        return redirect(url_for('reports.view_reports'))
     else:
         print(form.errors)
         session['mssg'] = "Something went wrong."
