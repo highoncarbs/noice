@@ -7,6 +7,7 @@
                 <div class="box">
                     <p class="is-size-5 has-text-weight-bold">Transaction - [[ id ]]</p>
                     <br>
+                    <p class="is-size-7 has-text-weight-bold">PROGRESS BAR</p>
                     <progress-bar :datalist="progress_data"></progress-bar>
                     <br>
                     <div class="notification">
@@ -131,6 +132,85 @@
                 let date = String(data).split("-")
                 return date[2] + '-' + date[1] + '-' + date[0]
             },
+            notRow(index) {
+            let self = this
+            let item_id = this.progress_data[index]
+            axios.post('/transaction/update/activity/item/not/' + String(item_id.id))
+                .then(function (response) {
+                    if (response.data.success) {
+
+                        self.$buefy.snackbar.open({
+                            duration: 4000,
+                            message: "Activity updated",
+                            type: 'is-light',
+                            position: 'is-top-right',
+                            actionText: 'Close',
+                            queue: true,
+                            onAction: () => {
+                                this.isActive = false;
+                            }
+                        })
+
+                        item_id.flag = "not"
+
+                    }
+                    if (response.data.message) {
+                        self.$buefy.snackbar.open({
+                            duration: 4000,
+                            message: response.data.message,
+                            type: 'is-light',
+                            position: 'is-top-right',
+                            actionText: 'Close',
+                            queue: true,
+                            onAction: () => {
+                                this.isActive = false;
+                            }
+                        })
+
+                    }
+                })
+
+        },
+        doneRow(index) {
+            let self = this
+            console.log(index, this.activity_list)
+            let item_id = this.progress_data[index]
+            axios.post('/transaction/update/activity/item/' + String(item_id.id))
+                .then(function (response) {
+                    if (response.data.success) {
+
+                        self.$buefy.snackbar.open({
+                            duration: 4000,
+                            message: "Activity marked as <b>Done </b>!",
+                            type: 'is-light',
+                            position: 'is-top-right',
+                            actionText: 'Close',
+                            queue: true,
+                            onAction: () => {
+                                this.isActive = false;
+                            }
+                        })
+
+                        item_id.flag = "done"
+
+                    }
+                    if (response.data.message) {
+                        self.$buefy.snackbar.open({
+                            duration: 4000,
+                            message: response.data.message,
+                            type: 'is-light',
+                            position: 'is-top-right',
+                            actionText: 'Close',
+                            queue: true,
+                            onAction: () => {
+                                this.isActive = false;
+                            }
+                        })
+
+                    }
+                })
+
+        },
         }
 
     })
