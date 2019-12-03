@@ -152,11 +152,18 @@ const BasicForm = ({
 
             let formData = new FormData()
             formData.append('data', JSON.stringify(this.form))
-            for (var i = 0; i < this.files.length; i++) {
-                let file = this.files[i];
-
-                formData.append('files[' + i + ']', file);
+            if (this.files.length != 0) {
+                for (var i = 0; i < this.files.length; i++) {
+                    let file = this.files[i];
+    
+                    formData.append('files[' + i + ']', file);
+                }    
             }
+            else {
+                formData.append('files', null);
+
+            }
+            
             let self = this
             axios.post('/transaction/add/basic', formData, {
                 headers: {

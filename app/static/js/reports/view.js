@@ -28,7 +28,7 @@ new Vue({
     },
     computed: {
         filteredTransaction() {
-            let data = {}
+            let data = this.transactions
             if (this.filter.start_date) {
                 data = this.transactions.filter(item => {
                     let temp_date = Date.parse(item.basic[0].start_date)
@@ -43,14 +43,15 @@ new Vue({
                 return this.transactions.filter(item => {
                     let momDate = moment(item.basic[0].start_date, 'YYYY-MM-DD')
                     let end_date = momDate.add(Number(item.basic[0].days), 'days').format("YYYY-MM-DD")
-                    console.log(Date.parse(end_date), Date.parse(this.filter.end_date))
+                    
                     if (Date.parse(end_date) <= Date.parse(this.filter.end_date)) {
                         return item
                     }
                 }
                 )
             }
-            return this.transactions;
+            console.log(data)
+            return data;
 
         }
     },

@@ -48,7 +48,8 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(row , index) in activity_list.task_items_act">
+                    <tr v-for="(row , index) in activity_list.task_items_act"
+                        :class="{ 'has-background-info' : row.flag == 'done' }">
 
                         <td>[[ index +1]]</td>
                         <td v-if=" row.task_id != null "> [[ row.name]]</td>
@@ -77,28 +78,36 @@
                         </td>
 
 
-                        <td><input type="text" class="input is-narrow" v-model="activity_list.task_items_act[index].depends"
-                                v-on:blur="setUpDates" v-on:input="setUpDates" v-on:keyup="setUpDates" v-on:change="setUpDates" placeholder="?"></td>
+                        <td><input type="text" class="input is-narrow"
+                                v-model="activity_list.task_items_act[index].depends_on" v-on:blur="setUpDates"
+                                v-on:input="setUpDates" v-on:keyup="setUpDates" v-on:change="setUpDates"
+                                :disabled=" row.flag == 'done' " placeholder="?"></td>
                         <td>
-                            <p  v-html="activity_list.task_items_act[index].start_date"
-                                placeholder="Start Date"></p>
+                            <p v-html="activity_list.task_items_act[index].start_date" placeholder="Start Date"></p>
                         </td>
                         <td>
-                            <p v-html="activity_list.task_items_act[index].end_date"
-                                placeholder=" End Date"></p>
+                            <p v-html="activity_list.task_items_act[index].end_date" placeholder=" End Date"></p>
                         </td>
                         <td>
                             <input type="text" placeholder="Enter Remarks"
-                                v-model="activity_list.task_items_act[index].remarks" class="input">
+                                v-model="activity_list.task_items_act[index].remarks" class="input"
+                                :disabled=" row.flag == 'done' ">
                         </td>
                         <td>
-                            <div class="buttons">
+                            <p v-if="row.flag == 'done'" class="has-text-weight-bold">
+                                <span class="icon">
+                                    <feather type="check-circle" size="1rem"></feather>
+                                </span>
+                                Done</p>
+
+                            <div v-if="row.flag == 'not' || row.flag == undefined" class="buttons">
                                 <button class="button is-small" @click="addRow(index)">
                                     <span class="icon">
                                         <feather type="plus" size="1.2rem"></feather>
                                     </span>
                                 </button>
-                                <button class="button is-danger is-small" @click="removeRow(index)"  v-on:click="setUpDates">
+                                <button class="button is-danger is-small" @click="removeRow(index)"
+                                    v-on:click="setUpDates">
                                     <span class="icon">
                                         <feather type="trash" size="1.2rem"></feather>
                                     </span>
@@ -108,30 +117,16 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="field is-grouped is-grouped-multiline">
+            <div class="field ">
                 <div class="control">
-                    <button class="button" @click="previous">
+                    <button class="button is-black" @click="update">
                         <span class="icon icon-btn">
-                            <feather type="arrow-left" size="1.3rem"></feather>
+                            <feather type="refresh-cw" size="1.3rem"></feather>
                         </span>
-                        Previous
+                        Update
                     </button>
                 </div>
-                <div class="control">
 
-                    <button class="button is-black" @click="next">
-                        Next
-                        <span class="icon icon-btn-l">
-                            <feather type="arrow-right" size="1.3rem"></feather>
-                        </span>
-                    </button>
-
-                </div>
-                <div class="control">
-                    <button class="button is-text">
-                        Add materials required for sample
-                    </button>
-                </div>
             </div>
 
         </div>

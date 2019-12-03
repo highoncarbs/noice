@@ -40,20 +40,26 @@ def add_basic():
 
         if payload:
             try:
+                print(len(request.files))
+                foldertemp = ""
                 unique_prefix = str(uuid.uuid4())[:8]
                 temp_date = payload['start_date'].split('-')
                 start_date = datetime(
                     int(temp_date[0]), int(temp_date[1]), int(temp_date[2]))
-                # print(start_date , int(payload['days']), payload["finished_product_category"], str(payload['desc']), str(payload['team_leader']), str(payload['team_members']))
+
                 finished_goods = ProductCategory.query.filter_by(
                     id=int(payload["finished_product_category"])).first()
+                
                 new_data = TransactionBasic(
                     start_date, int(payload['days']), finished_goods, str(payload['desc']), str(payload['team_leader']), str(payload['team_members']))
+                
+                
                 if len(request.files) != 0:
                     gen_folder_name = unique_prefix+'_'+str(
                         payload['start_date'])+'_'+str(payload['team_leader'])
                     foldertemp = os.path.join(
                         UPLOAD_FOLDER, 'transaction', str(gen_folder_name))
+                    
                     array_file = request.files
 
                     for file in array_file.items():
@@ -85,10 +91,15 @@ def add_basic():
 
                         except Exception as e:
                             print(str(e))
-
+                else:
+                    foldertemp = ""
+                    setattr(
+                                    new_data, 'upload_folder', foldertemp)
                 db.session.add(new_data)
                 db.session.commit()
                 basic_id = new_data.id
+                if not foldertemp:
+                    foldertemp = ""
                 return jsonify({'success': 'Data Added', 'basic_id': int(basic_id), 'upload_folder': str(foldertemp)})
 
             except sqlalchemy.exc.IntegrityError as e:

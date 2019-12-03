@@ -33,17 +33,14 @@ def get_materials(id):
 def add_materials():
     if request.method == 'POST':
         payload = request.json
-        print(payload)
         raw_inputs = payload[0]['raw_inputs']
         finished_inputs = payload[1]['finished_inputs']
         accessories_inputs = payload[2]['accessories_inputs']
         other_materials_inputs = payload[3]['other_materials_inputs']
         basic_id = payload[4]['basic_id']
         activity_id = payload[5]['activity_id']
-        print(basic_id, activity_id)
         basic_data = TransactionBasic.query.filter_by(id = int(basic_id)).first()
         activity_data = TransactionActivity.query.filter_by(id=int(activity_id)).first()
-        print(basic_data , activity_data)
         if payload:
             try:
                 new_data = TransactionMaterials()
@@ -59,23 +56,21 @@ def add_materials():
                         id=int(item['goods'])).first()
                     uom = Uom.query.filter_by(
                         id=int(item['uom'])).first()
-                    qty = int(item['qty'])
+                    qty = float(item['qty'])
 
                     new_data.raw_materials.append(
                         RawItem(raw_mat, uom, qty))
             
                    
                 for key, item in enumerate(finished_inputs):
-                    print(key , item)
                     finished_mat = FinishedGoods.query.filter_by(
                         id=int(item['goods'])).first()
                     uom = Uom.query.filter_by(
                         id=int(item['uom'])).first()
-                    qty = int(item['qty'])
+                    qty = float(item['qty'])
 
                     new_data.finished_materials.append(
                         FinishedItem(finished_mat, uom, qty))
-                    print(new_data)
 
                    
                 for key, item in enumerate(accessories_inputs):
@@ -83,7 +78,7 @@ def add_materials():
                         id=int(item['goods'])).first()
                     uom = Uom.query.filter_by(
                         id=int(item['uom'])).first()
-                    qty = int(item['qty'])
+                    qty = float(item['qty'])
 
                     new_data.accessories_materials.append(
                         AccessoriesItem(accessories_mat, uom, qty))
@@ -94,11 +89,10 @@ def add_materials():
                         id=int(item['goods'])).first()
                     uom = Uom.query.filter_by(
                         id=int(item['uom'])).first()
-                    qty = int(item['qty'])
+                    qty = float(item['qty'])
 
                     new_data.other_materials.append(
                         OtherMaterialsItem(other_mat, uom, qty))
-                print(new_data)
                 db.session.add(new_data)
                 db.session.commit()
                 return jsonify({'success': 'Data Added' })

@@ -91,7 +91,7 @@ class TaskItemAct(base):
 
 
 
-    def __init__(self, task_id , name , department , location ,days , depends_on , remarks , start_date , end_date):
+    def __init__(self, task_id , name , department , location ,days , depends_on , remarks , start_date , end_date , flag):
         self.task_id= task_id
         self.name= name
         self.depends_on= depends_on
@@ -101,6 +101,7 @@ class TaskItemAct(base):
         self.days = days
         self.start_date =start_date
         self.end_date= end_date
+        self.flag = flag
 
     activity = db.relationship(TransactionActivity, lazy="joined")
 
