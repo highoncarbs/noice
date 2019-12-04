@@ -206,6 +206,82 @@ new Vue({
         },
     },
     methods: {
+        showAddData(val) {
+            let self = this
+            this.$buefy.dialog.prompt({
+                message: `<b>Add Data</b> `,
+                inputAttrs: {
+                    placeholder: 'e.g. SKD',
+                    maxlength: 20,
+                    value: this.name
+                },
+                confirmText: 'Add',
+                onConfirm: (value) => {
+                    
+                    let formdata = { 'name' : value}
+                    axios
+                    .post('/basic_master/add/'+String(val), formdata )
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            switch (val) {
+                                case 'product_category':
+                                    self.data_product_category.push(response.data.data )
+                                    break;
+                                case 'fabric_combination':
+                                    self.data_fabric_combination.push(response.data.data )
+                                    break;
+                                case 'print_technique':
+                                    self.data_print_technique.push(response.data.data )
+                                    break;
+                                case 'design_number':
+                                    self.data_design_number.push(response.data.data )
+                                    break;
+                                case 'uom':
+                                    self.data_uom.push(response.data.data )
+                                    break;
+                            
+                                default:
+                                    break;
+                            }
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.success,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+
+                        }
+                        else {
+                            if (response.data.message) {
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: response.data.message,
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+                            }
+                        }
+
+
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+                   
+                }
+            })
+        },
         getProductCategory(option) {
             if (option != null) {
                 this.formID.product_category = option.id

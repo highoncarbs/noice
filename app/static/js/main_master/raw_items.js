@@ -240,6 +240,85 @@ new Vue({
         },
     },
     methods: {
+        showAddData(val) {
+            let self = this
+            this.$buefy.dialog.prompt({
+                message: `<b>Add Data</b> `,
+                inputAttrs: {
+                    placeholder: 'Enter Value',
+                    maxlength: 20,
+                    value: this.name
+                },
+                confirmText: 'Add',
+                onConfirm: (value) => {
+
+                    let formdata = { 'name': value }
+                    axios
+                        .post('/basic_master/add/' + String(val), formdata)
+                        .then(function (response) {
+
+                            if (response.data.success) {
+                                switch (val) {
+                                    case 'yarn':
+                                        self.data_yarn.push(response.data.data)
+                                        break;
+                                    case 'fabric_process':
+                                        self.data_fabric_process.push(response.data.data)
+                                        break;
+                                    case 'fabric_width':
+                                        self.data_fabric_width.push(response.data.data)
+                                        break;
+                                    case 'fabric_dye':
+                                        self.data_fabric_dye.push(response.data.data)
+                                        break;
+                                    case 'raw_material_category':
+                                        self.data_raw_material_category.push(response.data.data)
+                                        break;
+                                    case 'fabric_construction':
+                                        self.data_fabric_construction.push(response.data.data)
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: response.data.success,
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+
+                            }
+                            else {
+                                if (response.data.message) {
+                                    self.$buefy.snackbar.open({
+                                        duration: 4000,
+                                        message: response.data.message,
+                                        type: 'is-light',
+                                        position: 'is-top-right',
+                                        actionText: 'Close',
+                                        queue: true,
+                                        onAction: () => {
+                                            this.isActive = false;
+                                        }
+                                    })
+                                }
+                            }
+
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+
+                }
+            })
+        },
         getYarn(option) {
             if (option != null) {
                 this.formID.yarn = option.id

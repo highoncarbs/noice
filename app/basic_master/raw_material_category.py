@@ -76,7 +76,8 @@ def edit_raw_material_category():
                         id=payload['id']).first()
                     new_data.name = payload['name']
                     db.session.commit()
-                    return jsonify({'success': 'Data Updated'})
+                    json_data = { 'id' : new_data.id , 'name' : new_data.name}
+                    return jsonify({'success': 'Data Added', 'data' : json_data})
 
                 except Exception as e:
                     print(str(e))

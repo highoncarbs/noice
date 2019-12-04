@@ -31,6 +31,8 @@
                                 <b-autocomplete v-model="edit.product_category" placeholder="Select Product Category"
                                     :keep-first='true' :open-on-focus='true' :data="autocompleteProductCategory"
                                     field="name" @select="getEditProductCategory">
+                                  
+
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
@@ -112,6 +114,12 @@
                 <label for="" class="label">Product Category</label>
                 <b-autocomplete v-model="form.product_category" placeholder="Select Product Category" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteProductCategory" field="name" @select="getProductCategory">
+                    <template slot="header">
+                        <a @click="showAddData('product_category')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.product_category ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
@@ -119,24 +127,49 @@
                 <b-autocomplete v-model="form.fabric_combination" placeholder="Select Fabric Combination"
                     :keep-first='true' :open-on-focus='true' :data="autocompleteFabricCombination" field="name"
                     @select="getFabricCombination">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_combination')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_combination ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Print Technique</label>
                 <b-autocomplete v-model="form.print_technique" placeholder="Select Print Technique" :keep-first='true'
                     :open-on-focus='true' :data="autocompletePrintTechnique" field="name" @select="getPrintTechnique">
+                    <template slot="header">
+                        <a @click="showAddData('print_technique')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.print_technique ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Design Number</label>
                 <b-autocomplete v-model="form.design_number" placeholder="Select Design Number" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteDesignNumber" field="name" @select="getDesignNumber">
+                    <template slot="header">
+                        <a @click="showAddData('design_number')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.design_number ]]</template>
+                    
                 </b-autocomplete>
             </div>
             <div class="control">
                 <label for="" class="label">Uom</label>
                 <b-autocomplete v-model="form.uom" placeholder="Select Uom" :keep-first='true' :open-on-focus='true'
                     :data="autocompleteUom" field="name" @select="getUom">
+                    <template slot="header">
+                        <a @click="showAddData('uom')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.uom ]]</template>
                 </b-autocomplete>
             </div>
 

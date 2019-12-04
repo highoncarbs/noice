@@ -118,6 +118,12 @@
                 <label for="" class="label">Yarn</label>
                 <b-autocomplete v-model="form.yarn" placeholder="Select Yarn" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteYarn" field="name" @select="getYarn">
+                    <template slot="header">
+                        <a @click="showAddData('yarn')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.yarn]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
@@ -125,30 +131,60 @@
                 <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process"
                     :keep-first='true' :open-on-focus='true' :data="autocompleteFabricProcess" field="name"
                     @select="getFabricProcess">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_process')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_process ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Width</label>
                 <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteFabricWidth" field="name" @select="getFabricWidth">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_width')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_width ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Dye</label>
                 <b-autocomplete v-model="form.fabric_dye" placeholder="Select Fabric Dye" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteFabricDye" field="name" @select="getFabricDye">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_dye')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_dye ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control">
                 <label for="" class="label">Raw Material Category</label>
                 <b-autocomplete v-model="form.raw_material_category" placeholder="Select Raw Material Category" :keep-first='true' :open-on-focus='true'
                     :data="autocompleteRawMaterialCategory" field="name" @select="getRawMaterialCategory">
+                    <template slot="header">
+                        <a @click="showAddData('raw_material_category')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.raw_material_category ]]</template>
                 </b-autocomplete>
             </div>
             <div class="control">
                 <label for="" class="label">Fabric Construction</label>
                 <b-autocomplete v-model="form.fabric_construction" placeholder="Select Fabric Construction" :keep-first='true' :open-on-focus='true'
                     :data="autocompleteFabricConstruction" field="name" @select="getFabricConstruction">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_construction')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_construction ]]</template>
                 </b-autocomplete>
             </div>
 

@@ -45,8 +45,9 @@ def add_uom():
 
                     db.session.add(new_data)
                     db.session.commit()
-                    return jsonify({'success': 'Data Added'})
-
+                    json_data = { 'id' : new_data.id , 'name' : new_data.name}
+                    return jsonify({'success': 'Data Added', 'data': json_data})
+                    
                 except Exception as e:
                     print(str(e))
                     db.session.rollback()

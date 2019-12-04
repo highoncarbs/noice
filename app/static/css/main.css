@@ -20,6 +20,10 @@ body, html {
     position: relative;
 }
 
+.modal-card-foot{
+    border-radius : 0 !important;
+}
+
 .image img{
     width: auto !important    ;
 }
