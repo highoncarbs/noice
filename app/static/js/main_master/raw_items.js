@@ -9,6 +9,7 @@ new Vue({
                 fabric_dye: '',
                 raw_material_category: '',
                 fabric_construction: '',
+                errors: {}
             },
             formID: {
                 yarn: null,
@@ -442,13 +443,28 @@ new Vue({
             }
         },
         checkData(e) {
-            this.errors = {}
+            this.form.errors = {}
 
             if (this.formID.yarn && this.formID.fabric_process && this.formID.fabric_width && this.formID.raw_material_category && this.formID.fabric_dye && this.formID.fabric_construction) {
                 return true;
             }
-            if (!this.formID.yarn || !this.formID.fabric_process || !this.formID.fabric_width || !this.formID.raw_material_category || !this.formID.fabric_dye || !this.formID.fabric_construction) {
-                this.form.errors.push('Data required');
+            if (!this.formID.yarn) {
+                this.$set(this.form.errors, 'yarn', true)
+            }
+            if (!this.formID.fabric_process) {
+                this.$set(this.form.errors, 'fabric_process', true)
+            }
+            if (!this.formID.fabric_width) {
+                this.$set(this.form.errors, 'fabric_width', true)
+            }
+            if (!this.formID.raw_material_category) {
+                this.$set(this.form.errors, 'raw_material_category', true)
+            }
+            if (!this.formID.fabric_dye) {
+                this.$set(this.form.errors, 'fabric_dye', true)
+            }
+            if (!this.formID.fabric_construction) {
+                this.$set(this.form.errors, 'fabric_construction', true)
             }
 
         },

@@ -80,6 +80,8 @@
 
                                 <label for="" class="label">Date</label>
                                 <input type="date" v-model="form.start_date" class="input">
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.start_date">Data Required</small>
+
                             </div>
                         </div>
                         <div class="field">
@@ -90,6 +92,8 @@
                                     placeholder="Select Product Category" :keep-first='true' :open-on-focus='true'
                                     :data="autocompleteProductCategory" field="name" @select="getProductCategory">
                                 </b-autocomplete>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.finished_product_category">Data Required</small>
+
 
                             </div>
                         </div>
@@ -99,6 +103,8 @@
                                 <label for="" class="label">Description</label>
                                 <textarea type="text" class="input textarea" v-model="form.desc"
                                     placeholder="Enter Description for this transaction"></textarea>
+                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.desc">Data Required</small>
+
                             </div>
                         </div>
                         <br>
@@ -108,6 +114,8 @@
                                 <label for="" class="label">Team Leader</label>
                                 <input type="text" class="input" v-model="form.team_leader"
                                     placeholder="Select Team Leader">
+                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.team_leader">Data Required</small>
+
                             </div>
                             <div class="control is-expanded">
                                 <label for="" class="label">Other Members</label>
@@ -121,10 +129,14 @@
                                 <label for="" class="label">Days Required</label>
                                 <input type="text" class="input" v-on:input="getDate" placeholder="Enter Days"
                                     v-model="form.days">
+                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.days">Data Required</small>
+
                             </div>
                             <div class="control">
                                 <label for="" class="label">Target Date</label>
                                 <input type="date" class="input" v-model="form.target_date">
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.target_date">Data Required</small>
+
                             </div>
                         </div>
                     </div>

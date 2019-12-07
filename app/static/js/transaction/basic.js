@@ -10,7 +10,8 @@ const BasicForm = ({
                 team_members: null,
                 days: null,
                 target_date: null,
-                images: null
+                images: null,
+                errors: {}
             },
             finished_product_category: "",
             files: [],
@@ -97,6 +98,33 @@ const BasicForm = ({
         },
     },
     methods: {
+
+        checkData() {
+            if (this.form.start_date && this.form.finished_product_category && this.form.desc && this.form.team_leader && this.form.days && this.form.target_date) {
+                return true
+            }
+            if (!this.form.start_date) {
+                this.$set(this.form.errors, 'start_date', true)
+            }
+            if (!this.form.finished_product_category) {
+                this.$set(this.form.errors, 'finished_product_category', true)
+            }
+            if (!this.form.desc) {
+                this.$set(this.form.errors, 'desc', true)
+            }
+            if (!this.form.team_leader) {
+                this.$set(this.form.errors, 'team_leader', true)
+            }
+            if (!this.form.days) {
+                this.$set(this.form.errors, 'days', true)
+            }
+            if (!this.form.target_date) {
+                this.$set(this.form.errors, 'target_date', true)
+            }
+
+        },
+
+
         getProductCategory(option) {
             if (option != null) {
                 this.form.finished_product_category = option.id
@@ -150,57 +178,60 @@ const BasicForm = ({
         },
         next() {
 
-            let formData = new FormData()
-            formData.append('data', JSON.stringify(this.form))
-            if (this.files.length != 0) {
-                for (var i = 0; i < this.files.length; i++) {
-                    let file = this.files[i];
-    
-                    formData.append('files[' + i + ']', file);
-                }    
-            }
-            else {
-                formData.append('files', null);
+            if (this.checkData()) {
+                let formData = new FormData()
+                formData.append('data', JSON.stringify(this.form))
+                if (this.files.length != 0) {
+                    for (var i = 0; i < this.files.length; i++) {
+                        let file = this.files[i];
 
-            }
-            
-            let self = this
-            axios.post('/transaction/add/basic', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+                        formData.append('files[' + i + ']', file);
+                    }
                 }
-            })
-                .then(function (response) {
+                else {
+                    formData.append('files', null);
 
-                    try {
+                }
 
-                        if (response.data.success) {
-                            let selectedData = []
+                let self = this
+                axios.post('/transaction/add/basic', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(function (response) {
+
+                        try {
+
+                            if (response.data.success) {
+                                let selectedData = []
 
 
-                            var basic_id = { 'basic_id': response.data.basic_id }
-                            var upload_folder = { 'upload_folder': response.data.upload_folder }
-                            selectedData.push(self.form)
+                                var basic_id = { 'basic_id': response.data.basic_id }
+                                var upload_folder = { 'upload_folder': response.data.upload_folder }
+                                selectedData.push(self.form)
 
-                            selectedData.push(basic_id)
-                            selectedData.push(upload_folder)
+                                selectedData.push(basic_id)
+                                selectedData.push(upload_folder)
 
-                            localStorage.setItem('basic', JSON.stringify(selectedData))
-                            self.$router.push('/activity')
+                                localStorage.setItem('basic', JSON.stringify(selectedData))
+                                self.$router.push('/activity')
 
+                            }
                         }
-                    }
-                    catch (error) {
+                        catch (error) {
+                            console.log('Unable to save data - ' + String(error))
+                        }
+                    })
+                    .catch(function (error) {
                         console.log('Unable to save data - ' + String(error))
-                    }
-                })
-                .catch(function (error) {
-                    console.log('Unable to save data - ' + String(error))
-                })
+                    })
 
-
+            }
 
 
         }
+
+
     }
 })

@@ -125,6 +125,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.yarn]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.yarn">Date Required</small>
+
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Process</label>
@@ -138,6 +140,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.fabric_process ]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_process">Date Required</small>
+
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Width</label>
@@ -150,6 +154,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.fabric_width ]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_width">Date Required</small>
+
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Dye</label>
@@ -162,6 +168,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.fabric_dye ]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_dye">Date Required</small>
+
             </div>
             <div class="control">
                 <label for="" class="label">Raw Material Category</label>
@@ -174,6 +182,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.raw_material_category ]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.raw_material_category">Date Required</small>
+
             </div>
             <div class="control">
                 <label for="" class="label">Fabric Construction</label>
@@ -186,6 +196,8 @@
                     </template>
                     <template slot="empty">No results for [[ form.fabric_construction ]]</template>
                 </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_construction">Date Required</small>
+
             </div>
 
         </div>

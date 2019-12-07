@@ -8,6 +8,7 @@ new Vue({
                 print_technique: '',
                 design_number: '',
                 uom: '',
+                errors: {}
             },
             formID: {
                 product_category: null,
@@ -217,51 +218,36 @@ new Vue({
                 },
                 confirmText: 'Add',
                 onConfirm: (value) => {
-                    
-                    let formdata = { 'name' : value}
+
+                    let formdata = { 'name': value }
                     axios
-                    .post('/basic_master/add/'+String(val), formdata )
-                    .then(function (response) {
+                        .post('/basic_master/add/' + String(val), formdata)
+                        .then(function (response) {
 
-                        if (response.data.success) {
-                            switch (val) {
-                                case 'product_category':
-                                    self.data_product_category.push(response.data.data )
-                                    break;
-                                case 'fabric_combination':
-                                    self.data_fabric_combination.push(response.data.data )
-                                    break;
-                                case 'print_technique':
-                                    self.data_print_technique.push(response.data.data )
-                                    break;
-                                case 'design_number':
-                                    self.data_design_number.push(response.data.data )
-                                    break;
-                                case 'uom':
-                                    self.data_uom.push(response.data.data )
-                                    break;
-                            
-                                default:
-                                    break;
-                            }
-                            self.$buefy.snackbar.open({
-                                duration: 4000,
-                                message: response.data.success,
-                                type: 'is-light',
-                                position: 'is-top-right',
-                                actionText: 'Close',
-                                queue: true,
-                                onAction: () => {
-                                    this.isActive = false;
+                            if (response.data.success) {
+                                switch (val) {
+                                    case 'product_category':
+                                        self.data_product_category.push(response.data.data)
+                                        break;
+                                    case 'fabric_combination':
+                                        self.data_fabric_combination.push(response.data.data)
+                                        break;
+                                    case 'print_technique':
+                                        self.data_print_technique.push(response.data.data)
+                                        break;
+                                    case 'design_number':
+                                        self.data_design_number.push(response.data.data)
+                                        break;
+                                    case 'uom':
+                                        self.data_uom.push(response.data.data)
+                                        break;
+
+                                    default:
+                                        break;
                                 }
-                            })
-
-                        }
-                        else {
-                            if (response.data.message) {
                                 self.$buefy.snackbar.open({
                                     duration: 4000,
-                                    message: response.data.message,
+                                    message: response.data.success,
                                     type: 'is-light',
                                     position: 'is-top-right',
                                     actionText: 'Close',
@@ -270,15 +256,30 @@ new Vue({
                                         this.isActive = false;
                                     }
                                 })
+
                             }
-                        }
+                            else {
+                                if (response.data.message) {
+                                    self.$buefy.snackbar.open({
+                                        duration: 4000,
+                                        message: response.data.message,
+                                        type: 'is-light',
+                                        position: 'is-top-right',
+                                        actionText: 'Close',
+                                        queue: true,
+                                        onAction: () => {
+                                            this.isActive = false;
+                                        }
+                                    })
+                                }
+                            }
 
 
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-                   
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+
                 }
             })
         },
@@ -389,14 +390,27 @@ new Vue({
             }
         },
         checkData(e) {
-            this.errors = {}
+            this.form.errors = {}
 
             if (this.formID.product_category && this.formID.fabric_combination && this.formID.print_technique && this.formID.design_number && this.formID.uom) {
                 return true;
             }
-            if (!this.formID.product_category || !this.formID.fabric_combination || !this.formID.print_technique || !this.formID.design_number || !this.formID.uom) {
-                this.form.errors.push('Data required');
+            if (!this.formID.product_category) {
+                this.$set(this.form.errors, 'product_category', true)
             }
+            if (!this.formID.fabric_combination) {
+                this.$set(this.form.errors, 'fabric_combination', true)
+            }
+            if (!this.formID.print_technique) {
+                this.$set(this.form.errors, 'print_technique', true)
+            }
+            if (!this.formID.design_number) {
+                this.$set(this.form.errors, 'design_number', true)
+            }
+            if (!this.formID.uom) {
+                this.$set(this.form.errors, 'uom', true)
+            }
+
 
         },
         checkEditData(e) {
