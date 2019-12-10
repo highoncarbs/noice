@@ -28,17 +28,15 @@
                         <div class="field is-grouped is-grouped-multiline">
                             <div class="control is-expanded">
                                 <label for="" class="label">Yarn</label>
-                                <b-autocomplete v-model="edit.yarn" placeholder="Select Yarn"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteYarn"
-                                    field="name" @select="getEditYarn">
+                                <b-autocomplete v-model="edit.yarn" placeholder="Select Yarn" :keep-first='true'
+                                    :open-on-focus='true' :data="autocompleteYarn" field="name" @select="getEditYarn">
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
                                 <label for="" class="label">Fabric Process</label>
-                                <b-autocomplete v-model="edit.fabric_process"
-                                    placeholder="Select Fabric Process" :keep-first='true' :open-on-focus='true'
-                                    :data="autocompleteFabricProcess" field="name"
-                                    @select="getEditFabricProcess">
+                                <b-autocomplete v-model="edit.fabric_process" placeholder="Select Fabric Process"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricProcess"
+                                    field="name" @select="getEditFabricProcess">
                                 </b-autocomplete>
                             </div>
                             <div class="control is-expanded">
@@ -51,20 +49,24 @@
                             <div class="control is-expanded">
                                 <label for="" class="label">Fabric Dye</label>
                                 <b-autocomplete v-model="edit.fabric_dye" placeholder="Select Fabric Dye"
-                                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricDye"
-                                    field="name" @select="getEditFabricDye">
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricDye" field="name"
+                                    @select="getEditFabricDye">
                                 </b-autocomplete>
                             </div>
                             <div class="control">
                                 <label for="" class="label">Raw Material Category</label>
-                                <b-autocomplete v-model="edit.raw_material_category" placeholder="Select Raw Material Category" :keep-first='true'
-                                    :open-on-focus='true' :data="autocompleteRawMaterialCategory" field="name" @select="getEditRawMaterialCategory">
+                                <b-autocomplete v-model="edit.raw_material_category"
+                                    placeholder="Select Raw Material Category" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteRawMaterialCategory" field="name"
+                                    @select="getEditRawMaterialCategory">
                                 </b-autocomplete>
                             </div>
                             <div class="control">
                                 <label for="" class="label">Fabric Construction</label>
-                                <b-autocomplete v-model="edit.fabric_construction" placeholder="Select Fabric Construction" :keep-first='true'
-                                    :open-on-focus='true' :data="autocompleteFabricConstruction" field="name" @select="getEditFabricConstruction">
+                                <b-autocomplete v-model="edit.fabric_construction"
+                                    placeholder="Select Fabric Construction" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteFabricConstruction" field="name"
+                                    @select="getEditFabricConstruction">
                                 </b-autocomplete>
                             </div>
 
@@ -80,7 +82,8 @@
 
                             <div class="control">
                                 <label class="label">Change Reference Image</label>
-                                <image-input-slim ref="imageUploadSlim" v-model="editID.image" v-on:remove-input="removeImage()">
+                                <image-input-slim ref="imageUploadSlim" v-model="editID.image"
+                                    v-on:remove-input="removeImage()">
                                 </image-input-slim>
                             </div>
 
@@ -114,10 +117,27 @@
 
 
         <div class="field is-grouped is-grouped-multiline">
+            <div class="control">
+                <label for="" class="label">Raw Material Category</label>
+                <b-autocomplete v-model="form.raw_material_category" placeholder="Select Raw Material Category"
+                    :keep-first='true' :open-on-focus='true' :data="autocompleteRawMaterialCategory" field="name"
+                    @select="getRawMaterialCategory">
+                    <template slot="header">
+                        <a @click="showAddData('raw_material_category')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.raw_material_category ]]</template>
+                </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.raw_material_category">Date
+                    Required</small>
+
+            </div>
+
             <div class="control is-expanded">
                 <label for="" class="label">Yarn</label>
-                <b-autocomplete v-model="form.yarn" placeholder="Select Yarn" :keep-first='true'
-                    :open-on-focus='true' :data="autocompleteYarn" field="name" @select="getYarn">
+                <b-autocomplete v-model="form.yarn" placeholder="Select Yarn" :keep-first='true' :open-on-focus='true'
+                    :data="autocompleteYarn" field="name" @select="getYarn">
                     <template slot="header">
                         <a @click="showAddData('yarn')">
                             <span> Add new... </span>
@@ -128,21 +148,23 @@
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.yarn">Date Required</small>
 
             </div>
-            <div class="control is-expanded">
-                <label for="" class="label">Fabric Process</label>
-                <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process"
-                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricProcess" field="name"
-                    @select="getFabricProcess">
+            <div class="control">
+                <label for="" class="label">Fabric Construction</label>
+                <b-autocomplete v-model="form.fabric_construction" placeholder="Select Fabric Construction"
+                    :keep-first='true' :open-on-focus='true' :data="autocompleteFabricConstruction" field="name"
+                    @select="getFabricConstruction">
                     <template slot="header">
-                        <a @click="showAddData('fabric_process')">
+                        <a @click="showAddData('fabric_construction')">
                             <span> Add new... </span>
                         </a>
                     </template>
-                    <template slot="empty">No results for [[ form.fabric_process ]]</template>
+                    <template slot="empty">No results for [[ form.fabric_construction ]]</template>
                 </b-autocomplete>
-                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_process">Date Required</small>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_construction">Date
+                    Required</small>
 
             </div>
+
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Width</label>
                 <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
@@ -155,6 +177,21 @@
                     <template slot="empty">No results for [[ form.fabric_width ]]</template>
                 </b-autocomplete>
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_width">Date Required</small>
+
+            </div>
+            <div class="control is-expanded">
+                <label for="" class="label">Fabric Process</label>
+                <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process" :keep-first='true'
+                    :open-on-focus='true' :data="autocompleteFabricProcess" field="name" @select="getFabricProcess">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_process')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_process ]]</template>
+                </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_process">Date
+                    Required</small>
 
             </div>
             <div class="control is-expanded">
@@ -171,34 +208,7 @@
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_dye">Date Required</small>
 
             </div>
-            <div class="control">
-                <label for="" class="label">Raw Material Category</label>
-                <b-autocomplete v-model="form.raw_material_category" placeholder="Select Raw Material Category" :keep-first='true' :open-on-focus='true'
-                    :data="autocompleteRawMaterialCategory" field="name" @select="getRawMaterialCategory">
-                    <template slot="header">
-                        <a @click="showAddData('raw_material_category')">
-                            <span> Add new... </span>
-                        </a>
-                    </template>
-                    <template slot="empty">No results for [[ form.raw_material_category ]]</template>
-                </b-autocomplete>
-                <small class="tag is-danger is-light is-underline" v-if="form.errors.raw_material_category">Date Required</small>
 
-            </div>
-            <div class="control">
-                <label for="" class="label">Fabric Construction</label>
-                <b-autocomplete v-model="form.fabric_construction" placeholder="Select Fabric Construction" :keep-first='true' :open-on-focus='true'
-                    :data="autocompleteFabricConstruction" field="name" @select="getFabricConstruction">
-                    <template slot="header">
-                        <a @click="showAddData('fabric_construction')">
-                            <span> Add new... </span>
-                        </a>
-                    </template>
-                    <template slot="empty">No results for [[ form.fabric_construction ]]</template>
-                </b-autocomplete>
-                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_construction">Date Required</small>
-
-            </div>
 
         </div>
 
@@ -213,7 +223,8 @@
             <div class="control">
                 <label class="label">Upload Image Reference</label>
 
-                <image-input-boxed ref="imageUpload" v-model="formID.image" v-on:remove-input="removeImage()"></image-input-boxed>
+                <image-input-boxed ref="imageUpload" v-model="formID.image" v-on:remove-input="removeImage()">
+                </image-input-boxed>
             </div>
             <hr>
             <div class="field">
