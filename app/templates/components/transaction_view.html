@@ -1,4 +1,4 @@
-<template id="transaction-view">
+<template id="transaction-view" v-cloak>
     <div>
         <div class="modal" :class="{'is-active': active == true , 'is-clipped': active == true }">
             <div class="modal-background" @click="active = !active"></div>

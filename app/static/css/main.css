@@ -204,6 +204,9 @@ i {
     font-size: 1.5rem;
 }
 
+
+[v-cloak] > * { display:none; }
+[v-cloak]::before { content: " LOADING .. "; }
 /* Autocomplete from Buefy */
 
 /* .autocomplete .dropdown-menu {
