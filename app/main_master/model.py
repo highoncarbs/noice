@@ -231,10 +231,12 @@ class RawGoodsSchema(ma.ModelSchema):
 
 class Accessories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    desc = db.Column(db.String(100), unique=True)
+    name = db.Column(db.String(50))
+    desc = db.Column(db.String(100))
     image = db.Column(db.String(250))
-   
+    __table_args__ = (db.UniqueConstraint(
+        'name', 'desc',  name='acc_id'), )
+
 
     def __init__(self, name, desc):
         self.name = name
@@ -259,10 +261,13 @@ class AccessoriesSchema(ma.ModelSchema):
 
 class OtherMaterials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    desc = db.Column(db.String(100) , unique=True)
+    name = db.Column(db.String(50))
+    desc = db.Column(db.String(100))
     image = db.Column(db.String(250))
-    
+    __table_args__ = (db.UniqueConstraint(
+        'name', 'desc',  name='oth_mat_id'), )
+
+
 
     def __init__(self, name, desc):
         self.name = name
