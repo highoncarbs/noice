@@ -90,22 +90,26 @@ new Vue({
     delimiters: ['[[', ']]'],
     methods: {
         checkRow() {
-
-            this.task.error = {}
-            if (this.task.name && this.task.department && this.task.location && this.task.days) {
-                return true
+            try {
+                this.task.error = {}
+                if (this.task.name && this.task.department && this.task.location && this.task.days) {
+                    return true
+                }
+                if (!this.task.name) {
+                    this.$set(this.task.error, 'name', true)
+                }
+                if (!this.task.department) {
+                    this.$set(this.task.error, 'department', true)
+                }
+                if (!this.task.location) {
+                    this.$set(this.task.error, 'location', true)
+                }
+                if (!this.task.days) {
+                    this.$set(this.task.error, 'days', true)
+                }
             }
-            if (!this.task.name) {
-                this.$set(this.task.error, 'name', true)
-            }
-            if (!this.task.department) {
-                this.$set(this.task.error, 'department', true)
-            }
-            if (!this.task.location) {
-                this.$set(this.task.error, 'location', true)
-            }
-            if (!this.task.days) {
-                this.$set(this.task.error, 'days', true)
+            catch (error) {
+                console.error(error)
             }
 
 
@@ -128,6 +132,7 @@ new Vue({
                 department: null,
                 location: null,
                 days: null,
+                error : {}
             }
             this.errors = false
 
