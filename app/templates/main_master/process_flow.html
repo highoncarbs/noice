@@ -78,33 +78,46 @@
                 </tr>
                 <tr>
                     <td>
-
+                        [[ task.error ]]
                     </td>
                     <td>
                         <div class="control">
                             <input type="text" ref="name" v-model="task.name" class="input"
                                 placeholder="Enter Process Name">
+                            <small class="tag is-danger is-light is-underline" v-if="task.error.name">Invalid
+                                Data</small>
+
                         </div>
                     </td>
                     <td>
                         <div class="control">
                             <b-autocomplete v-model="query_department" placeholder="Select Department"
                                 :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
-                                @select="option => task.department = option">
+                                @select="option => task.department = option
+                                ">
                             </b-autocomplete>
+                            <small class="tag is-danger is-light is-underline" v-if="task.error.department">Invalid
+                                Data</small>
+
                         </div>
                     </td>
                     <td>
                         <div class="control">
                             <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
-                                :open-on-focus='true' :data="autocompleteLocation" field="name"
-                                @select="option => task.location = option">
+                                :open-on-focus='true' :data="autocompleteLocation" field="name" @select=" option => task.location = option
+                                ">
                             </b-autocomplete>
+                            <small class="tag is-danger is-light is-underline" v-if="task.error.location">Invalid
+                                Data</small>
+
                         </div>
                     </td>
                     <td>
                         <div class="control">
                             <input type="text" class="input" v-model="task.days" placeholder="Enter Days">
+                            <small class="tag is-danger is-light is-underline" v-if="task.error.days">Invalid
+                                Data</small>
+
                         </div>
                     </td>
                     <td>

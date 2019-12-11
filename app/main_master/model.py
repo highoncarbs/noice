@@ -232,8 +232,9 @@ class RawGoodsSchema(ma.ModelSchema):
 class Accessories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
-    desc = db.Column(db.String(100))
+    desc = db.Column(db.String(100), unique=True)
     image = db.Column(db.String(250))
+   
 
     def __init__(self, name, desc):
         self.name = name
@@ -245,6 +246,12 @@ class AccessoriesSchema(ma.ModelSchema):
     name = field_for(Accessories, 'name', dump_only=True)
     desc = field_for(Accessories, 'desc', dump_only=True)
     image = field_for(Accessories, 'image', dump_only=True)
+    gen_name = fields.Method("get_goods_name")
+
+    def get_goods_name(self, obj):
+        goods_name = "{} - {}".format(
+            obj.name, obj.desc)
+        return goods_name
 
     class meta:
         model = Accessories
@@ -253,8 +260,9 @@ class AccessoriesSchema(ma.ModelSchema):
 class OtherMaterials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
-    desc = db.Column(db.String(100))
+    desc = db.Column(db.String(100) , unique=True)
     image = db.Column(db.String(250))
+    
 
     def __init__(self, name, desc):
         self.name = name
@@ -266,10 +274,15 @@ class OtherMaterialsSchema(ma.ModelSchema):
     name = field_for(OtherMaterials, 'name', dump_only=True)
     desc = field_for(OtherMaterials, 'desc', dump_only=True)
     image = field_for(OtherMaterials, 'image', dump_only=True)
+    gen_name = fields.Method("get_goods_name")
 
     class meta:
         model = OtherMaterials
 
+    def get_goods_name(self, obj):
+        goods_name = "{} - {}".format(
+            obj.name, obj.desc)
+        return goods_name
 
 class ProcessFlow(db.Model):
     id = db.Column(db.Integer, primary_key=True)

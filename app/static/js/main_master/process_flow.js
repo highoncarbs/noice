@@ -11,6 +11,7 @@ new Vue({
                 department: null,
                 location: null,
                 days: null,
+                error: {}
             },
 
             data_department: [],
@@ -90,10 +91,23 @@ new Vue({
     methods: {
         checkRow() {
 
+            this.task.error = {}
             if (this.task.name && this.task.department && this.task.location && this.task.days) {
-                this.errors = false
                 return true
             }
+            if (!this.task.name) {
+                this.$set(this.task.error, 'name', true)
+            }
+            if (!this.task.department) {
+                this.$set(this.task.error, 'department', true)
+            }
+            if (!this.task.location) {
+                this.$set(this.task.error, 'location', true)
+            }
+            if (!this.task.days) {
+                this.$set(this.task.error, 'days', true)
+            }
+
 
         },
         checkData() {
@@ -116,6 +130,7 @@ new Vue({
                 days: null,
             }
             this.errors = false
+
         },
         addRow() {
             if (this.checkRow()) {
@@ -196,13 +211,13 @@ new Vue({
                 })
 
         },
-        deleteData(data_id , index) {
-            let raw = this 
-            let payload = {'id' : data_id}
+        deleteData(data_id, index) {
+            let raw = this
+            let payload = { 'id': data_id }
             axios.post('/main_master/delete/process_flow', payload)
                 .then(function (response) {
                     if (response.data.success) {
-                        raw.process_flow_list.splice(index , 1)
+                        raw.process_flow_list.splice(index, 1)
                         raw.$buefy.snackbar.open({
                             duration: 4000,
                             message: 'Data deleted',
@@ -216,7 +231,7 @@ new Vue({
                         })
                     }
                 })
-            
+
         }
     }
 })
