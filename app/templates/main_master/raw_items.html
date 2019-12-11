@@ -323,10 +323,7 @@
                             None
                         </td>
                         <td class="has-text-weight-bold">
-                            [[ row.yarn[0].name ]] -
-                            [[ row.fabric_process[0].name ]] -
-                            [[ row.fabric_width[0].name ]] -
-                            [[ row.fabric_dye[0].name ]]
+                            [[ row.gen_name ]]
                         </td>
                         <td v-if="row.alt_name != null ">[[ row.alt_name ]]</td>
                         <td v-else="row.alt_name == null " class="has-text-grey-light">None</td>
