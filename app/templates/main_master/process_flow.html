@@ -17,14 +17,7 @@
                 <label for="" class="label">Process Flow Name</label>
                 <input type="text" v-model="process_flow_name" class="input" placeholder="Enter Process Flow Name">
             </div>
-            <div class="control">
-                <label for="" class="label has-text-white">View</label>
-                <button class="button" @click="showView"><span class="icon icon-btn">
-                        <feather type="eye" szie="1.3rem"></feather>
-                    </span>
-                    View
-                </button>
-            </div>
+
 
         </div>
         <br>
@@ -33,10 +26,10 @@
             <colgroup>
                 <col span="1" style="width: 4%;">
 
-                <col span="1" style="width: 50%;">
+                <col span="1" style="width: 48%;">
+                <col span="1" style="width: 20%;">
                 <col span="1" style="width: 13%;">
-                <col span="1" style="width: 13%;">
-                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 5%;">
                 <col span="1" style="width: 10%;">
             </colgroup>
             <thead>
@@ -139,6 +132,13 @@
 
                     </span>
                     Save
+                </button>
+            </div>
+            <div class="control">
+                <button class="button" @click="showView"><span class="icon icon-btn">
+                        <feather type="eye" szie="1.3rem"></feather>
+                    </span>
+                    View
                 </button>
             </div>
             <div class="control animated shake" v-if="data_error">

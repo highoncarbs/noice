@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, request, session, jsonify,
 from flask_login import login_user, logout_user, current_user, login_required
 from app.main_master import bp
 from app.main_master.model import RawGoods, RawGoodsSchema
-from app.basic_master.model import Yarn, FabricProcess, FabricWidth, FabricDye, RawMaterialCategory, FabricConstruction
+from app.basic_master.model import Yarn, FabricProcess, FabricWidth, FabricDye, RawMaterialCategory, FabricConstruction ,Uom
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -63,8 +63,10 @@ def add_raw_goods():
                     id=int(payload['raw_material_category'])).first()
                 fabric_construction = FabricConstruction.query.filter_by(
                     id=int(payload['fabric_construction'])).first()
+                uom = Uom.query.filter_by(
+                    id=int(payload['uom'])).first()
                 new_data = RawGoods(
-                    payload['alt_name'], int(payload['yarn']), int(payload['fabric_process']), int(payload['fabric_width']), int(payload['fabric_dye']), int(payload['raw_material_category']), int(payload['fabric_construction']))
+                    payload['alt_name'], int(payload['yarn']), int(payload['fabric_process']), int(payload['fabric_width']), int(payload['fabric_dye']), int(payload['raw_material_category']), int(payload['fabric_construction']) , int(payload['uom']))
                 
                 new_data.yarn.append(yarn)
                 new_data.fabric_process.append(fabric_process)
@@ -72,6 +74,7 @@ def add_raw_goods():
                 new_data.fabric_dye.append(fabric_dye)
                 new_data.raw_material_category.append(raw_material_category)
                 new_data.fabric_construction.append(fabric_construction)
+                new_data.uom.append(uom)
 
                 if len(file) != 0:
                     file = request.files['image']
@@ -152,6 +155,8 @@ def edit_raw_goods():
                     id=int(payload['raw_material_category'])).first()
                 fabric_construction = FabricConstruction.query.filter_by(
                     id=int(payload['fabric_construction'])).first()
+                uom = Uom.query.filter_by(
+                    id=int(payload['uom'])).first()
 
                 new_data.yarn_id = yarn.id
                 new_data.fabric_process_id =fabric_process.id
@@ -159,6 +164,7 @@ def edit_raw_goods():
                 new_data.fabric_dye_id = fabric_dye.id
                 new_data.raw_material_category_id = raw_material_category.id
                 new_data.fabric_construction_id = fabric_construction.id
+                new_data.uom_id = uom.id
 
                 new_data.yarn = []
                 new_data.fabric_process = []
@@ -166,6 +172,7 @@ def edit_raw_goods():
                 new_data.fabric_dye = []
                 new_data.raw_material_category = []
                 new_data.fabric_construction = []
+                new_data.uom = []
 
                 new_data.yarn.append(yarn)
                 new_data.fabric_process.append(fabric_process)
@@ -173,6 +180,7 @@ def edit_raw_goods():
                 new_data.fabric_dye.append(fabric_dye)
                 new_data.raw_material_category.append(raw_material_category)
                 new_data.fabric_construction.append(fabric_construction)
+                new_data.uom.append(uom)
 
                 if len(file) != 0:
                     file = request.files['image']

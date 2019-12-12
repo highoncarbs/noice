@@ -41,7 +41,7 @@ class PrintTechnique(db.Model):
 
 class PrintTechniqueSchema(ma.ModelSchema):
     class Meta:
-        model = FabricCombination
+        model = PrintTechnique
 
 
 class DesignNumber(db.Model):
@@ -54,7 +54,7 @@ class DesignNumber(db.Model):
 
 class DesignNumberSchema(ma.ModelSchema):
     class Meta:
-        model = FabricCombination
+        model = DesignNumber
 
 
 class SizeMaster(db.Model):
@@ -67,7 +67,7 @@ class SizeMaster(db.Model):
 
 class SizeMasterSchema(ma.ModelSchema):
     class Meta:
-        model = FabricCombination
+        model = SizeMaster
 
 
 # Raw Materials Master

@@ -10,7 +10,8 @@ const ActivityForm = ({
             data_location: [],
             query_department: '',
             query_location: '',
-            program_start_date: null
+            program_start_date: null,
+            loader: false
         }
     },
     delimiters: ['[[', ']]'],
@@ -170,6 +171,8 @@ const ActivityForm = ({
         next() {
             try {
                 if (this.activity_list.length != 0) {
+                    this.loader = true
+
                     let selectedData = []
                     let self = this 
                     console.log(this.activity_list)
@@ -188,8 +191,12 @@ const ActivityForm = ({
                                     self.$router.push('/material')
 
                                 }
+                                this.loader = false
+
                             }
                             catch (error) {
+                                this.loader = false
+
                                 console.log('Error sending JSON data - activity list')
                             }
                     })
@@ -197,6 +204,8 @@ const ActivityForm = ({
                 }
             }
             catch (error) {
+                this.loader = false
+
                 console.log('Unable to save data - ' + String(error))
             }
         },

@@ -3,11 +3,13 @@ new Vue({
     data() {
         return {
             view: true,
+            query_uom: '',
             form: {
                 errors: [],
                 name: null,
                 desc: null,
                 image: null,
+                uom: null,
             },
             data: [],
             modal: false,
@@ -16,11 +18,14 @@ new Vue({
                 name: null,
                 desc: null,
                 image: null,
-                index: null
+                index: null,
+                uom: null,
             },
             // confirm: false,
             fileSrc: null,
-            viewUpload: false
+            viewUpload: false,
+            data_uom: [],
+
         }
     },
 
@@ -28,8 +33,107 @@ new Vue({
     mounted() {
 
         this.$refs.name.focus();
+  
+
+        let raw = this
+        axios.get('/basic_master/get/uom')
+            .then(function (response) {
+                raw.data_uom = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                raw.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Uom',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
+    },
+    computed: {
+        autocompleteUom() {
+
+            if (this.data_uom.length != 0) {
+                return this.data_uom.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.query_uom.toLowerCase()) >= 0
+                })
+            }
+        },
     },
     methods: {
+        showAddData(val) {
+            let self = this
+            this.$buefy.dialog.prompt({
+                message: `<b>Add Data</b> `,
+                inputAttrs: {
+                    placeholder: 'e.g. SKD',
+                    maxlength: 20,
+                    value: this.name
+                },
+                confirmText: 'Add',
+                onConfirm: (value) => {
+
+                    let formdata = { 'name': value }
+                    axios
+                        .post('/basic_master/add/' + String(val), formdata)
+                        .then(function (response) {
+
+                            if (response.data.success) {
+                                switch (val) {
+                                    case 'uom':
+                                        self.data_uom.push(response.data.data)
+                                        break;
+                                
+
+                                    default:
+                                        break;
+                                }
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: response.data.success,
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+
+                            }
+                            else {
+                                if (response.data.message) {
+                                    self.$buefy.snackbar.open({
+                                        duration: 4000,
+                                        message: response.data.message,
+                                        type: 'is-light',
+                                        position: 'is-top-right',
+                                        actionText: 'Close',
+                                        queue: true,
+                                        onAction: () => {
+                                            this.isActive = false;
+                                        }
+                                    })
+                                }
+                            }
+
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+
+                }
+            })
+        },
         checkData(e) {
             this.form.errors = []
 
@@ -75,6 +179,8 @@ new Vue({
                             raw.form.name = null;
                             raw.form.desc = null;
                             raw.form.image = null;
+                            raw.form.uom = null;
+                            raw.query_uom = '';
 
                             raw.$buefy.snackbar.open({
                                 duration: 4000,
@@ -135,6 +241,10 @@ new Vue({
 
             this.modal = true
             this.edit.name = data.name
+            
+            this.query_uom = data.uom[0].name
+            this.edit.uom = data.uom[0].id
+            
             this.edit.id = data.id
             this.edit.index = index
             this.edit.image = data.image
@@ -163,6 +273,8 @@ new Vue({
                             dataList = raw.data.filter(function (x) { return x.id === raw.edit.id })
                             dataList[0].name = raw.edit.name
                             dataList[0].desc = raw.edit.desc
+                            dataList[0].uom[0].name = raw.query_uom
+                            dataList[0].uom[0].id = raw.edit.uom
                             raw.modal = !raw.modal;
 
                             raw.$buefy.snackbar.open({
@@ -276,6 +388,8 @@ new Vue({
 
                     raw.form.name = data.name
                     raw.form.desc = data.desc
+                    raw.form.uom = data.uom[0].id
+                    raw.query_uom = data.uom[0].name
                 })
         }
 

@@ -28,13 +28,29 @@
                         <div class="field is-grouped is-grouped-multiline">
                             <div class="control ">
                                 <label for="" class="label">Name</label>
-                                <input type="text" class="input" v-model="edit.name" ref="editname" placeholder="Enter Name"
-                                    :class="{ 'is-danger': edit.errors.length != 0}">
+                                <input type="text" class="input" v-model="edit.name" ref="editname"
+                                    placeholder="Enter Name" :class="{ 'is-danger': edit.errors.length != 0}">
                             </div>
                             <div class="control ">
                                 <label for="" class="label">Technical Details</label>
                                 <input type="text" class="input" v-model="edit.desc" placeholder="Enter Details"
                                     :class="{ 'is-danger': edit.errors.length != 0}">
+                            </div>
+                            <div class="control">
+                                <label for="" class="label">Uom</label>
+                                <b-autocomplete v-model="query_uom" placeholder="Select Uom" :keep-first='true'
+                                    :open-on-focus='true' :data="autocompleteUom" field="name"
+                                    @select="option => edit.uom = option.id">
+                                    <template slot="header">
+                                        <a @click="showAddData('uom')">
+                                            <span> Add new... </span>
+                                        </a>
+                                    </template>
+                                    <template slot="empty">No results for [[ form.uom ]]</template>
+                                </b-autocomplete>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.uom">Date
+                                    Required</small>
+
                             </div>
 
                         </div>
@@ -44,7 +60,8 @@
 
                             <div class="control">
                                 <label class="label">Change Reference Image</label>
-                                <image-input-slim v-model="edit.image" v-on:remove-input="removeImage()" ref="imageUploadSlim">
+                                <image-input-slim v-model="edit.image" v-on:remove-input="removeImage()"
+                                    ref="imageUploadSlim">
                                 </image-input-slim>
                             </div>
 
@@ -88,7 +105,20 @@
                 <input type="text" class="input" v-model="form.desc" placeholder="Enter Details"
                     :class="{ 'is-danger': form.errors.length != 0}">
             </div>
+            <div class="control">
+                <label for="" class="label">Uom</label>
+                <b-autocomplete v-model="query_uom" placeholder="Select Uom" :keep-first='true' :open-on-focus='true'
+                    :data="autocompleteUom" field="name" @select="option => form.uom = option.id">
+                    <template slot="header">
+                        <a @click="showAddData('uom')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.uom ]]</template>
+                </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.uom">Date Required</small>
 
+            </div>
         </div>
 
 
@@ -181,6 +211,8 @@
                         <th>Other Materials</th>
                         <th>Name</th>
                         <th>Details</th>
+                        <th>UOM</th>
+
                         <th>Action</th>
                     </tr>
 
@@ -199,6 +231,8 @@
                         <td>[[ row.gen_name ]]</td>
                         <td>[[ row.name ]]</td>
                         <td>[[ row.desc ]]</td>
+                        <td>[[ row.uom[0].name ]]</td>
+
                         <td>
                             <div class=" buttons">
                                 <div class="button" @click="editData(row ,index)">

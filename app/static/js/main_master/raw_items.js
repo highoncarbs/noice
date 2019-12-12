@@ -9,6 +9,7 @@ new Vue({
                 fabric_dye: '',
                 raw_material_category: '',
                 fabric_construction: '',
+                uom: '',
                 errors: {}
             },
             formID: {
@@ -19,6 +20,7 @@ new Vue({
                 raw_material_category: null,
                 fabric_construction: null,
                 alt_name: null,
+                uom: null,
                 image: null
             },
             edit: {
@@ -28,6 +30,7 @@ new Vue({
                 fabric_dye: null,
                 raw_material_category: null,
                 fabric_construction: null,
+                uom: null,
                 image: null
             },
             editID: {
@@ -39,6 +42,7 @@ new Vue({
                 fabric_construction: null,
                 alt_name: null,
                 image: null,
+                uom: null,
                 id: null
             },
             data_yarn: [],
@@ -47,6 +51,7 @@ new Vue({
             data_fabric_dye: [],
             data_raw_material_category: [],
             data_fabric_construction: [],
+            data_uom: [],
             errors: {},
             view: true,
             data: [],
@@ -171,8 +176,37 @@ new Vue({
                     }
                 })
             })
+        axios.get('/basic_master/get/uom')
+            .then(function (response) {
+                raw.data_uom = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                raw.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Uom',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
     },
     computed: {
+        autocompleteUom() {
+
+            if (this.data_uom.length != 0) {
+                return this.data_uom.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.form.uom.toLowerCase()) >= 0
+                })
+            }
+        },
         autocompleteYarn() {
 
             if (this.data_yarn.length != 0) {
@@ -278,6 +312,9 @@ new Vue({
                                     case 'fabric_construction':
                                         self.data_fabric_construction.push(response.data.data)
                                         break;
+                                    case 'uom':
+                                        self.data_uom.push(response.data.data)
+                                        break;
 
                                     default:
                                         break;
@@ -360,6 +397,14 @@ new Vue({
                 this.formID.fabric_dye = null
             }
         },
+        getUom(option) {
+            if (option != null) {
+                this.formID.uom = option.id
+            }
+            else {
+                this.formID.uom = null
+            }
+        },
         getFabricConstruction(option) {
             if (option != null) {
                 this.formID.fabric_construction = option.id
@@ -390,6 +435,14 @@ new Vue({
             }
             else {
                 this.editID.raw_material_category = null
+            }
+        },
+        getEditUom(option) {
+            if (option != null) {
+                this.editID.uom = option.id
+            }
+            else {
+                this.editID.uom = null
             }
         },
         getEditFabricWidth(option) {
@@ -466,15 +519,18 @@ new Vue({
             if (!this.formID.fabric_construction) {
                 this.$set(this.form.errors, 'fabric_construction', true)
             }
+            if (!this.formID.uom) {
+                this.$set(this.form.errors, 'uom', true)
+            }
 
         },
         checkEditData(e) {
             this.errors = {}
 
-            if (this.editID.yarn && this.editID.fabric_process && this.editID.fabric_width && this.editID.raw_material_category && this.editID.fabric_dye && this.editID.fabric_construction) {
+            if (this.editID.yarn && this.editID.fabric_process && this.editID.fabric_width && this.editID.raw_material_category && this.editID.fabric_dye && this.editID.fabric_construction && this.editID.uom) {
                 return true;
             }
-            if (!this.editID.yarn || !this.editID.fabric_process || !this.editID.fabric_width || !this.editID.raw_material_category || !this.editID.fabric_dye || !this.editID.fabric_construction) {
+            if (!this.editID.yarn || !this.editID.fabric_process || !this.editID.fabric_width || !this.editID.raw_material_category || !this.editID.fabric_dye || !this.editID.fabric_construction || !this.editID.uom) {
                 this.edit.errors.push('Data required');
             }
 
@@ -486,12 +542,14 @@ new Vue({
             this.form.raw_material_category = '';
             this.form.fabric_dye = '';
             this.form.fabric_construction = '';
+            this.form.uom = '';
             this.formID.fabric_dye = null;
             this.formID.yarn = null;
             this.formID.fabric_process = null;
             this.formID.fabric_width = null;
             this.formID.raw_material_category = null;
             this.formID.fabric_construction = null;
+            this.formID.uom = null;
             this.formID.alt_name = null;
             this.formID.image = null;
 
@@ -614,6 +672,9 @@ new Vue({
             this.edit.yarn = data.yarn[0].name
             this.editID.yarn = data.yarn[0].id
 
+            this.edit.uom = data.uom[0].name
+            this.editID.uom = data.uom[0].id
+
             this.edit.fabric_process = data.fabric_process[0].name
             this.editID.fabric_process = data.fabric_process[0].id
 
@@ -655,6 +716,7 @@ new Vue({
                             dataList[0].yarn[0].name = raw.edit.yarn
                             dataList[0].fabric_process[0].name = raw.edit.fabric_process
                             dataList[0].fabric_width[0].name = raw.edit.fabric_width
+                            dataList[0].uom[0].name = raw.edit.uom
                             dataList[0].raw_material_category[0].name = raw.edit.raw_material_category
                             dataList[0].alt_name = raw.editID.alt_name
                             raw.modal = !raw.modal;
@@ -730,6 +792,9 @@ new Vue({
 
                     raw.form.yarn = data.yarn[0].name
                     raw.formID.yarn = data.yarn[0].id
+
+                    raw.form.uom = data.yarn[0].name
+                    raw.formID.uom = data.yarn[0].id
 
                     raw.form.fabric_construction = data.fabric_construction[0].name
                     raw.formID.fabric_construction = data.fabric_construction[0].id

@@ -3,6 +3,7 @@ from flask import render_template, redirect, url_for, request, session, jsonify,
 from flask_login import login_user, logout_user, current_user, login_required
 from app.main_master import bp
 from app.main_master.model import OtherMaterials, OtherMaterialsSchema
+from app.basic_master.model import Uom
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -48,9 +49,12 @@ def add_other_materials():
 
         if payload:
             try:
+                uom = Uom.query.filter_by(id = int(payload['uom'])).first()
 
                 new_data = OtherMaterials(
-                    payload['name'], payload['desc'])
+                    payload['name'], payload['desc'], payload['uom'])
+                new_data.uom.append(uom)
+
                 if len(file) != 0:
                     file = request.files['image']
                     try:
@@ -114,11 +118,18 @@ def edit_other_materials():
         print(payload)
         if payload:
             try:
+                uom = Uom.query.filter_by(id=int(payload['uom'])).first()
+
                 new_data = OtherMaterials.query.filter_by(
                     id=payload['id']).first()
+
                 temp_image = new_data.image
                 new_data.name = payload['name']
                 new_data.desc = payload['desc']
+                new_data.uom_id = uom.id
+                new_data.uom = []
+                new_data.uom.append(uom)
+
 
                 if len(file) != 0:
                     file = request.files['image']

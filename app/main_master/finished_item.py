@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, request, session, jsonify,
 from flask_login import login_user, logout_user, current_user, login_required
 from app.main_master import bp
 from app.main_master.model import FinishedGoods, FinishedGoodsSchema
-from app.basic_master.model import ProductCategory, FabricCombination, PrintTechnique, DesignNumber, Uom
+from app.basic_master.model import ProductCategory, FabricCombination, PrintTechnique, DesignNumber, Uom , SizeMaster , SizeMasterSchema
 from werkzeug import secure_filename
 import shutil
 from pathlib import Path
@@ -59,14 +59,16 @@ def add_finished_goods():
                 design_number = DesignNumber.query.filter_by(
                     id=int(payload['design_number'])).first()
                 uom = Uom.query.filter_by(id=int(payload['uom'])).first()
+                size = SizeMaster.query.filter_by(id=int(payload['size'])).first()
 
                 new_data = FinishedGoods(
-                    payload['alt_name'], int(payload['product_category']), int(payload['fabric_combination']), int(payload['print_technique']), int(payload['design_number']), int(payload['uom']))
+                    payload['alt_name'], int(payload['product_category']), int(payload['fabric_combination']), int(payload['print_technique']), int(payload['design_number']), int(payload['uom']) , int(payload['size']))
                 new_data.product_category.append(product_category)
                 new_data.fabric_combination.append(fabric_combination)
                 new_data.print_technique.append(print_technique)
                 new_data.design_number.append(design_number)
                 new_data.uom.append(uom)
+                new_data.size.append(size)
 
                 if len(file) != 0:
                     file = request.files['image']
@@ -144,22 +146,28 @@ def edit_finished_goods():
                 design_number = DesignNumber.query.filter_by(
                     id=int(payload['design_number'])).first()
                 uom = Uom.query.filter_by(id=int(payload['uom'])).first()
+                size = SizeMaster.query.filter_by(id=int(payload['size'])).first()
 
                 new_data.product_category_id = product_category.id
                 new_data.fabric_combination_id = fabric_combination.id
                 new_data.print_technique_id = print_technique.id
                 new_data.design_number_id = design_number.id
                 new_data.uom_id = uom.id
+                new_data.size_id = size.id
+
                 new_data.product_category = []
                 new_data.print_technique = []
                 new_data.fabric_combination = []
                 new_data.design_number = []
                 new_data.uom = []
+                new_data.size = []
+                
                 new_data.product_category.append(product_category)
                 new_data.fabric_combination.append(fabric_combination)
                 new_data.print_technique.append(print_technique)
                 new_data.design_number.append(design_number)
                 new_data.uom.append(uom)
+                new_data.size.append(size)
 
                 if len(file) != 0:
                     file = request.files['image']

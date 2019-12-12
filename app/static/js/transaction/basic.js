@@ -11,6 +11,7 @@ const BasicForm = ({
                 days: null,
                 target_date: null,
                 images: null,
+                trans_id : null,
                 errors: {}
             },
             finished_product_category: "",
@@ -43,6 +44,13 @@ const BasicForm = ({
         }
     },
     mounted() {
+        let self = this 
+        this.form.start_date = moment().format('YYYY-MM-DD')
+        axios.get('/transaction/get/last')
+            .then(function (response) {
+                self.form.trans_id = response.data.new_id
+        })
+
         try {
 
             let saved = JSON.parse(localStorage.getItem('basic'))
@@ -59,6 +67,7 @@ const BasicForm = ({
                 }
 
             }
+            
         }
         catch (error) {
             console.log("Error in getting data from localStorage.")
@@ -100,6 +109,7 @@ const BasicForm = ({
     methods: {
 
         checkData() {
+            this.form.errors = {}
             if (this.form.start_date && this.form.finished_product_category && this.form.desc && this.form.team_leader && this.form.days && this.form.target_date) {
                 return true
             }
@@ -179,6 +189,7 @@ const BasicForm = ({
         next() {
 
             if (this.checkData()) {
+                this.loader = true
                 let formData = new FormData()
                 formData.append('data', JSON.stringify(this.form))
                 if (this.files.length != 0) {
@@ -218,12 +229,16 @@ const BasicForm = ({
                                 self.$router.push('/activity')
 
                             }
+
+                            this.loader = false
                         }
                         catch (error) {
+                            this.loader = false
                             console.log('Unable to save data - ' + String(error))
                         }
                     })
                     .catch(function (error) {
+                        this.loader = false
                         console.log('Unable to save data - ' + String(error))
                     })
 

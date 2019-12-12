@@ -45,6 +45,13 @@ def get_transaction_report(id):
     json_data = schema.dumps(data)
     return jsonify(json_data)
 
+@bp.route('/get/last/', methods=['GET'])
+@login_required
+def get_transaction_last():
+
+    data = Transaction.query.order_by(Transaction.id.desc()).first().id
+    return jsonify({'new_id' : int(data+1)})
+
 
 @bp.route('/view/<id>', methods=['GET'])
 @login_required

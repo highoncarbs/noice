@@ -1,7 +1,7 @@
 from app import db
 from app import ma
 from datetime import datetime
-from app.basic_master.model import ProductCategorySchema, FabricCombinationSchema, DesignNumberSchema,  PrintTechniqueSchema, UomSchema
+from app.basic_master.model import ProductCategorySchema, FabricCombinationSchema, DesignNumberSchema,  PrintTechniqueSchema, UomSchema , SizeMaster , SizeMasterSchema
 from app.basic_master.model import YarnSchema, FabricProcessSchema, FabricWidthSchema,  PrintTechniqueSchema, RawMaterialCategorySchema, FabricConstructionSchema, FabricDyeSchema
 from app.basic_master.model import Location, LocationSchema, Department, DepartmentSchema
 from marshmallow_sqlalchemy import field_for
@@ -21,6 +21,8 @@ class FinishedGoods(db.Model):
         'DesignNumber', cascade="all,delete", secondary='design_number_goods', backref='design_number_goods', lazy='joined')
     uom = db.relationship('Uom', cascade="all,delete",
                           secondary='uom_goods', backref='uom_goods', lazy='joined')
+    size = db.relationship('SizeMaster', cascade="all,delete",
+                          secondary='size_goods', backref='size_goods', lazy='joined')
 
     alt_name = db.Column(db.String(100), default=None)
     product_category_id = db.Column(db.Integer, nullable=False)
@@ -28,18 +30,20 @@ class FinishedGoods(db.Model):
     print_technique_id = db.Column(db.Integer, nullable=False)
     design_number_id = db.Column(db.Integer, nullable=False)
     uom_id = db.Column(db.Integer, nullable=False)
+    size_id = db.Column(db.Integer, nullable=False , default=None)
     image = db.Column(db.String(250))
 
     __table_args__ = (db.UniqueConstraint(
-        'product_category_id', 'fabric_combination_id', 'print_technique_id', 'design_number_id', name='finished_goods_id'), )
+        'product_category_id', 'fabric_combination_id', 'print_technique_id', 'design_number_id', 'size_id', 'uom_id', name='finished_goods_id'), )
 
-    def __init__(self, alt_name, product_category_id, fabric_combination_id, print_technique_id, design_number_id, uom_id):
+    def __init__(self, alt_name, product_category_id, fabric_combination_id, print_technique_id, design_number_id, uom_id , size_id):
         self.alt_name = alt_name
         self.product_category_id = product_category_id
         self.fabric_combination_id = fabric_combination_id
         self.print_technique_id = print_technique_id
         self.design_number_id = design_number_id
         self.uom_id = uom_id
+        self.size_id = size_id
 
     def get_goods_name(self):
         product_category = self.product_category
@@ -47,7 +51,7 @@ class FinishedGoods(db.Model):
         print_technique = self.print_technique
         design_number = self.design_number
         uom = self.uom
-        goods_name = "{} - {} - {} - {}".format(
+        goods_name = "{} / {} / {} / {}".format(
             product_category[0].name, fabric_combination[0].name, print_technique[0].name, design_number[0].name)
         return goods_name
 
@@ -88,6 +92,13 @@ db.Table('uom_goods',
          db.Column('goods_id', db.Integer, db.ForeignKey(
              'finished_goods.id', ondelete='SET NULL'))
          )
+db.Table('size_goods',
+         db.Column('id', db.Integer, primary_key=True),
+         db.Column('size_id', db.Integer, db.ForeignKey(
+             'size_master.id', ondelete='SET NULL')),
+         db.Column('goods_id', db.Integer, db.ForeignKey(
+             'finished_goods.id', ondelete='SET NULL'))
+         )
 
 
 class FinishedGoodsSchema(ma.ModelSchema):
@@ -98,11 +109,12 @@ class FinishedGoodsSchema(ma.ModelSchema):
     print_technique = ma.Nested(PrintTechniqueSchema, many=True)
     design_number = ma.Nested(DesignNumberSchema, many=True)
     uom = ma.Nested(UomSchema, many=True)
+    size = ma.Nested(SizeMasterSchema, many=True)
     image = field_for(FinishedGoods, 'image', dump_only=True)
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
-        goods_name = "{} - {} - {} - {}".format(
+        goods_name = "{} / {} / {} / {}".format(
             obj.product_category[0].name, obj.fabric_combination[0].name, obj.print_technique[0].name, obj.design_number[0].name)
         return goods_name
 
@@ -127,6 +139,8 @@ class RawGoods(db.Model):
         'RawMaterialCategory', cascade="all,delete", secondary='raw_material_category_goods', backref='raw_material_category_goods', lazy='joined')
     fabric_construction = db.relationship('FabricConstruction', cascade="all,delete",
                                           secondary='fabric_construction_goods', backref='fabric_construction_goods', lazy='joined')
+    uom = db.relationship('Uom', cascade="all,delete",
+                          secondary='uom_raw_goods', backref='uom_raw_goods', lazy='joined')
 
     alt_name = db.Column(db.String(100), default=None)
     yarn_id = db.Column(db.Integer, nullable=False)
@@ -134,13 +148,14 @@ class RawGoods(db.Model):
     fabric_width_id = db.Column(db.Integer, nullable=False)
     fabric_dye_id = db.Column(db.Integer, nullable=False)
     raw_material_category_id = db.Column(db.Integer, nullable=False)
+    uom_id = db.Column(db.Integer, nullable=False ,  default=None)
     fabric_construction_id = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(250))
 
     __table_args__ = (db.UniqueConstraint(
-        'yarn_id', 'fabric_process_id', 'fabric_width_id', 'fabric_dye_id', 'raw_material_category_id', 'fabric_construction_id',  name='raw_goods_id'), )
+        'yarn_id', 'fabric_process_id', 'fabric_width_id', 'fabric_dye_id', 'raw_material_category_id', 'fabric_construction_id', 'uom_id' , name='raw_goods_id'), )
 
-    def __init__(self, alt_name, yarn_id, fabric_process_id, fabric_width_id, fabric_dye_id, raw_material_category_id, fabric_construction_id):
+    def __init__(self, alt_name, yarn_id, fabric_process_id, fabric_width_id, fabric_dye_id, raw_material_category_id, fabric_construction_id , uom_id):
         self.alt_name = alt_name
         self.yarn_id = yarn_id
         self.fabric_process_id = fabric_process_id
@@ -148,17 +163,7 @@ class RawGoods(db.Model):
         self.fabric_dye_id = fabric_dye_id
         self.raw_material_category_id = raw_material_category_id
         self.fabric_construction_id = fabric_construction_id
-
-    # def get_goods_name(self):
-    #     yarn = self.yarn
-    #     fabric_combination = self.fabric_combo
-    #     print_technique = self.print_technique
-    #     design_number = self.design_number
-    #     uom = self.uom
-    #     goods_name = "{} - {} - {} - {}".format(
-    #         product_category[0].name, fabric_combination[0].name, print_technique[0].name, design_number[0].name)
-    #     return goods_name
-
+        self.uom_id = uom_id
 
 db.Table('yarn_goods',
          db.Column('id', db.Integer, primary_key=True),
@@ -207,6 +212,15 @@ db.Table('fabric_construction_goods',
              'raw_goods.id', ondelete='SET NULL'))
          )
 
+db.Table('uom_raw_goods',
+         db.Column('id', db.Integer, primary_key=True),
+         db.Column('uom_id', db.Integer, db.ForeignKey(
+             'uom.id', ondelete='SET NULL')),
+         db.Column('goods_id', db.Integer, db.ForeignKey(
+             'raw_goods.id', ondelete='SET NULL'))
+         )
+
+
 
 class RawGoodsSchema(ma.ModelSchema):
     id = field_for(RawGoods, 'id', dump_only=True)
@@ -218,6 +232,7 @@ class RawGoodsSchema(ma.ModelSchema):
     raw_material_category = ma.Nested(RawMaterialCategorySchema, many=True)
     fabric_construction = ma.Nested(FabricConstructionSchema, many=True)
     image = field_for(RawGoods, 'image', dump_only=True)
+    uom = ma.Nested(UomSchema, many=True)
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
@@ -234,20 +249,33 @@ class Accessories(db.Model):
     name = db.Column(db.String(50))
     desc = db.Column(db.String(100))
     image = db.Column(db.String(250))
+    uom = db.relationship('Uom', cascade="all,delete",
+                          secondary='uom_acc', backref='uom_acc', lazy='joined')
+    uom_id = db.Column(db.Integer, nullable=False ,  default=None)
     __table_args__ = (db.UniqueConstraint(
-        'name', 'desc',  name='acc_id'), )
+        'name', 'desc','uom_id' , name='acc_id'), )
 
 
-    def __init__(self, name, desc):
+    def __init__(self, name, desc , uom_id):
         self.name = name
         self.desc = desc
+        self.uom_id = uom_id
 
+db.Table('uom_acc',
+         db.Column('id', db.Integer, primary_key=True),
+         db.Column('uom_id', db.Integer, db.ForeignKey(
+             'uom.id', ondelete='SET NULL')),
+         db.Column('acc_id', db.Integer, db.ForeignKey(
+             'accessories.id', ondelete='SET NULL'))
+         )
 
 class AccessoriesSchema(ma.ModelSchema):
     id = field_for(Accessories, 'id', dump_only=True)
     name = field_for(Accessories, 'name', dump_only=True)
     desc = field_for(Accessories, 'desc', dump_only=True)
     image = field_for(Accessories, 'image', dump_only=True)
+    uom = ma.Nested(UomSchema, many=True)
+
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
@@ -264,15 +292,26 @@ class OtherMaterials(db.Model):
     name = db.Column(db.String(50))
     desc = db.Column(db.String(100))
     image = db.Column(db.String(250))
+    uom = db.relationship('Uom', cascade="all,delete",
+                          secondary='uom_oth', backref='uom_oth', lazy='joined')
+    uom_id = db.Column(db.Integer, nullable=False ,  default=None)
     __table_args__ = (db.UniqueConstraint(
-        'name', 'desc',  name='oth_mat_id'), )
+        'name', 'desc', 'uom_id', name='oth_mat_id'), )
 
 
 
-    def __init__(self, name, desc):
+    def __init__(self, name, desc , uom_id):
         self.name = name
         self.desc = desc
+        self.uom_id = uom_id
 
+db.Table('uom_oth',
+         db.Column('id', db.Integer, primary_key=True),
+         db.Column('uom_id', db.Integer, db.ForeignKey(
+             'uom.id', ondelete='SET NULL')),
+         db.Column('oth_id', db.Integer, db.ForeignKey(
+             'other_materials.id', ondelete='SET NULL'))
+         )
 
 class OtherMaterialsSchema(ma.ModelSchema):
     id = field_for(OtherMaterials, 'id', dump_only=True)
@@ -280,6 +319,7 @@ class OtherMaterialsSchema(ma.ModelSchema):
     desc = field_for(OtherMaterials, 'desc', dump_only=True)
     image = field_for(OtherMaterials, 'image', dump_only=True)
     gen_name = fields.Method("get_goods_name")
+    uom = ma.Nested(UomSchema, many=True)
 
     class meta:
         model = OtherMaterials

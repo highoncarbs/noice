@@ -77,6 +77,12 @@
                     <div class="field">
                         <div class="field is-grouped">
                             <div class="control">
+                                <label for="" class="label">PPD No.</label>
+                                <p class="tag is-large">
+                                    [[ form.trans_id ]]
+                                </p>
+                            </div>
+                            <div class="control">
 
                                 <label for="" class="label">Date</label>
                                 <input type="date" v-model="form.start_date" class="input">
@@ -146,10 +152,11 @@
                         <div class="control">
 
 
-                            <button class="button is-black" @click="next">
+                            <button class="button is-black" @click="next" :disabled="loader">
                                 Next
                                 <span class="icon icon-btn-l">
-                                    <feather type="arrow-right" size="1.3rem"></feather>
+                                        <feather type="refresh-cw" v-if="loader"  size="1.3rem" animation="spin"></feather>
+                                        <feather type="arrow-right" v-if="!loader" size="1.3rem"></feather>
                                 </span>
                             </button>
 

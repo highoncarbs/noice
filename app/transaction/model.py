@@ -167,14 +167,11 @@ class FinishedItem(base):
                                 db.ForeignKey('transaction_materials.id', ondelete='SET NULL'))
     finished_mat = db.relationship(FinishedGoods,  secondary='finished_mat',
                                backref='finished_mat', cascade='all ,delete', lazy='joined')
-    uom = db.relationship(Uom,  secondary='finished_mat_uom',
-                               backref='finished_mat_uom', cascade='all ,delete', lazy='joined')
     quantity = db.Column(db.Float , nullable = False , default = 1)
 
 
-    def __init__(self, finished_mat , uom , quantity):
+    def __init__(self, finished_mat , quantity):
         self.finished_mat.append(finished_mat)
-        self.uom.append(uom)
         self.quantity = quantity
 
     material = db.relationship(TransactionMaterials, lazy="joined")
@@ -182,10 +179,6 @@ class FinishedItem(base):
 db.Table('finished_mat',
          db.Column('item_id', db.Integer, db.ForeignKey('finished_item.id', ondelete='SET NULL')),
          db.Column('finished_goods_id', db.Integer, db.ForeignKey('finished_goods.id', ondelete='SET NULL'))
-         )
-db.Table('finished_mat_uom',
-         db.Column('item_id', db.Integer, db.ForeignKey('finished_item.id', ondelete='SET NULL')),
-         db.Column('finished_mat_uom_id', db.Integer, db.ForeignKey('uom.id', ondelete='SET NULL'))
          )
 
 
@@ -197,14 +190,11 @@ class AccessoriesItem(base):
                                 db.ForeignKey('transaction_materials.id', ondelete='SET NULL'))
     accessories_mat = db.relationship(Accessories,  secondary='accessories_mat',
                                backref='accessories_mat', cascade='all ,delete', lazy='joined')
-    uom = db.relationship(Uom,  secondary='accessories_mat_uom',
-                               backref='accessories_mat_uom', cascade='all ,delete', lazy='joined')
     quantity = db.Column(db.Float , nullable = False , default = 1)
 
 
-    def __init__(self, accessories_mat , uom , quantity):
+    def __init__(self, accessories_mat , quantity):
         self.accessories_mat.append(accessories_mat)
-        self.uom.append(uom)
         self.quantity = quantity
 
     material = db.relationship(TransactionMaterials, lazy="joined")
@@ -213,11 +203,6 @@ db.Table('accessories_mat',
          db.Column('item_id', db.Integer, db.ForeignKey('accessories_item.id', ondelete='SET NULL')),
          db.Column('accessories_id', db.Integer, db.ForeignKey('accessories.id', ondelete='SET NULL'))
          )
-db.Table('accessories_mat_uom',
-         db.Column('item_id', db.Integer, db.ForeignKey('accessories_item.id', ondelete='SET NULL')),
-         db.Column('accessories_mat_uom_id', db.Integer, db.ForeignKey('uom.id', ondelete='SET NULL'))
-         )
-
 
 
 class OtherMaterialsItem(base):
@@ -227,14 +212,12 @@ class OtherMaterialsItem(base):
                                 db.ForeignKey('transaction_materials.id', ondelete='SET NULL'))
     other_mat = db.relationship(OtherMaterials,  secondary='other_mat',
                                backref='other_mat', cascade='all ,delete', lazy='joined')
-    uom = db.relationship(Uom,  secondary='other_mat_uom',
-                               backref='other_mat_uom', cascade='all ,delete', lazy='joined')
+    
     quantity = db.Column(db.Float , nullable = False , default = 1)
 
 
-    def __init__(self, other_mat , uom , quantity):
+    def __init__(self, other_mat , quantity):
         self.other_mat.append(other_mat)
-        self.uom.append(uom)
         self.quantity = quantity
 
     material = db.relationship(TransactionMaterials, lazy="joined")
@@ -242,10 +225,6 @@ class OtherMaterialsItem(base):
 db.Table('other_mat',
          db.Column('item_id', db.Integer, db.ForeignKey('other_materials_item.id', ondelete='SET NULL')),
          db.Column('other_materials_id', db.Integer, db.ForeignKey('other_materials.id', ondelete='SET NULL'))
-         )
-db.Table('other_mat_uom',
-         db.Column('item_id', db.Integer, db.ForeignKey('other_materials_item.id', ondelete='SET NULL')),
-         db.Column('other_mat_uom_id', db.Integer, db.ForeignKey('uom.id', ondelete='SET NULL'))
          )
 
 
@@ -256,14 +235,11 @@ class RawItem(base):
                                 db.ForeignKey('transaction_materials.id', ondelete='SET NULL'))
     raw_mat = db.relationship(RawGoods,  secondary='raw_mat',
                                backref='raw_mat', cascade='all ,delete', lazy='joined')
-    uom = db.relationship(Uom,  secondary='raw_mat_uom',
-                               backref='raw_mat_uom', cascade='all ,delete', lazy='joined')
     quantity = db.Column(db.Float , nullable = False , default = 1)
 
 
-    def __init__(self, raw_mat , uom , quantity):
+    def __init__(self, raw_mat , quantity):
         self.raw_mat.append(raw_mat)
-        self.uom.append(uom)
         self.quantity = quantity
 
     material = db.relationship(TransactionMaterials, lazy="joined")
@@ -272,10 +248,6 @@ db.Table('raw_mat',
          db.Column('item_id', db.Integer, db.ForeignKey('raw_item.id', ondelete='SET NULL')),
          db.Column('raw_goods_id', db.Integer, db.ForeignKey('raw_goods.id', ondelete='SET NULL'))
          )
-db.Table('raw_mat_uom',
-         db.Column('item_id', db.Integer, db.ForeignKey('raw_item.id', ondelete='SET NULL')),
-         db.Column('raw_mat_uom_id', db.Integer, db.ForeignKey('uom.id', ondelete='SET NULL'))
-         )
 
 
 class RawItemSchema(ma.ModelSchema):
@@ -283,8 +255,7 @@ class RawItemSchema(ma.ModelSchema):
     
     quantity = field_for(RawItem, 'quantity', dump_only=True)
     raw_mat = ma.Nested(RawGoodsSchema ,  many=True)
-    uom = ma.Nested(UomSchema ,  many=True)
-
+    
     class meta:
         model = RawItem
 
@@ -298,8 +269,7 @@ class FinishedItemSchema(ma.ModelSchema):
     
     quantity = field_for(FinishedItem, 'quantity', dump_only=True)
     finished_mat = ma.Nested(FinishedGoodsSchema ,  many=True)
-    uom = ma.Nested(UomSchema ,  many=True)
-
+    
     class meta:
         model = FinishedItem
 
@@ -311,8 +281,7 @@ class AccessoriesItemSchema(ma.ModelSchema):
     
     quantity = field_for(AccessoriesItem, 'quantity', dump_only=True)
     accessories_mat = ma.Nested(AccessoriesSchema ,  many=True)
-    uom = ma.Nested(UomSchema ,  many=True)
-
+    
     class meta:
         model = AccessoriesItem
 
@@ -325,8 +294,7 @@ class OtherMaterialsItemSchema(ma.ModelSchema):
     
     quantity = field_for(OtherMaterialsItem, 'quantity', dump_only=True)
     other_mat = ma.Nested(OtherMaterialsSchema ,  many=True)
-    uom = ma.Nested(UomSchema ,  many=True)
-
+    
     class meta:
         model = OtherMaterialsItem
 

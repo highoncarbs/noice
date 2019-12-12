@@ -3,7 +3,7 @@ const MaterialForm = ({
     data() {
         return {
             dataUom: [],
-
+            loader: false,
             raw_goods_inputs: [],
             data_raw_goods: [],
             dataRawGoods: [],
@@ -166,7 +166,11 @@ const MaterialForm = ({
             }
 
         },
-       
+        setRawGoods(option) {
+            this.raw_goods_inputs[this.current_raw].goods = option.id
+            this.raw_goods_inputs[this.current_raw].uom = option.uom[0].name
+        },
+        
         addFinishedRow() {
             this.finished_goods_inputs.push({
                 goods: '',
@@ -176,6 +180,10 @@ const MaterialForm = ({
         },
         deleteFinishedRow(index) {
             this.finished_goods_inputs.splice(index, 1)
+        },
+        setFinishedGoods(option) {
+            this.finished_goods_inputs[this.current_finished].goods = option.id
+            this.finished_goods_inputs[this.current_finished].uom = option.uom[0].name
         },
         getFinishedGoods(name) {
             if (!name.length) {
@@ -217,6 +225,12 @@ const MaterialForm = ({
             }
 
         },
+        setAccessoriesGoods(option) {
+            this.accessories_goods_inputs[this.current_accessories].goods = option.id
+            this.accessories_goods_inputs[this.current_accessories].uom = option.uom[0].name
+        },
+
+
         addOtherMaterialsRow() {
             this.other_materials_goods_inputs.push({
                 goods: '',
@@ -242,6 +256,10 @@ const MaterialForm = ({
             }
 
         },
+        setOtherMaterial(option) {
+            this.other_materials_goods_inputs[this.current_other_materials].goods = option.id
+            this.other_materials_goods_inputs[this.current_other_materials].uom = option.uom[0].name
+        },
 
 
         getUom(name) {
@@ -260,6 +278,7 @@ const MaterialForm = ({
 
         },
         submitData() {
+            this.loader = true
             let basic_id= JSON.parse(localStorage.getItem('basic'))[1]
             let activity_id= JSON.parse(localStorage.getItem('activity'))[0]
             let self = this 
@@ -285,8 +304,10 @@ const MaterialForm = ({
                             window.location.href = '/reports/view'
                             
                         }
+                        self.loader = false
                     }
                     catch (error) {
+                        self.loader = false
                         console.log('Error sending JSON data - activity list' + String(error))
                     }
             })

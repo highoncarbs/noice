@@ -8,6 +8,7 @@ new Vue({
                 print_technique: '',
                 design_number: '',
                 uom: '',
+                size: '',
                 errors: {}
             },
             formID: {
@@ -17,6 +18,7 @@ new Vue({
                 design_number: null,
                 alt_name: null,
                 uom: null,
+                size: null,
                 image: null
             },
             edit: {
@@ -25,6 +27,7 @@ new Vue({
                 print_technique: null,
                 design_number: null,
                 uom: null,
+                size: null,
                 image: null
             },
             editID: {
@@ -34,6 +37,7 @@ new Vue({
                 design_number: null,
                 alt_name: null,
                 uom: null,
+                size: null,
                 image: null,
                 id: null
             },
@@ -42,6 +46,7 @@ new Vue({
             data_print_technique: [],
             data_design_number: [],
             data_uom: [],
+            data_size: [],
             errors: {},
             view: true,
             data: [],
@@ -67,6 +72,24 @@ new Vue({
                 raw.$buefy.snackbar.open({
                     duration: 4000,
                     message: 'Unable to fetch data for Product Category',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
+        axios.get('/basic_master/get/size_master')
+            .then(function (response) {
+                raw.data_size = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                raw.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Size',
                     type: 'is-light',
                     position: 'is-top-right',
                     actionText: 'Close',
@@ -161,6 +184,17 @@ new Vue({
                 })
             }
         },
+        autocompleteSize() {
+
+            if (this.data_size.length != 0) {
+                return this.data_size.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.form.size.toLowerCase()) >= 0
+                })
+            }
+        },
         autocompleteFabricCombination() {
 
             if (this.data_fabric_combination.length != 0) {
@@ -241,6 +275,9 @@ new Vue({
                                     case 'uom':
                                         self.data_uom.push(response.data.data)
                                         break;
+                                    case 'size':
+                                        self.data_size.push(response.data.data)
+                                        break;
 
                                     default:
                                         break;
@@ -297,6 +334,14 @@ new Vue({
             }
             else {
                 this.formID.fabric_combination = null
+            }
+        },
+        getSize(option) {
+            if (option != null) {
+                this.formID.size = option.id
+            }
+            else {
+                this.formID.size = null
             }
         },
         getDesignNumber(option) {
@@ -363,6 +408,14 @@ new Vue({
                 this.editID.uom = null
             }
         },
+        getEditSize(option) {
+            if (option != null) {
+                this.editID.size = option.id
+            }
+            else {
+                this.editID.size = null
+            }
+        },
         getData(event) {
             let raw = this;
 
@@ -392,7 +445,7 @@ new Vue({
         checkData(e) {
             this.form.errors = {}
 
-            if (this.formID.product_category && this.formID.fabric_combination && this.formID.print_technique && this.formID.design_number && this.formID.uom) {
+            if (this.formID.product_category && this.formID.fabric_combination && this.formID.print_technique && this.formID.design_number && this.formID.uom  && this.formID.size) {
                 return true;
             }
             if (!this.formID.product_category) {
@@ -410,16 +463,19 @@ new Vue({
             if (!this.formID.uom) {
                 this.$set(this.form.errors, 'uom', true)
             }
+            if (!this.formID.size) {
+                this.$set(this.form.errors, 'size', true)
+            }
 
 
         },
         checkEditData(e) {
             this.errors = {}
 
-            if (this.editID.product_category && this.editID.fabric_combination && this.editID.print_technique && this.editID.design_number && this.editID.uom) {
+            if (this.editID.product_category && this.editID.fabric_combination && this.editID.print_technique && this.editID.design_number && this.editID.uom && this.editID.size) {
                 return true;
             }
-            if (!this.editID.product_category || !this.editID.fabric_combination || !this.editID.print_technique || !this.editID.design_number || !this.editID.uom) {
+            if (!this.editID.product_category || !this.editID.fabric_combination || !this.editID.print_technique || !this.editID.design_number || !this.editID.uom || !this.editID.size) {
                 this.edit.errors.push('Data required');
             }
 
@@ -430,6 +486,7 @@ new Vue({
             this.form.print_technique = '';
             this.form.design_number = '';
             this.form.uom = '';
+            this.form.size = '';
             this.formID.uom = null;
             this.formID.product_category = null;
             this.formID.fabric_combination = null;
@@ -437,6 +494,7 @@ new Vue({
             this.formID.design_number = null;
             this.formID.alt_name = null;
             this.formID.image = null;
+            this.formID.size = null;
 
         },
         submitData(e) {
@@ -568,6 +626,9 @@ new Vue({
 
             this.edit.uom = data.uom[0].name
             this.editID.uom = data.uom[0].id
+         
+            this.edit.size = data.size[0].name
+            this.editID.size = data.size[0].id
 
         },
         saveEditData(event) {
@@ -597,6 +658,8 @@ new Vue({
                             dataList[0].print_technique[0].name = raw.edit.print_technique
                             dataList[0].design_number[0].name = raw.edit.design_number
                             dataList[0].alt_name = raw.editID.alt_name
+                            dataList[0].size = raw.editID.size
+                            dataList[0].uom = raw.editID.uom
                             // dataList[0].image = reader.readAsDataURL(raw.editID.image.files[0])
                             raw.modal = !raw.modal;
 
@@ -670,6 +733,9 @@ new Vue({
 
                     raw.form.uom = data.uom[0].name
                     raw.formID.uom = data.uom[0].id
+                   
+                    raw.form.size = data.size[0].name
+                    raw.formID.size = data.size[0].id
 
                     raw.form.product_category = data.product_category[0].name
                     raw.formID.product_category = Number(data.product_category[0].id)
