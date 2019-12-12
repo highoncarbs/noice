@@ -716,7 +716,10 @@ new Vue({
                             dataList[0].yarn[0].name = raw.edit.yarn
                             dataList[0].fabric_process[0].name = raw.edit.fabric_process
                             dataList[0].fabric_width[0].name = raw.edit.fabric_width
+
                             dataList[0].uom[0].name = raw.edit.uom
+                            dataList[0].uom[0].id = raw.editID.uom
+
                             dataList[0].raw_material_category[0].name = raw.edit.raw_material_category
                             dataList[0].alt_name = raw.editID.alt_name
                             raw.modal = !raw.modal;

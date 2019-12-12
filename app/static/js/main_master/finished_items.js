@@ -22,12 +22,12 @@ new Vue({
                 image: null
             },
             edit: {
-                product_category: null,
-                fabric_combination: null,
-                print_technique: null,
-                design_number: null,
-                uom: null,
-                size: null,
+                product_category: '',
+                fabric_combination: '',
+                print_technique: '',
+                design_number: '',
+                uom: '',
+                size: '',
                 image: null
             },
             editID: {
@@ -658,9 +658,13 @@ new Vue({
                             dataList[0].print_technique[0].name = raw.edit.print_technique
                             dataList[0].design_number[0].name = raw.edit.design_number
                             dataList[0].alt_name = raw.editID.alt_name
-                            dataList[0].size = raw.editID.size
-                            dataList[0].uom = raw.editID.uom
-                            // dataList[0].image = reader.readAsDataURL(raw.editID.image.files[0])
+
+                            dataList[0].size[0].name = raw.edit.size
+                            dataList[0].size[0].id = raw.editID.size
+                            
+                            dataList[0].uom[0].name = raw.edit.uom
+                            dataList[0].uom[0].id = raw.editID.uom
+                            
                             raw.modal = !raw.modal;
 
                             raw.$buefy.snackbar.open({
