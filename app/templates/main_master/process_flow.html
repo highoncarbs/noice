@@ -87,6 +87,12 @@
                                 :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
                                 @select="option => task.department = option
                                 ">
+                                <template slot="header">
+                                    <a @click="showAddData('department')">
+                                        <span> Add new... </span>
+                                    </a>
+                                </template>
+                                <template slot="empty">No results for [[ query_department ]]</template>
                             </b-autocomplete>
                             <small class="tag is-danger is-light is-underline" v-if="task.error.department">Invalid
                                 Data</small>
@@ -98,6 +104,12 @@
                             <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
                                 :open-on-focus='true' :data="autocompleteLocation" field="name" @select=" option => task.location = option
                                 ">
+                                <template slot="header">
+                                    <a @click="showAddData('location')">
+                                        <span> Add new... </span>
+                                    </a>
+                                </template>
+                                <template slot="empty">No results for [[ query_location ]]</template>
                             </b-autocomplete>
                             <small class="tag is-danger is-light is-underline" v-if="task.error.location">Invalid
                                 Data</small>
@@ -106,7 +118,7 @@
                     </td>
                     <td>
                         <div class="control">
-                            <input type="text" class="input" v-model="task.days" placeholder="Enter Days">
+                            <input type="text" class="input" v-model="task.days" placeholder="0">
                             <small class="tag is-danger is-light is-underline" v-if="task.error.days">Invalid
                                 Data</small>
 

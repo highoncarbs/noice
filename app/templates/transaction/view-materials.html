@@ -19,16 +19,16 @@
                 </colgroup>
                 <thead >
                     <th class="has-text-grey">Raw Material</th>
-                    <th class="has-text-grey">Quantity</th>
                     <th class="has-text-grey">UOM</th>
+                    <th class="has-text-grey">Quantity</th>
 
                 </thead>
 
                 <tbody>
                     <tr v-for="(raw, index) in raw_goods_inputs">
                         <th v-html="raw.raw_mat[0].gen_name"></th>
+                        <th v-html="raw.raw_mat[0].uom[0].name"></th>
                         <th v-html="raw.quantity"></th>
-                        <th v-html="raw.uom[0].name"></th>
 
                     </tr>
                 </tbody>
@@ -48,15 +48,15 @@
                 </colgroup>
                 <thead>
                     <th class="has-text-grey" >Finished Goods</th>
-                    <th class="has-text-grey">Quantity</th>
                     <th class="has-text-grey">UOM</th>
+                    <th class="has-text-grey">Quantity</th>
                 </thead>
 
                 <tbody>
                     <tr v-for="(row, index) in finished_goods_inputs">
                         <th v-html="row.finished_mat[0].gen_name"></th>
+                        <th v-html="row.finished_mat[0].uom[0].name"></th>
                         <th v-html="row.quantity"></th>
-                        <th v-html="row.uom[0].name"></th>
 
 
                     </tr>
@@ -75,15 +75,15 @@
                 </colgroup>
                 <thead>
                     <th class="has-text-grey">Accessories Goods</th>
-                    <th class="has-text-grey">Quantity</th>
                     <th class="has-text-grey">UOM</th>
+                    <th class="has-text-grey">Quantity</th>
                 </thead>
 
                 <tbody>
                     <tr v-for="(row, index) in accessories_goods_inputs" class="has-text-weight-bold">
                         <th v-html="row.accessories_mat[0].gen_name"></th>
                         <th v-html="row.quantity"></th>
-                        <th v-html="row.uom[0].name"></th>
+                        <th v-html="row.accessories_mat[0].uom[0].name"></th>
 
 
                     </tr>
@@ -102,14 +102,14 @@
                 </colgroup>
                 <thead>
                     <th class="has-text-grey">Other Materials</th>
-                    <th class="has-text-grey">Quantity</th>
                     <th class="has-text-grey">UOM</th>
+                    <th class="has-text-grey">Quantity</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(other_materials, index) in other_materials_goods_inputs">
+                    <tr v-for="(row, index) in other_materials_goods_inputs">
                             <th v-html="row.other_mat[0].gen_name"></th>
+                            <th v-html="row.other_mat[0].uom[0].name"></th>
                             <th v-html="row.quantity"></th>
-                            <th v-html="row.uom[0].name"></th>
                     </tr>
                 </tbody>
             </table>

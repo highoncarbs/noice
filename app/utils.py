@@ -1,5 +1,5 @@
 
-ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg','JPG','PNG','JPEG', 'jpeg', 'gif'])
 
 
 def allowed_file(filename):

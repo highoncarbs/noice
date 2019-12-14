@@ -98,7 +98,7 @@ const BasicForm = ({
                 .then(function (response) {
                     if (response.data) {
                         self.form = JSON.parse(response.data)[0]
-                        self.$set(self.form , 'transaction_id' , self.pp_num)
+                        self.$set(self.form, 'transaction_id', self.pp_num)
                         self.ogData = JSON.parse(response.data)[0]
                         // self.form.finished_product_category = null
                         self.getProductCategory(self.form['finished_product_category'][0])
@@ -300,9 +300,9 @@ const BasicForm = ({
 
                 formData.append('files[' + i + ']', file);
             }
-           
+
             let self = this
-            axios.post('/transaction/update/basic/'+ String(this.pp_num), formData, {
+            axios.post('/transaction/update/basic/' + String(this.pp_num), formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -312,18 +312,32 @@ const BasicForm = ({
                     try {
 
                         if (response.data.success) {
-                            let selectedData = []
-
-
-                            var basic_id = { 'basic_id': response.data.basic_id }
-                            var upload_folder = { 'upload_folder': response.data.upload_folder }
-                            selectedData.push(self.form)
-
-                            selectedData.push(basic_id)
-                            selectedData.push(upload_folder)
-
-                            localStorage.setItem('basic', JSON.stringify(selectedData))
-                            self.$router.push('/edit-activity')
+                            if (response.data.success) {
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: "Data updated",
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+                            }
+                            else {
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: "Something went wrong",
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+                            }
 
                         }
                     }

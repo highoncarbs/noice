@@ -37,6 +37,7 @@ def get_accessories_last():
         data_schema = AccessoriesSchema()
         data = Accessories.query.order_by(Accessories.id.desc()).first()
         json_data = data_schema.dump(data)
+        print(json_data)
         return jsonify(json_data)
 
 

@@ -246,8 +246,8 @@ new Vue({
             this.$buefy.dialog.prompt({
                 message: `<b>Add Data</b> `,
                 inputAttrs: {
-                    placeholder: 'e.g. SKD',
-                    maxlength: 20,
+                    placeholder: 'e.g. Data',
+                    maxlength: 100,
                     value: this.name
                 },
                 confirmText: 'Add',
@@ -257,7 +257,7 @@ new Vue({
                     axios
                         .post('/basic_master/add/' + String(val), formdata)
                         .then(function (response) {
-
+                            console.log(response.data)
                             if (response.data.success) {
                                 switch (val) {
                                     case 'product_category':
@@ -275,7 +275,7 @@ new Vue({
                                     case 'uom':
                                         self.data_uom.push(response.data.data)
                                         break;
-                                    case 'size':
+                                    case 'size_master':
                                         self.data_size.push(response.data.data)
                                         break;
 

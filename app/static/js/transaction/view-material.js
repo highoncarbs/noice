@@ -39,12 +39,15 @@ const MaterialForm = ({
             let self = this
             axios.get('/transaction/get/materials/' + String(pp_num))
                 .then(function (response) {
+
                     if (response.data) {
                         payload = JSON.parse(response.data)[0]
                         
                         console.log(payload)
                         self.raw_goods_inputs = payload['raw_materials']
                         self.finished_goods_inputs = payload['finished_materials']
+                        self.other_materials_goods_inputs = payload['other_materials']
+                        self.accessories_goods_inputs = payload['accessories_materials']
                     }
                 })
                 .catch(function (error) {

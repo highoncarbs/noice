@@ -89,6 +89,72 @@ new Vue({
     },
     delimiters: ['[[', ']]'],
     methods: {
+        showAddData(val) {
+            let self = this
+            this.$buefy.dialog.prompt({
+                message: `<b>Add Data</b> `,
+                inputAttrs: {
+                    placeholder: 'e.g. Data',
+                    maxlength: 100,
+                    value: this.name
+                },
+                confirmText: 'Add',
+                onConfirm: (value) => {
+
+                    let formdata = { 'name': value }
+                    axios
+                        .post('/basic_master/add/' + String(val), formdata)
+                        .then(function (response) {
+                            console.log(response.data)
+                            if (response.data.success) {
+                                switch (val) {
+                                    case 'department':
+                                        self.data_department.push(response.data.data)
+                                        break;
+                                    case 'location':
+                                        self.data_location.push(response.data.data)
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: response.data.success,
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+
+                            }
+                            else {
+                                if (response.data.message) {
+                                    self.$buefy.snackbar.open({
+                                        duration: 4000,
+                                        message: response.data.message,
+                                        type: 'is-light',
+                                        position: 'is-top-right',
+                                        actionText: 'Close',
+                                        queue: true,
+                                        onAction: () => {
+                                            this.isActive = false;
+                                        }
+                                    })
+                                }
+                            }
+
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+
+                }
+            })
+        },
         getLastRow() {
             let raw = this
             axios.get('/main_master/get/process_flow/last')

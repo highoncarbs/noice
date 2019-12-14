@@ -86,7 +86,8 @@
 
                                 <label for="" class="label">Date</label>
                                 <input type="date" v-model="form.start_date" class="input">
-                                <small class="tag is-danger is-light is-underline" v-if="form.errors.start_date">Data Required</small>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.start_date">Data
+                                    Required</small>
 
                             </div>
                         </div>
@@ -97,8 +98,15 @@
                                 <b-autocomplete v-model="finished_product_category"
                                     placeholder="Select Product Category" :keep-first='true' :open-on-focus='true'
                                     :data="autocompleteProductCategory" field="name" @select="getProductCategory">
+                                    <template slot="header">
+                                        <a @click="showAddData('product_category')">
+                                            <span> Add new... </span>
+                                        </a>
+                                    </template>
+                                    <template slot="empty">No results for [[ finished_product_category ]]</template>
                                 </b-autocomplete>
-                                <small class="tag is-danger is-light is-underline" v-if="form.errors.finished_product_category">Data Required</small>
+                                <small class="tag is-danger is-light is-underline"
+                                    v-if="form.errors.finished_product_category">Data Required</small>
 
 
                             </div>
@@ -109,7 +117,8 @@
                                 <label for="" class="label">Description</label>
                                 <textarea type="text" class="input textarea" v-model="form.desc"
                                     placeholder="Enter Description for this transaction"></textarea>
-                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.desc">Data Required</small>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.desc">Data
+                                    Required</small>
 
                             </div>
                         </div>
@@ -120,7 +129,8 @@
                                 <label for="" class="label">Team Leader</label>
                                 <input type="text" class="input" v-model="form.team_leader"
                                     placeholder="Select Team Leader">
-                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.team_leader">Data Required</small>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.team_leader">Data
+                                    Required</small>
 
                             </div>
                             <div class="control is-expanded">
@@ -135,13 +145,15 @@
                                 <label for="" class="label">Days Required</label>
                                 <input type="text" class="input" v-on:input="getDate" placeholder="Enter Days"
                                     v-model="form.days">
-                                    <small class="tag is-danger is-light is-underline" v-if="form.errors.days">Data Required</small>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.days">Data
+                                    Required</small>
 
                             </div>
                             <div class="control">
                                 <label for="" class="label">Target Date</label>
-                                <input type="date" class="input" v-model="form.target_date">
-                                <small class="tag is-danger is-light is-underline" v-if="form.errors.target_date">Data Required</small>
+                                <input type="date" class="input" v-model="form.target_date" readonly>
+                                <small class="tag is-danger is-light is-underline" v-if="form.errors.target_date">Data
+                                    Required</small>
 
                             </div>
                         </div>
@@ -155,8 +167,8 @@
                             <button class="button is-black" @click="next" :disabled="loader">
                                 Next
                                 <span class="icon icon-btn-l">
-                                        <feather type="refresh-cw" v-if="loader"  size="1.3rem" animation="spin"></feather>
-                                        <feather type="arrow-right" v-if="!loader" size="1.3rem"></feather>
+                                    <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
+                                    <feather type="arrow-right" v-if="!loader" size="1.3rem"></feather>
                                 </span>
                             </button>
 

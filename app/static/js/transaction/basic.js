@@ -11,7 +11,7 @@ const BasicForm = ({
                 days: null,
                 target_date: null,
                 images: null,
-                trans_id : null,
+                trans_id: null,
                 errors: {}
             },
             finished_product_category: "",
@@ -44,12 +44,12 @@ const BasicForm = ({
         }
     },
     mounted() {
-        let self = this 
+        let self = this
         this.form.start_date = moment().format('YYYY-MM-DD')
         axios.get('/transaction/get/last')
             .then(function (response) {
                 self.form.trans_id = response.data.new_id
-        })
+            })
 
         try {
 
@@ -67,7 +67,7 @@ const BasicForm = ({
                 }
 
             }
-            
+
         }
         catch (error) {
             console.log("Error in getting data from localStorage.")
@@ -107,7 +107,85 @@ const BasicForm = ({
         },
     },
     methods: {
+        showAddData(val) {
+            let self = this
+            this.$buefy.dialog.prompt({
+                message: `<b>Add Data</b> `,
+                inputAttrs: {
+                    placeholder: 'e.g. Data',
+                    maxlength: 100,
+                    value: this.name
+                },
+                confirmText: 'Add',
+                onConfirm: (value) => {
 
+                    let formdata = { 'name': value }
+                    axios
+                        .post('/basic_master/add/' + String(val), formdata)
+                        .then(function (response) {
+                            console.log(response.data)
+                            if (response.data.success) {
+                                switch (val) {
+                                    case 'product_category':
+                                        self.data_product_category.push(response.data.data)
+                                        break;
+                                    case 'fabric_combination':
+                                        self.data_fabric_combination.push(response.data.data)
+                                        break;
+                                    case 'print_technique':
+                                        self.data_print_technique.push(response.data.data)
+                                        break;
+                                    case 'design_number':
+                                        self.data_design_number.push(response.data.data)
+                                        break;
+                                    case 'uom':
+                                        self.data_uom.push(response.data.data)
+                                        break;
+                                    case 'size_master':
+                                        self.data_size.push(response.data.data)
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                                self.$buefy.snackbar.open({
+                                    duration: 4000,
+                                    message: response.data.success,
+                                    type: 'is-light',
+                                    position: 'is-top-right',
+                                    actionText: 'Close',
+                                    queue: true,
+                                    onAction: () => {
+                                        this.isActive = false;
+                                    }
+                                })
+
+                            }
+                            else {
+                                if (response.data.message) {
+                                    self.$buefy.snackbar.open({
+                                        duration: 4000,
+                                        message: response.data.message,
+                                        type: 'is-light',
+                                        position: 'is-top-right',
+                                        actionText: 'Close',
+                                        queue: true,
+                                        onAction: () => {
+                                            this.isActive = false;
+                                        }
+                                    })
+                                }
+                            }
+
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+
+                }
+            })
+        },
         checkData() {
             this.form.errors = {}
             if (this.form.start_date && this.form.finished_product_category && this.form.desc && this.form.team_leader && this.form.days && this.form.target_date) {
@@ -176,6 +254,7 @@ const BasicForm = ({
         },
         clearUploads() {
             this.imageUrlArray = []
+            this.files = []
 
         },
         getDate() {

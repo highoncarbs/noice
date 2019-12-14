@@ -306,9 +306,8 @@ class TransactionMaterialsSchema(ma.ModelSchema):
     
     finished_materials = ma.Nested(FinishedItemSchema ,  many=True)
     raw_materials = ma.Nested(RawItemSchema ,  many=True)
-    accessories = ma.Nested(AccessoriesItemSchema ,  many=True)
+    accessories_materials = ma.Nested(AccessoriesItemSchema ,  many=True )
     other_materials = ma.Nested(OtherMaterialsItemSchema, many=True)
-    transaction_id = db.Column(db.Integer , db.ForeignKey('transaction.id' , ondelete="CASCADE"))
 
     class meta:
         model = TransactionMaterials

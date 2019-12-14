@@ -8,6 +8,84 @@
             <p class="is-size-5 has-text-weight-bold">Basic Information</p>
             <br>
             <div class="columns is-variable is-6">
+
+
+                <div class="column is-5">
+                    <div class="box">
+                        <div class="field is-grouped is-grouped-multiline">
+
+                            <div class="control">
+
+                                <div class="file ">
+                                    <label class="file-label">
+                                        <input class="file-input" @change.prevent="listUploads" accept="image/*"
+                                            type="file" name="ref-file" multiple>
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <feather type="upload" size="1rem"></feather>
+                                            </span>
+                                            <span class="file-label">
+                                                Choose a file…
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button" @click="clearUploads">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+
+                        <p v-if="loader" class="has-text-weight-bold has-text-grey">
+                            <span class="icon icon-btn">
+                                <feather type="rotate-cw" animation="spin"></feather>
+                            </span>
+                            Upload reference pictures here.
+                        </p>
+                        <ul>
+                            <p v-if="files.length == 0 && !loader" class="has-text-weight-bold has-text-grey">
+                                <span class="icon icon-btn">
+                                    <feather type="info"></feather>
+                                </span>
+                                Upload reference pictures here.
+                            </p>
+                            <ul>
+                                <article class="media" v-for="(file , index) in files">
+
+                                    <figure class="media-left">
+                                        <p class="image is-128x128" style="height: auto !important;">
+
+                                            <img class="image-preview"
+                                                v-bind:src="imageUrlArray | getIndexedImage(index)">
+                                        </p>
+
+
+                                    </figure>
+                                    <div class="media-content">
+                                        <div class="content">
+
+                                            <p class="has-text-weight-bold">
+                                                <span class="has-text-grey">[[ index +1 ]].</span> [[ file.name ]]
+                                                <br>
+                                                <span class="has-text-grey has-text-weight-normal">File size:
+                                                    [[file.size |
+                                                    formatBytes ]]
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                    <div class="media-right">
+                                        <button class="delete" @click.prevent="deleteItem(index)"></button>
+                                    </div>
+                                </article>
+                            </ul>
+                    </div>
+                </div>
+
                 <div class="column is-7">
                     <div class="field">
                         <div class="field is-grouped">
@@ -22,9 +100,8 @@
                             <div class="control">
                                 <label for="" class="label">Finished Product Category</label>
                                 <b-autocomplete v-model="finished_product_category"
-                                    placeholder="Select Product Category" :keep-first='true'
-                                    :open-on-focus='true' :data="autocompleteProductCategory" field="name"
-                                    @select="getProductCategory">
+                                    placeholder="Select Product Category" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteProductCategory" field="name" @select="getProductCategory">
                                 </b-autocomplete>
 
                             </div>
@@ -71,9 +148,9 @@
 
 
                             <button class="button is-black" @click="next">
-                                Next
+                                Update
                                 <span class="icon icon-btn-l">
-                                    <feather type="arrow-right" size="1.3rem"></feather>
+                                    <feather type="refresh-cw" size="1.3rem"></feather>
                                 </span>
                             </button>
 
@@ -86,80 +163,6 @@
                     </div>
 
 
-                </div>
-
-                <div class="column is-5">
-                    <div class="box">
-                        <div class="field is-grouped is-grouped-multiline">
-                            
-                            <div class="control">
-                                
-                                <div class="file ">
-                                    <label class="file-label">
-                                        <input class="file-input" @change.prevent="listUploads" accept="image/*"
-                                            type="file" name="ref-file" multiple>
-                                        <span class="file-cta">
-                                            <span class="file-icon">
-                                                <feather type="upload" size="1rem"></feather>
-                                            </span>
-                                            <span class="file-label">
-                                                Choose a file…
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="control">
-                                <button class="button" @click="clearUploads">
-                                    Clear
-                                </button>
-                            </div>
-                        </div>
-                        <br>
-
-                        <p v-if="loader" class="has-text-weight-bold has-text-grey">
-                            <span class="icon icon-btn">
-                                <feather type="rotate-cw" animation="spin"></feather>
-                            </span>
-                            Upload reference pictures here.
-                        </p>
-                        <ul>
-                        <p v-if="files.length == 0 && !loader" class="has-text-weight-bold has-text-grey">
-                            <span class="icon icon-btn">
-                                <feather type="info"></feather>
-                            </span>
-                            Upload reference pictures here.
-                        </p>
-                        <ul>
-                            <article class="media" v-for="(file , index) in files">
-
-                                <figure class="media-left">
-                                    <p class="image is-128x128" style="height: auto !important;">
-
-                                        <img class="image-preview" v-bind:src="imageUrlArray | getIndexedImage(index)">
-                                    </p>
-
-
-                                </figure>
-                                <div class="media-content">
-                                    <div class="content">
-
-                                        <p class="has-text-weight-bold">
-                                            <span class="has-text-grey">[[ index +1 ]].</span> [[ file.name ]]
-                                            <br>
-                                            <span class="has-text-grey has-text-weight-normal">File size: [[file.size |
-                                                formatBytes ]]
-                                            </span>
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <div class="media-right">
-                                    <button class="delete" @click.prevent="deleteItem(index)"></button>
-                                </div>
-                            </article>
-                        </ul>
-                    </div>
                 </div>
             </div>
 
