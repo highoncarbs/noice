@@ -74,10 +74,12 @@ const ActivityForm = ({
             let pp_num = path_array[path_array.length - 1]
             this.pp_num = pp_num
             let self = this
-            axios.get('/transaction/get/report/' + String(this.pp_num))
+            axios.get('/transaction/get/basic/' + String(this.pp_num))
                 .then(function (response) {
-                    payload = JSON.parse(response.data)
-                    self.program_start_date = payload.date
+                    console.log(response.data)
+                    payload = JSON.parse(response.data)[0]
+                    console.log(payload.start_date)
+                    self.program_start_date = moment(payload.start_date, 'YYYY-MM-DD')
                 })
 
             axios.get('/transaction/get/activity/' + String(this.pp_num))
@@ -325,6 +327,45 @@ const ActivityForm = ({
             temp_list.splice(index + 1, 0, newObj)
             this.activity_list.task_items_act = temp_list
             // console.log(temp_list)
+        },
+        setUpDates() {
+            const program_date = moment(this.program_start_date, 'YYYY-MM-DD')
+            index_list = []
+            dependency_list = []
+            this.activity_list.tast_items_act.forEach(function (task, index) {
+                index_list.push(index)
+                if (task.depends != null) {
+                    dependency_list.push(task.depends)
+                }
+                else {
+                    dependency_list.push(null)
+                }
+            })
+
+            console.log(index_list , dependency_list)
+            let self = this
+            // Date set up form index & dependency list
+            this.activity_list.tast_items_act.forEach(function (task, index) {
+                if (dependency_list[index] == null || dependency_list[index] == "") {
+                    task.start_date = moment(program_date).format("DD-MM-YYYY")
+                    task.end_date = moment(program_date).add(Number(task.days), 'days').format("DD-MM-YYYY")
+
+                }
+                else {
+                    let depends = dependency_list[index]-1
+                    if (depends in index_list) {
+                        let previous_date = moment(self.activity_list.tast_items_act[depends].end_date , 'DD-MM-YYYY')
+                        task.start_date = previous_date.format("DD-MM-YYYY")
+                        task.end_date =  previous_date.add(Number(task.days) , 'days').format("DD-MM-YYYY")
+                    }
+
+                }
+
+                
+            console.log( task.start_date , task.end_date)
+            })
+
+
         },
         setUpDates() {
 
