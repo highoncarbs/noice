@@ -49,17 +49,16 @@ def add_basic():
 
                 finished_goods = ProductCategory.query.filter_by(
                     id=int(payload["finished_product_category"])).first()
-                
+
                 new_data = TransactionBasic(
                     start_date, int(payload['days']), finished_goods, str(payload['desc']), str(payload['team_leader']), str(payload['team_members']))
-                
-                
+
+                gen_folder_name = unique_prefix+'_'+str(
+                    payload['start_date'])+'_'+str(payload['team_leader'])
+                foldertemp = os.path.join(
+                    UPLOAD_FOLDER, 'transaction', str(gen_folder_name))
                 if len(request.files) != 0:
-                    gen_folder_name = unique_prefix+'_'+str(
-                        payload['start_date'])+'_'+str(payload['team_leader'])
-                    foldertemp = os.path.join(
-                        UPLOAD_FOLDER, 'transaction', str(gen_folder_name))
-                    
+
                     array_file = request.files
 
                     for file in array_file.items():
@@ -92,9 +91,7 @@ def add_basic():
                         except Exception as e:
                             print(str(e))
                 else:
-                    foldertemp = ""
-                    setattr(
-                                    new_data, 'upload_folder', foldertemp)
+                    setattr(new_data, 'upload_folder', foldertemp)
                 db.session.add(new_data)
                 db.session.commit()
                 basic_id = new_data.id
@@ -163,13 +160,11 @@ def update_basic(id):
                     if os.path.exists(foldertemp):
                         shutil.rmtree(
                             foldertemp, ignore_errors=False, onerror=None)
-    
-                print(request.files)
+
                 if len(request.files) != 0:
                     gen_folder_name = unique_prefix+'_'+str(
                         payload['start_date'])+'_'+str(payload['team_leader'])
                     foldertemp = payload['upload_folder']
-                    print(payload['upload_folder'])
                     array_file = request.files
                     if os.path.exists(foldertemp):
                         shutil.rmtree(
@@ -193,9 +188,6 @@ def update_basic(id):
                                             foldertemp,  file[1].filename)
                                         file[1].save(filetemp)
 
-                                    setattr(
-                                        new_data, 'upload_folder', foldertemp)
-
                                 else:
                                     return jsonify({'message': 'Image file not supported.'})
 
@@ -205,7 +197,7 @@ def update_basic(id):
 
                             except Exception as e:
                                 print(str(e))
-
+                setattr(new_data, 'upload_folder', foldertemp)
                 db.session.commit()
                 return jsonify({'success': 'Data updated'})
 
