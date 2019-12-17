@@ -170,25 +170,7 @@ new Vue({
                         raw.addRow()
                     })
 
-                    // raw.formID.alt_name = data.alt_name
-
-                    // raw.form.fabric_combination = data.fabric_combination[0].name
-                    // raw.formID.fabric_combination = data.fabric_combination[0].id
-
-                    // raw.form.print_technique = data.print_technique[0].name
-                    // raw.formID.print_technique = data.print_technique[0].id
-
-                    // raw.form.design_number = data.design_number[0].name
-                    // raw.formID.design_number = data.design_number[0].id
-
-                    // raw.form.uom = data.uom[0].name
-                    // raw.formID.uom = data.uom[0].id
                    
-                    // raw.form.size = data.size[0].name
-                    // raw.formID.size = data.size[0].id
-
-                    // raw.form.product_category = data.product_category[0].name
-                    // raw.formID.product_category = Number(data.product_category[0].id)
                 })
         },
         checkRow() {

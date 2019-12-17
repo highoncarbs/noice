@@ -139,11 +139,61 @@ const MaterialForm = ({
 
     },
     methods: {
+        checkRawRow() {
+            let self = this
+            this.raw_goods_inputs.forEach(function (item) {
+                console
+                if (item.goods == '') {
+                    self.$set(item.error, 'goods', true)
+                }
+                if (item.qty == '') {
+                    self.$set(item.error, 'qty', true)
+                }
+            })
+        },
+        checkFinishedRow() {
+            let self = this
+            this.finished_goods_inputs.forEach(function (item) {
+                console
+                if (item.goods == '') {
+                    self.$set(item.error, 'goods', true)
+                }
+                if (item.qty == '') {
+                    self.$set(item.error, 'qty', true)
+                }
+            })
+        },
+        checkAccRow() {
+            let self = this
+            this.accessories_goods_inputs.forEach(function (item) {
+                console
+                if (item.goods == '') {
+                    self.$set(item.error, 'goods', true)
+                }
+                if (item.qty == '') {
+                    self.$set(item.error, 'qty', true)
+                }
+            })
+        },
+        checkOtherRow() {
+            let self = this
+            this.other_materials_goods_inputs.forEach(function (item) {
+                console
+                if (item.goods == '') {
+                    self.$set(item.error, 'goods', true)
+                }
+                if (item.qty == '') {
+                    self.$set(item.error, 'qty', true)
+                }
+            })
+        },
+
         addRawRow() {
             this.raw_goods_inputs.push({
                 goods: '',
                 qty: '',
                 uom: '',
+                error: {}
             })
         },
         deleteRawRow(index) {
@@ -170,12 +220,13 @@ const MaterialForm = ({
             this.raw_goods_inputs[this.current_raw].goods = option.id
             this.raw_goods_inputs[this.current_raw].uom = option.uom[0].name
         },
-        
+
         addFinishedRow() {
             this.finished_goods_inputs.push({
                 goods: '',
                 qty: '',
                 uom: '',
+                error: {}
             })
         },
         deleteFinishedRow(index) {
@@ -205,6 +256,7 @@ const MaterialForm = ({
                 goods: '',
                 qty: '',
                 uom: '',
+                error: {}
             })
         },
         deleteAccessoriesRow(index) {
@@ -236,6 +288,7 @@ const MaterialForm = ({
                 goods: '',
                 qty: '',
                 uom: '',
+                error: {}
             })
         },
         deleteOtherMaterialsRow(index) {
@@ -277,40 +330,99 @@ const MaterialForm = ({
             }
 
         },
-        submitData() {
-            this.loader = true
-            let basic_id= JSON.parse(localStorage.getItem('basic'))[1]
-            let activity_id= JSON.parse(localStorage.getItem('activity'))[0]
-            let self = this 
-            let selectedData = []
-            selectedData.push({'raw_inputs':this.raw_goods_inputs })
-            selectedData.push({'finished_inputs': this.finished_goods_inputs })
-            selectedData.push({'accessories_inputs': this.accessories_goods_inputs })
-            selectedData.push({'other_materials_inputs': this.other_materials_goods_inputs })
-            selectedData.push(basic_id)
-            selectedData.push(activity_id)
-            axios.post('/transaction/add/materials', JSON.stringify(selectedData), {
-                headers: {
-                    'Content-Type': 'application/json'
+        checkData() {
+            let self = this
+            this.other_materials_goods_inputs.every(function (item) {
+
+                if (item.error.goods == true) {
+                    return false
                 }
+                if (item.error.qty == true) {
+                    return false
+                }
+                return true
             })
-                .then(function (response) {
-                    try {
-                        if (response.data.success) {
-                            console.log('Yippe kay yaya')
-                            localStorage.removeItem('basic')
-                            localStorage.removeItem('activity')
-                            localStorage.removeItem('material')
-                            window.location.href = '/reports/view'
-                            
+            this.raw_goods_inputs.every(function (item) {
+
+                if (item.error.goods == true) {
+                    return false
+                }
+
+                if (item.error.qty == true) {
+                    return false
+                }
+                return true
+            })
+            this.finished_goods_inputs.every(function (item) {
+
+                if (item.error.goods == true) {
+                    return false
+                }
+
+                if (item.error.qty == true) {
+                    return false
+                }
+                return true
+            })
+            this.accessories_goods_inputs.every(function (item) {
+                console.log(item)
+                if (item.error.goods == true) {
+                    return false
+                }
+                if (item.error.qty == true) {
+                    return false
+                }
+                return true
+            })
+
+            
+        },
+        submitData() {
+            this.checkRawRow()
+            this.checkAccRow()
+            this.checkFinishedRow()
+            this.checkOtherRow()
+            
+            try {
+                
+           
+                this.loader = true
+                let basic_id = JSON.parse(localStorage.getItem('basic'))[1]
+                let activity_id = JSON.parse(localStorage.getItem('activity'))[0]
+                let self = this
+                let selectedData = []
+                selectedData.push({ 'raw_inputs': this.raw_goods_inputs })
+                selectedData.push({ 'finished_inputs': this.finished_goods_inputs })
+                selectedData.push({ 'accessories_inputs': this.accessories_goods_inputs })
+                selectedData.push({ 'other_materials_inputs': this.other_materials_goods_inputs })
+                selectedData.push(basic_id)
+                selectedData.push(activity_id)
+                axios.post('/transaction/add/materials', JSON.stringify(selectedData), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(function (response) {
+                        try {
+                            if (response.data.success) {
+                                console.log('Yippe kay yaya')
+                                localStorage.removeItem('basic')
+                                localStorage.removeItem('activity')
+                                localStorage.removeItem('material')
+                                window.location.href = '/reports/view'
+
+                            }
+                            self.loader = false
                         }
-                        self.loader = false
-                    }
-                    catch (error) {
-                        self.loader = false
-                        console.log('Error sending JSON data - activity list' + String(error))
-                    }
-            })
+                        catch (error) {
+                            self.loader = false
+                            console.log('Error sending JSON data - activity list' + String(error))
+                        }
+                    })
+            }
+            catch (error) {
+                
+            }
         },
         previous() {
             try {

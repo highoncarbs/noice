@@ -52,7 +52,7 @@ new Vue({
                 }
                 )
             }
-            console.log(data)
+            
             return data;
 
         }

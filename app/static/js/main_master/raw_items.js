@@ -796,8 +796,8 @@ new Vue({
                     raw.form.yarn = data.yarn[0].name
                     raw.formID.yarn = data.yarn[0].id
 
-                    raw.form.uom = data.yarn[0].name
-                    raw.formID.uom = data.yarn[0].id
+                    raw.form.uom = data.uom[0].name
+                    raw.formID.uom = data.uom[0].id
 
                     raw.form.fabric_construction = data.fabric_construction[0].name
                     raw.formID.fabric_construction = data.fabric_construction[0].id
