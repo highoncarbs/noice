@@ -213,8 +213,8 @@
             </div>
             <div class="control is-expanded">
                 <label for="" class="label">Uom</label>
-                <b-autocomplete v-model="form.uom" placeholder="Select Uom" :keep-first='true'
-                    :open-on-focus='true' :data="autocompleteUom" field="name" @select="getUom">
+                <b-autocomplete v-model="form.uom" placeholder="Select Uom" :keep-first='true' :open-on-focus='true'
+                    :data="autocompleteUom" field="name" @select="getUom">
                     <template slot="header">
                         <a @click="showAddData('uom')">
                             <span> Add new... </span>
@@ -373,31 +373,30 @@
                                             </button>
                                         </div>
                                         <div class="dropdown-menu" style="z-index:10;" id="dropdown-menu4" role="menu">
-                                            <div class="dropdown-content has-background-light">
-                                                <p class="dropdown-item">
-                                                    Are you sure ?
+                                            <div class="dropdown-content has-background-grey-lighter">
+                                                <p class="dropdown-item has-text-weight-semibold">
+                                                    Confirm Delete ?
                                                 </p>
-                                                <hr class="dropdown-divider">
 
-                                                <a class="dropdown-item">
-                                                    <div class="buttons ">
-                                                        <div class="button is-danger is-small"
-                                                            @click="deleteData(row , index)">Delete</div>
-                                                        <div class="button is-small">Cancel</div>
-                                                    </div>
+
+                                                <a class="dropdown-item button is-danger is-outlined has-text-weight-semibold"
+                                                    @click="deleteData(row , index)">
+                                                    Delete
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
         </div>
     </div>
+    </td>
+    </tr>
+    </tbody>
+
+    </table>
+</div>
+</div>
 </div>
 
 <script src="{{ url_for('static' , filename='js/main_master/raw_items.js')}}"></script>
