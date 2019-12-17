@@ -118,7 +118,7 @@
                                     <feather type="edit" size="1rem"></feather>
                                 </span>
                             </a>
-                            <button class="is-danger button is-small">
+                            <button class="is-danger button is-small" @click="setModal(index)">
                                 <span class="icon ">
                                     <feather type="x" size="1rem"></feather>
                                 </span>
@@ -129,6 +129,44 @@
             </tbody>
 
         </table>
+        <div class="modal animated fadeIn" :class="{ 'is-active' : delete_modal == true}">
+            <div class="modal-background" @click="delete_modal = !delete_modal"></div>
+            <div class="modal-content">
+                <div class="card">
+
+                    <div class="card-content" v-if="curr_index != null">
+
+
+                        <div class="content">
+                            <p class="has-text-weight-bold is-size-5">Delete Transaction - [[ filteredTransaction[curr_index].id ]]</p>
+                            <br>
+                            <div class="has-text-weight-bold">
+
+                                <p > <span class="has-text-grey has-text-weight-normal">Start date : </span> [[ formatDate(filteredTransaction[curr_index].basic[0].start_date) ]]</p>
+                                <p> <span class="has-text-grey has-text-weight-normal">Product Category : </span> [[ filteredTransaction[curr_index].basic[0].finished_product_category[0].name ]]</p>
+                                <p> <span class="has-text-grey has-text-weight-normal">Team Leader : </span>   [[ filteredTransaction[curr_index].basic[0].team_leader ]]</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item has-text-danger" @click="deleteData"><span
+                                class="icon icon-btn icon-btn-in">
+                                <feather type="trash" size="1.2rem"></feather>
+                            </span> Delete</a>
+                        <a class="card-footer-item has-text-grey" @click="delete_modal = !delete_modal"><span
+                                class="icon icon-btn icon-btn-in">
+                                <feather type="x" size="1.2rem"></feather>
+                            </span> Close</a>
+                    </footer>
+
+                </div>
+
+                <button class="modal-close is-large" aria-label="close" @click="delete_modal = !delete_modal"></button>
+
+            </div>
+
+        </div>
         <status-card :id="trans_id" :view="status_card_view" :progress_data="progress_data_item"></status-card>
     </div>
 </div>

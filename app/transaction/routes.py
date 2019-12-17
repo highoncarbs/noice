@@ -52,6 +52,19 @@ def get_transaction_last():
     data = Transaction.query.order_by(Transaction.id.desc()).first().id
     return jsonify({'new_id' : int(data+1)})
 
+@bp.route('/delete/<id>', methods=['POST'])
+@login_required
+def delete_transaction(id):
+    try:
+        data = Transaction.query.filter_by(id=id)
+        data.delete()
+        db.session.commit()
+        return jsonify({'success': 'Data Added'})
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Something unexpected happened' , 'error' : str(e)})
+        
+
 
 @bp.route('/view/<id>', methods=['GET'])
 @login_required

@@ -13,7 +13,9 @@ new Vue({
             },
             status_card_view: false,
             trans_id: null,
-            progress_data_item: []
+            progress_data_item: [],
+            delete_modal: false,
+            curr_index: null
         }
     },
     delimiters: ['[[', ']]'],
@@ -43,7 +45,7 @@ new Vue({
                 return this.transactions.filter(item => {
                     let momDate = moment(item.basic[0].start_date, 'YYYY-MM-DD')
                     let end_date = momDate.add(Number(item.basic[0].days), 'days').format("YYYY-MM-DD")
-                    
+
                     if (Date.parse(end_date) <= Date.parse(this.filter.end_date)) {
                         return item
                     }
@@ -65,6 +67,51 @@ new Vue({
             this.status_card_view = true
             this.trans_id = id
             this.progress_data_item = this.transactions[index].activity[0].task_items_act
+        },
+        setModal(index) {
+            this.delete_modal = !this.delete_modal
+            this.curr_index = index
+        },
+        deleteData() {
+            let self = this
+            let id = this.transactions[this.curr_index].id
+
+            axios.post('/transaction/delete/' + String(id))
+                .then(function (response) {
+                    if (response.data.success) {
+                        if (response.data.success) {
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.success,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+
+                            self.delete_modal = !self.delete_modal
+                            self.curr_index = null
+                            self.transactions.splice(self.curr_index , 1)
+                        }
+                        else {
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.message,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+                        }
+
+                    }
+                })
         }
     }
 
