@@ -351,15 +351,15 @@ const BasicForm = ({
 
                             }
 
-                            this.loader = false
+                            self.loader = false
                         }
                         catch (error) {
-                            this.loader = false
+                            self.loader = false
                             console.log('Unable to save data - ' + String(error))
                         }
                     })
                     .catch(function (error) {
-                        this.loader = false
+                        self.loader = false
                         console.log('Unable to save data - ' + String(error))
                     })
 
