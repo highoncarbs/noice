@@ -96,7 +96,7 @@
                     <td>[[ item.id]]</td>
                     <td>[[ formatDate(item.basic[0].start_date) ]]</td>
                     <td>[[ item.basic[0].finished_product_category[0].name ]]</td>
-                    <td>[[ item.basic[0].team_leader]]</td>
+                    <td>[[ item.basic[0].team_leader[0].name ]]</td>
                     <td>
                         <progress-bar :datalist="item.activity[0].task_items_act"></progress-bar>
                     </td>

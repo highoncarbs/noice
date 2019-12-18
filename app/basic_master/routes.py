@@ -29,3 +29,8 @@ def view_department():
 @login_required
 def view_location():
     return render_template('basic_master/location.html')
+
+@bp.route('/leader', methods=['GET'])
+@login_required
+def view_leader():
+    return render_template('basic_master/leader.html')

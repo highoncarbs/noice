@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     <p> [[ activity_list.task_items ]]</p>
-                    <tr v-for="(row , index) in activity_list.task_items_act"
+                    <tr  v-for="(row , index) in activity_list.task_items_act"
                         :class="{'has-background-info' : row.flag == 'done'}">
 
                         <td>[[ index +1]]</td>
@@ -128,7 +128,7 @@
 
                                 <feather type="check" size="1.3rem"></feather>
                             </span>
-                            Save
+                            Save & Exit
                         </button>
                     </div>
                     <div class="column">

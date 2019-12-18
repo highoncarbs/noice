@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, redirect, url_for, request, session, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.transaction import bp
-from app.basic_master.model import ProductCategory
+from app.basic_master.model import ProductCategory , Leader
 from app.transaction.model import Transaction, TransactionBasic, TransactionBasicSchema
 from werkzeug import secure_filename
 import shutil
@@ -49,9 +49,11 @@ def add_basic():
 
                 finished_goods = ProductCategory.query.filter_by(
                     id=int(payload["finished_product_category"])).first()
+                leader = Leader.query.filter_by(
+                    id=int(payload["team_leader"])).first()
 
                 new_data = TransactionBasic(
-                    start_date, int(payload['days']), finished_goods, str(payload['desc']), str(payload['team_leader']), str(payload['team_members']))
+                    start_date, int(payload['days']), finished_goods, str(payload['desc']), leader, str(payload['team_members']))
 
                 gen_folder_name = unique_prefix+'_'+str(
                     payload['start_date'])+'_'+str(payload['team_leader'])
@@ -60,22 +62,21 @@ def add_basic():
                 if len(request.files) != 0:
 
                     array_file = request.files
-
-                    for file in array_file.items():
+                    for index, file in enumerate(array_file.items()):
                         try:
-                            # if file and allowed_file(file.filename):
+                        # if file and allowed_file(file.filename):
                             if file:
 
                                 if os.path.exists(foldertemp):
                                     filetemp = os.path.join(
-                                        foldertemp, file[1].filename)
+                                        foldertemp, str(index))
                                     file[1].save(filetemp)
 
                                 else:
 
                                     os.makedirs(foldertemp)
                                     filetemp = os.path.join(
-                                        foldertemp,  file[1].filename)
+                                        foldertemp,  str(index))
                                     file[1].save(filetemp)
 
                                 setattr(
@@ -130,32 +131,33 @@ def update_basic(id):
                     int(temp_date[0]), int(temp_date[1]), int(temp_date[2]))
                 finished_goods = ProductCategory.query.filter_by(
                     id=int(payload["finished_product_category"])).first()
+                leader = Leader.query.filter_by(
+                    id=int(payload["team_leader"])).first()
 
                 trans = Transaction.query.filter_by(
                     id=int(id)).first()
 
                 new_data = trans.basic[0]
-                print(new_data)
                 fields_list = [
                     "start_date",
                     "days",
                     "desc",
-                    "team_leader",
                     "team_members"
                 ]
-                print(new_data.start_date)
                 new_data.start_date = start_date
                 new_data.days = int(payload['days'])
                 new_data.desc = str(payload['desc'])
                 new_data.finished_product_category = []
                 new_data.finished_product_category.append(finished_goods)
 
-                new_data.team_leader = str(payload['team_leader'])
+                new_data.team_leader = []
+                new_data.team_leader.append(leader)
+
                 new_data.team_members = str(payload['team_members'])
+
                 if len(request.files) == 0:
 
                     foldertemp = payload['upload_folder']
-                    print(payload['upload_folder'])
                     array_file = request.files
                     if os.path.exists(foldertemp):
                         shutil.rmtree(
@@ -171,21 +173,21 @@ def update_basic(id):
                             foldertemp, ignore_errors=False, onerror=None)
                     if (len(array_file) != 0):
 
-                        for file in array_file.items():
+                        for index, file in enumerate(array_file.items()):
                             try:
                                 # if file and allowed_file(file.filename):
                                 if file:
 
                                     if os.path.exists(foldertemp):
                                         filetemp = os.path.join(
-                                            foldertemp, file[1].filename)
+                                            foldertemp, str(index))
                                         file[1].save(filetemp)
 
                                     else:
 
                                         os.makedirs(foldertemp)
                                         filetemp = os.path.join(
-                                            foldertemp,  file[1].filename)
+                                            foldertemp,  str(index))
                                         file[1].save(filetemp)
 
                                 else:
@@ -228,7 +230,4 @@ def get_basic_files(id):
     for r, d, f in os.walk(data):
         for file in f:
             images.append(os.path.join(r, file))
-    print(images)
-    # schema = TransactionBasicSchema(many=True)
-    # json_data = schema.dumps(data)
     return jsonify(images)

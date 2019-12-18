@@ -13,6 +13,7 @@ const ActivityForm = ({
             query_department: '',
             query_location: '',
             program_start_date: null,
+            loader : false,
             report: {
                 date: null,
                 status: null,
@@ -199,10 +200,14 @@ const ActivityForm = ({
             this.activity_list.task_items_act.splice(index, 1)
         },
         update() {
-            let self = this 
+            let self = this
+            this.loader = true
+
             axios.post('/transaction/update/activity/' + String(this.pp_num), this.activity_list)
                 .then(function (response) {
                     if (response.data.success) {
+                        self.loader = false
+
                         self.$buefy.snackbar.open({
                             duration: 4000,
                             message: "Data updated",
@@ -228,6 +233,7 @@ const ActivityForm = ({
                             }
                         })
                     }
+                    self.loader = false
                 })
 
         },
@@ -342,7 +348,7 @@ const ActivityForm = ({
                 }
             })
 
-            console.log(index_list , dependency_list)
+            console.log(index_list, dependency_list)
             let self = this
             // Date set up form index & dependency list
             this.activity_list.tast_items_act.forEach(function (task, index) {
@@ -352,17 +358,17 @@ const ActivityForm = ({
 
                 }
                 else {
-                    let depends = dependency_list[index]-1
+                    let depends = dependency_list[index] - 1
                     if (depends in index_list) {
-                        let previous_date = moment(self.activity_list.tast_items_act[depends].end_date , 'DD-MM-YYYY')
+                        let previous_date = moment(self.activity_list.tast_items_act[depends].end_date, 'DD-MM-YYYY')
                         task.start_date = previous_date.format("DD-MM-YYYY")
-                        task.end_date =  previous_date.add(Number(task.days) , 'days').format("DD-MM-YYYY")
+                        task.end_date = previous_date.add(Number(task.days), 'days').format("DD-MM-YYYY")
                     }
 
                 }
 
-                
-            console.log( task.start_date , task.end_date)
+
+                console.log(task.start_date, task.end_date)
             })
 
 

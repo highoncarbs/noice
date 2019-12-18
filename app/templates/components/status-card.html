@@ -13,9 +13,9 @@
                     <div class="notification">
 
                         <label for="" class="label">Finished Goods Code</label>
-                        <p v-if="result.finised_goods_code  == null">None</p>
+                        <p v-if="result.finised_goods_code  == ''">None</p>
 
-                        <p v-if="result.finised_goods_code  != null">[[ result.finished_goods_code ]]</p>
+                        <p v-if="result.finised_goods_code  != ''">[[ result.finished_goods_code ]]</p>
                     </div>
 
                     <br>

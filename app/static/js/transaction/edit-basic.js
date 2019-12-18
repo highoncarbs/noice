@@ -14,6 +14,7 @@ const BasicForm = ({
                 images: null
             },
             finished_product_category: "",
+            team_leader: "",
             images: [],
             files: [],
             showUploads: false,
@@ -24,9 +25,11 @@ const BasicForm = ({
             loader: false,
             fileSrc: null,
             data_product_category: [],
+            data_team_leader: [],
             fileNameList: [],
             ogData: {},
-            ogFiles: []
+            ogFiles: [],
+
         }
 
     },
@@ -66,6 +69,17 @@ const BasicForm = ({
                 })
             }
         },
+        autocompleteTeamLeader() {
+
+            if (this.data_team_leader.length != 0) {
+                return this.data_team_leader.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.team_leader) >= 0
+                })
+            }
+        },
     },
     mounted() {
         let raw = this
@@ -89,6 +103,25 @@ const BasicForm = ({
                 })
             })
 
+        axios.get('/basic_master/get/leader')
+            .then(function (response) {
+                raw.data_team_leader = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                raw.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Team Leader',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
+
         try {
             let path_array = window.location.pathname.split("/")
             let pp_num = path_array[path_array.length - 1]
@@ -102,6 +135,7 @@ const BasicForm = ({
                         self.ogData = JSON.parse(response.data)[0]
                         // self.form.finished_product_category = null
                         self.getProductCategory(self.form['finished_product_category'][0])
+                        self.getTeamLeader(self.form['team_leader'][0])
                         // console.log(response.data['finished_product_category'])
 
                     }
@@ -227,6 +261,17 @@ const BasicForm = ({
                 return null
             }
         },
+        getTeamLeader(option) {
+            console.log(option)
+            if (option != null) {
+                this.form.team_leader = option.id
+                this.ogData.team_leader = option.id
+                this.team_leader = option.name
+            }
+            else {
+                this.form.team_leader = null
+            }
+        },
 
         setUpload(row) {
             this.viewUpload = true
@@ -292,6 +337,7 @@ const BasicForm = ({
 
 
 
+            this.loader = true
 
             let formData = new FormData()
             formData.append('data', JSON.stringify(this.form))
@@ -313,6 +359,8 @@ const BasicForm = ({
 
                         if (response.data.success) {
                             if (response.data.success) {
+                                self.loader = false
+
                                 self.$buefy.snackbar.open({
                                     duration: 4000,
                                     message: "Data updated",
@@ -324,8 +372,11 @@ const BasicForm = ({
                                         this.isActive = false;
                                     }
                                 })
+
                             }
                             else {
+                                self.loader = false
+
                                 self.$buefy.snackbar.open({
                                     duration: 4000,
                                     message: "Something went wrong",
@@ -339,13 +390,22 @@ const BasicForm = ({
                                 })
                             }
 
+
                         }
+
+                        self.loader = false
+
                     }
                     catch (error) {
                         console.log('Unable to save data - ' + String(error))
                     }
+
+                    self.loader = false
+
                 })
                 .catch(function (error) {
+                    self.loader = false
+
                     console.log('Unable to save data - ' + String(error))
                 })
 

@@ -3,7 +3,7 @@ from app import ma
 from datetime import datetime
 from marshmallow_sqlalchemy import field_for
 from marshmallow import fields
-from app.basic_master.model import Department , DepartmentSchema , LocationSchema , Location ,Uom , UomSchema  , ProductCategory , ProductCategorySchema
+from app.basic_master.model import Department , DepartmentSchema , LocationSchema , Location ,Uom , UomSchema  , ProductCategory , ProductCategorySchema , Leader , LeaderSchema
 from app.main_master.model import RawGoods, RawGoodsSchema, FinishedGoods \
     , FinishedGoodsSchema , Accessories , AccessoriesSchema , OtherMaterials , OtherMaterialsSchema
 
@@ -26,8 +26,10 @@ class TransactionBasic( base):
                                  backref="transaction_category" , secondary ="transaction_category")
     desc = db.Column(db.String(250), nullable=False)
     upload_folder = db.Column(db.String(250))
-    flag = db.Column(db.String(15) , default="draft")
-    team_leader =db.Column(db.String(250) , default= None)
+    flag = db.Column(db.String(15), default="draft")
+    team_leader = db.relationship("Leader",
+                                cascade="all, delete",
+                                backref="transaction_leader" , secondary ="transaction_leader")
     team_members = db.Column(db.String(250) , default=None)
     transaction_id = db.Column(db.Integer , db.ForeignKey('transaction.id' , ondelete="CASCADE"))
 
@@ -36,12 +38,16 @@ class TransactionBasic( base):
         self.days = days
         self.finished_product_category.append(finished_product_category)
         self.desc = desc
-        self.team_leader = team_leader
+        self.team_leader.append(team_leader)
         self.team_members = team_members
 
 db.Table('transaction_category',
          db.Column('transaction_basic_id', db.Integer, db.ForeignKey('transaction_basic.id', ondelete='SET NULL')),
          db.Column('product_category_id', db.Integer, db.ForeignKey('product_category.id', ondelete='SET NULL'))
+         )
+db.Table('transaction_leader',
+         db.Column('transaction_basic_id', db.Integer, db.ForeignKey('transaction_basic.id', ondelete='SET NULL')),
+         db.Column('leader_id', db.Integer, db.ForeignKey('leader.id', ondelete='SET NULL'))
          )
 
 class TransactionBasicSchema(ma.ModelSchema):
@@ -52,7 +58,7 @@ class TransactionBasicSchema(ma.ModelSchema):
     desc = field_for(TransactionBasic, 'desc', dump_only=True)
     upload_folder = field_for(TransactionBasic, 'upload_folder', dump_only=True)
     flag = field_for(TransactionBasic, 'flag', dump_only=True)
-    team_leader = field_for(TransactionBasic, 'team_leader', dump_only=True)
+    team_leader = ma.Nested(LeaderSchema , many=True)
     team_members = field_for(TransactionBasic, 'team_members', dump_only=True)
    
     class meta:

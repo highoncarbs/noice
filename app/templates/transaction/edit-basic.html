@@ -119,8 +119,17 @@
 
                             <div class="control">
                                 <label for="" class="label">Team Leader</label>
-                                <input type="text" class="input" v-model="form.team_leader"
-                                    placeholder="Select Team Leader">
+                                <b-autocomplete v-model="team_leader" placeholder="Select Team Leader"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteTeamLeader" field="name"
+                                    @select="getTeamLeader">
+                                    <template slot="header">
+                                        <a @click="showAddData('leader')">
+                                            <span> Add new... </span>
+                                        </a>
+                                    </template>
+                                    <template slot="empty">No results for [[ team_leader ]]</template>
+                                </b-autocomplete>
+                               
                             </div>
                             <div class="control is-expanded">
                                 <label for="" class="label">Other Members</label>
@@ -147,10 +156,12 @@
                         <div class="control">
 
 
-                            <button class="button is-black" @click="next">
+                            <button class="button is-black" @click="next" :disabled="loader">
                                 Update
                                 <span class="icon icon-btn-l">
-                                    <feather type="refresh-cw" size="1.3rem"></feather>
+                                    <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
+
+                                    <feather type="refresh-cw" v-if="!loader" size="1.3rem"></feather>
                                 </span>
                             </button>
 

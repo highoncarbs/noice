@@ -15,6 +15,7 @@ const BasicForm = ({
                 errors: {}
             },
             finished_product_category: "",
+            team_leader: "",
             files: [],
             showUploads: false,
             imageUrlArray: [],
@@ -23,6 +24,7 @@ const BasicForm = ({
             viewBig: false,
             loader: false,
             data_product_category: [],
+            data_team_leader: [],
 
         }
 
@@ -92,6 +94,24 @@ const BasicForm = ({
                     }
                 })
             })
+        axios.get('/basic_master/get/leader')
+            .then(function (response) {
+                raw.data_team_leader = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                raw.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Team Leader',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
     },
     computed: {
         autocompleteProductCategory() {
@@ -102,6 +122,17 @@ const BasicForm = ({
                         .toString()
                         .toLowerCase()
                         .indexOf(this.finished_product_category) >= 0
+                })
+            }
+        },
+        autocompleteTeamLeader() {
+
+            if (this.data_team_leader.length != 0) {
+                return this.data_team_leader.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.team_leader) >= 0
                 })
             }
         },
@@ -143,6 +174,9 @@ const BasicForm = ({
                                         break;
                                     case 'size_master':
                                         self.data_size.push(response.data.data)
+                                        break;
+                                    case 'leader':
+                                        self.data_team_leader.push(response.data.data)
                                         break;
 
                                     default:
@@ -219,6 +253,14 @@ const BasicForm = ({
             }
             else {
                 this.form.finished_product_category = null
+            }
+        },
+        getTeamLeader(option) {
+            if (option != null) {
+                this.form.team_leader = option.id
+            }
+            else {
+                this.form.team_leader = null
             }
         },
 

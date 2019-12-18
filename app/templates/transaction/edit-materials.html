@@ -68,192 +68,195 @@
             <p class="is-size-5">Finished Materials </p>
             <br>
             <table class="table is-fullwidth is-bordered">
-                    <colgroup>
-                        <col span="1" style="width: 60%;">
-    
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 10%;">
-                    </colgroup>
-                    <thead>
-                        <th>Finished Goods</th>
-                        <th>UOM</th>
-                        <th>Quantity</th>
-                        <th>Action</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4">
-                                <button class="button" @click="addFinishedRow()">
-                                    <span class=" icon icon-btn">
-                                        <feather type="plus" size="1.2rem"></feather>
-                                    </span> Add
-                                </button></td>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr v-for="(finished, index) in finished_goods_inputs">
-                            <td>
-                                <p v-if="finished.temp">[[ findAndSetFinishedGoods(finished.goods).gen_name ]] </p>
+                <colgroup>
+                    <col span="1" style="width: 60%;">
 
-                                <b-autocomplete @typing="getFinishedGoods" v-if="!finished.temp" v-on:focus="current_finished = index"
-                                    placeholder="Select Finished Material" :keep-first='true' :open-on-focus='true'
-                                    :data="dataFinishedGoods" field="gen_name"
-                                    @select="setFinishedGoods">
-                                    <template slot-scope="props">
-                                        <p class="is-size-6">[[ props.option.gen_name ]]</p>
-                                        <p class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.alt_name ]]
-                                        </p>
-                                    </template>
-    
-                                </b-autocomplete>
-                            </td>
-                            <td>
-                                    [[ finished.uom ]]
-                            </td>
-                            <td><input class="input" type="text" v-model="finished.qty" placeholder="Select Quantity"></td>
-                            <td><button class="button is-danger" @click="deleteFinishedRow(index)">
-                                    <span class="icon">
-                                        <feather type="x" size="1.3rem"></feather>
-                                    </span>
-                                </button></td>
-    
-                        </tr>
-                    </tbody>
-                </table>
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead>
+                    <th>Finished Goods</th>
+                    <th>UOM</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button class="button" @click="addFinishedRow()">
+                                <span class=" icon icon-btn">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add
+                            </button></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr v-for="(finished, index) in finished_goods_inputs">
+                        <td>
+                            <p v-if="finished.temp">[[ findAndSetFinishedGoods(finished.goods).gen_name ]] </p>
+
+                            <b-autocomplete @typing="getFinishedGoods" v-if="!finished.temp"
+                                v-on:focus="current_finished = index" placeholder="Select Finished Material"
+                                :keep-first='true' :open-on-focus='true' :data="dataFinishedGoods" field="gen_name"
+                                @select="setFinishedGoods">
+                                <template slot-scope="props">
+                                    <p class="is-size-6">[[ props.option.gen_name ]]</p>
+                                    <p class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.alt_name ]]
+                                    </p>
+                                </template>
+
+                            </b-autocomplete>
+                        </td>
+                        <td>
+                            [[ finished.uom ]]
+                        </td>
+                        <td><input class="input" type="text" v-model="finished.qty" placeholder="Select Quantity"></td>
+                        <td><button class="button is-danger" @click="deleteFinishedRow(index)">
+                                <span class="icon">
+                                    <feather type="x" size="1.3rem"></feather>
+                                </span>
+                            </button></td>
+
+                    </tr>
+                </tbody>
+            </table>
             <br>
             <br>
             <p class="is-size-5">Accessories </p>
             <br>
             <table class="table is-fullwidth is-bordered">
-                    <colgroup>
-                        <col span="1" style="width: 60%;">
-    
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 10%;">
-                    </colgroup>
-                    <thead>
-                        <th>Accessories Goods</th>
-                        <th>UOM</th>
-                        <th>Quantity</th>
-                        <th>Action</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4">
-                                <button class="button" @click="addAccessoriesRow()">
-                                    <span class=" icon icon-btn">
-                                        <feather type="plus" size="1.2rem"></feather>
-                                    </span> Add
-                                </button></td>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr v-for="(accessories, index) in accessories_goods_inputs">
-                            <td>
-                                <p v-if="accessories.temp">[[ findAndSetAccessoriesGoods(accessories.goods).gen_name ]] </p>
+                <colgroup>
+                    <col span="1" style="width: 60%;">
 
-                                <b-autocomplete @typing="getAccessoriesGoods" v-if="!accessories.temp" v-on:focus="current_accessories = index"
-                                    placeholder="Select Accessories Material" :keep-first='true' :open-on-focus='true'
-                                    :data="dataAccessoriesGoods" field="name"
-                                    @select="setAccessoriesGoods">
-                                    <template slot-scope="props">
-                                        <p class="is-size-6">[[ props.option.name ]] - <span
-                                                class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
-                                                ]]</span></p>
-    
-                                    </template>
-    
-                                </b-autocomplete>
-                            </td>
-                            <td>
-                                [[ accessories.uom ]]
-                            </td>
-                            
-                            <td><input class="input" type="text" v-model="accessories.qty" placeholder="Select Quantity">
-                            </td>
-                            <td>
-                            <button class="button is-danger" @click="deleteAccessoriesRow(index)">
-                            <span class="icon">
-                                <feather type="x" size="1.3rem"></feather>
-                            </span>
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead>
+                    <th>Accessories Goods</th>
+                    <th>UOM</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button class="button" @click="addAccessoriesRow()">
+                                <span class=" icon icon-btn">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add
                             </button></td>
-    
-                        </tr>
-                    </tbody>
-                </table>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr v-for="(accessories, index) in accessories_goods_inputs">
+                        <td>
+                            <p v-if="accessories.temp">[[ findAndSetAccessoriesGoods(accessories.goods).gen_name ]] </p>
+
+                            <b-autocomplete @typing="getAccessoriesGoods" v-if="!accessories.temp"
+                                v-on:focus="current_accessories = index" placeholder="Select Accessories Material"
+                                :keep-first='true' :open-on-focus='true' :data="dataAccessoriesGoods" field="name"
+                                @select="setAccessoriesGoods">
+                                <template slot-scope="props">
+                                    <p class="is-size-6">[[ props.option.name ]] - <span
+                                            class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
+                                            ]]</span></p>
+
+                                </template>
+
+                            </b-autocomplete>
+                        </td>
+                        <td>
+                            [[ accessories.uom ]]
+                        </td>
+
+                        <td><input class="input" type="text" v-model="accessories.qty" placeholder="Select Quantity">
+                        </td>
+                        <td>
+                            <button class="button is-danger" @click="deleteAccessoriesRow(index)">
+                                <span class="icon">
+                                    <feather type="x" size="1.3rem"></feather>
+                                </span>
+                            </button></td>
+
+                    </tr>
+                </tbody>
+            </table>
             <br>
             <br>
             <p class="is-size-5">Other Materials </p>
             <br>
             <table class="table is-fullwidth is-bordered">
-                    <colgroup>
-                        <col span="1" style="width: 60%;">
-    
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 10%;">
-                    </colgroup>
-                    <thead>
-                        <th>Other Materials</th>
-                        <th>UOM</th>
-                        <th>Quantity</th>
-                        <th>Action</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4">
-                                <button class="button" @click="addOtherMaterialsRow()">
-                                    <span class=" icon icon-btn">
-                                        <feather type="plus" size="1.2rem"></feather>
-                                    </span> Add
-                                </button></td>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr v-for="(other_materials, index) in other_materials_goods_inputs">
-                            <td>
-                                <p v-if="other_materials.temp">[[ findAndSetOtherGoods(other_materials.goods).gen_name ]] </p>
+                <colgroup>
+                    <col span="1" style="width: 60%;">
 
-                                <b-autocomplete @typing="getOtherMaterialsGoods" v-if="!other_materials.temp"
-                                    v-on:focus="current_other_materials = index"
-                                    placeholder="Select OtherMaterials Material" :keep-first='true' :open-on-focus='true'
-                                    :data="dataOtherMaterialsGoods" field="name"
-                                    @select="setOtherMaterial">
-                                    <template slot-scope="props">
-                                        <p class="is-size-6">[[ props.option.name ]] - <span
-                                                class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
-                                                ]]</span></p>
-    
-                                    </template>
-    
-                                </b-autocomplete>
-                            </td>
-                            <td>
-                                [[ other_materials.uom ]]
-                            </td>
-                            <td><input class="input" type="text" v-model="other_materials.qty"
-                                    placeholder="Select Quantity">
-                            </td>
-                            <td><button class="button is-danger" @click="deleteOtherMaterialsRow(index)">
-                                    <span class="icon">
-                                        <feather type="x" size="1.3rem"></feather>
-                                    </span>
-                                </button></td>
-    
-                        </tr>
-                    </tbody>
-                </table>
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead>
+                    <th>Other Materials</th>
+                    <th>UOM</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button class="button" @click="addOtherMaterialsRow()">
+                                <span class=" icon icon-btn">
+                                    <feather type="plus" size="1.2rem"></feather>
+                                </span> Add
+                            </button></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr v-for="(other_materials, index) in other_materials_goods_inputs">
+                        <td>
+                            <p v-if="other_materials.temp">[[ findAndSetOtherGoods(other_materials.goods).gen_name ]]
+                            </p>
+
+                            <b-autocomplete @typing="getOtherMaterialsGoods" v-if="!other_materials.temp"
+                                v-on:focus="current_other_materials = index"
+                                placeholder="Select OtherMaterials Material" :keep-first='true' :open-on-focus='true'
+                                :data="dataOtherMaterialsGoods" field="name" @select="setOtherMaterial">
+                                <template slot-scope="props">
+                                    <p class="is-size-6">[[ props.option.name ]] - <span
+                                            class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
+                                            ]]</span></p>
+
+                                </template>
+
+                            </b-autocomplete>
+                        </td>
+                        <td>
+                            [[ other_materials.uom ]]
+                        </td>
+                        <td><input class="input" type="text" v-model="other_materials.qty"
+                                placeholder="Select Quantity">
+                        </td>
+                        <td><button class="button is-danger" @click="deleteOtherMaterialsRow(index)">
+                                <span class="icon">
+                                    <feather type="x" size="1.3rem"></feather>
+                                </span>
+                            </button></td>
+
+                    </tr>
+                </tbody>
+            </table>
             <br>
             <div class="field ">
                 <div class="control">
-                    <button class="button is-black" @click="update">
-                        <span class="icon icon-btn">
-                            <feather type="refresh-cw" size="1.3rem"></feather>
-                        </span>
+                    <button class="button is-black" @click="next" :disabled="loader">
                         Update
+                        <span class="icon icon-btn-l">
+                            <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
+
+                            <feather type="refresh-cw" v-if="!loader" size="1.3rem"></feather>
+                        </span>
                     </button>
+
                 </div>
 
             </div>

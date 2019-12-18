@@ -26,13 +26,13 @@
                     <col span="1" style="width: 2%;">
 
                     <col span="1" style="width: 20%;">
-                    <col span="1" style="width: 12%;">
-                    <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 5%;">
-                    <col span="1" style="width: 5%;">
-                    <col span="1" style="width: 10%;">
-                    <col span="1" style="width: 10%;">
                     <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 18%;">
                     <col span="1" style="width: 5%;">
                 </colgroup>
                 <thead>
@@ -119,12 +119,15 @@
             </table>
             <div class="field ">
                 <div class="control">
-                    <button class="button is-black" @click="update">
-                        <span class="icon icon-btn">
-                            <feather type="refresh-cw" size="1.3rem"></feather>
-                        </span>
+                    <button class="button is-black" @click="next" :disabled="loader">
                         Update
+                        <span class="icon icon-btn-l">
+                            <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
+
+                            <feather type="refresh-cw" v-if="!loader" size="1.3rem"></feather>
+                        </span>
                     </button>
+
                 </div>
 
             </div>

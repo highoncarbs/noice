@@ -10,6 +10,7 @@ const MaterialForm = ({
             dataRawGoods: [],
             current_raw: null,
             current_uom: null,
+            loader: false,
 
             finished_goods_inputs: [],
             data_finished_goods: [],
@@ -365,6 +366,7 @@ const MaterialForm = ({
         update() {
 
             let self = this
+            self.loader = true
             let selectedData = []
             selectedData.push({ 'raw_inputs': this.raw_goods_inputs })
             selectedData.push({ 'finished_inputs': this.finished_goods_inputs })
@@ -377,7 +379,11 @@ const MaterialForm = ({
             })
                 .then(function (response) {
                     try {
+                        self.loader = false
+
                         if (response.data.success) {
+                            self.loader = false
+
                             self.$buefy.snackbar.open({
                                 duration: 4000,
                                 message: "Data updated",
@@ -403,8 +409,12 @@ const MaterialForm = ({
                                 }
                             })
                         }
+                        self.loader = false
+
                     }
                     catch (error) {
+                        self.loader = false
+
                         console.log('Error sending JSON data - activity list' + String(error))
                     }
                 })

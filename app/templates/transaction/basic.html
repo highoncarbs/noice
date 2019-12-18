@@ -127,11 +127,20 @@
 
                             <div class="control">
                                 <label for="" class="label">Team Leader</label>
-                                <input type="text" class="input" v-model="form.team_leader"
-                                    placeholder="Select Team Leader">
+                                <b-autocomplete v-model="team_leader"
+                                    placeholder="Select Team Leader" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteTeamLeader" field="name" @select="getTeamLeader">
+                                    <template slot="header">
+                                        <a @click="showAddData('leader')">
+                                            <span> Add new... </span>
+                                        </a>
+                                    </template>
+                                    <template slot="empty">No results for [[ team_leader ]]</template>
+                                </b-autocomplete>
                                 <small class="tag is-danger is-light is-underline" v-if="form.errors.team_leader">Data
                                     Required</small>
 
+                                
                             </div>
                             <div class="control is-expanded">
                                 <label for="" class="label">Other Members</label>

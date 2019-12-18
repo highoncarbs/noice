@@ -10,7 +10,7 @@ const ActivityForm = ({
                 date: "",
                 status: "",
                 finished_goods_code: "",
-                quantity:"",
+                quantity: "",
                 report: ""
             }
 
@@ -33,6 +33,7 @@ const ActivityForm = ({
             let pp_num = path_array[path_array.length - 1]
             this.pp_num = pp_num
             let self = this
+
             axios.get('/transaction/get/activity/' + String(this.pp_num))
                 .then(function (response) {
                     // console.log(response)
@@ -58,11 +59,17 @@ const ActivityForm = ({
                 })
             axios.get('/transaction/get/report/' + String(this.pp_num))
                 .then(function (response) {
-                    // console.log(response)
+                    console.log(response)
                     if (response.data) {
                         payload = JSON.parse(response.data)
                         self.report.status = payload['flag']
-                        self.report.date = payload['date']
+                        if (payload['date'] != null) {
+
+                            self.report.date = payload['date']
+                        }
+                        else {
+                            self.report.date = moment().format('YYYY-MM-DD')
+                        }
                         self.report.finished_goods_code = payload['finished_goods_code']
                         self.report.quantity = payload['quantity']
                         self.report.report = payload['report']
@@ -138,6 +145,8 @@ const ActivityForm = ({
                                     this.isActive = false;
                                 }
                             })
+
+                            window.location.href = '/reports/view'
                         }
                         else {
                             self.$buefy.snackbar.open({

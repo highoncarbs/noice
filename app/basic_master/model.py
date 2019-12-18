@@ -162,6 +162,20 @@ class UomSchema(ma.ModelSchema):
     class Meta:
         model = Uom
 
+
+class Leader(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+
+class LeaderSchema(ma.ModelSchema):
+    class Meta:
+        model = Leader
+
+
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
