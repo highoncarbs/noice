@@ -168,20 +168,7 @@
 
             </div>
 
-            <div class="control is-expanded">
-                <label for="" class="label">Fabric Width</label>
-                <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
-                    :open-on-focus='true' :data="autocompleteFabricWidth" field="name" @select="getFabricWidth">
-                    <template slot="header">
-                        <a @click="showAddData('fabric_width')">
-                            <span> Add new... </span>
-                        </a>
-                    </template>
-                    <template slot="empty">No results for [[ form.fabric_width ]]</template>
-                </b-autocomplete>
-                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_width">Data Required</small>
 
-            </div>
             <div class="control is-expanded">
                 <label for="" class="label">Fabric Process</label>
                 <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process" :keep-first='true'
@@ -195,6 +182,20 @@
                 </b-autocomplete>
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_process">Data
                     Required</small>
+
+            </div>
+            <div class="control is-expanded">
+                <label for="" class="label">Fabric Width</label>
+                <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
+                    :open-on-focus='true' :data="autocompleteFabricWidth" field="name" @select="getFabricWidth">
+                    <template slot="header">
+                        <a @click="showAddData('fabric_width')">
+                            <span> Add new... </span>
+                        </a>
+                    </template>
+                    <template slot="empty">No results for [[ form.fabric_width ]]</template>
+                </b-autocomplete>
+                <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_width">Data Required</small>
 
             </div>
             <div class="control is-expanded">
