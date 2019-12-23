@@ -16,7 +16,7 @@ const ActivityForm = ({
     },
     delimiters: ['[[', ']]'],
     computed: {
-      
+
         moment: function () {
             return moment();
         },
@@ -59,69 +59,75 @@ const ActivityForm = ({
 
     mounted() {
 
-        if (localStorage.getItem('basic')) {
-            
-       
-        let basicSaved = JSON.parse(localStorage.getItem('basic'))[0]
-        this.program_start_date = moment(basicSaved.start_date, 'YYYY-MM-DD')
-
         let raw = this
-        axios.get('/main_master/get/process_flow')
-            .then(function (response) {
-                raw.base_activity_list = response.data
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch Process Flow List',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
+        if (localStorage.getItem('basic')) {
+
+            if (localStorage.getItem('activity')) {
+                
+                let activitySaved = JSON.parse(localStorage.getItem('activity'))[1]
+                raw.activity_list = activitySaved
+                raw.base_activity = activitySaved['name']
+            }
+
+            let basicSaved = JSON.parse(localStorage.getItem('basic'))[0]
+            this.program_start_date = moment(basicSaved.start_date, 'YYYY-MM-DD')
+
+            axios.get('/main_master/get/process_flow')
+                .then(function (response) {
+                    raw.base_activity_list = response.data
                 })
-            })
+                .catch(function (error) {
+                    console.log(error)
+                    raw.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: 'Unable to fetch Process Flow List',
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+                })
 
 
-        axios.get('/basic_master/get/department')
-            .then(function (response) {
-                raw.data_department = response.data
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Department',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
+            axios.get('/basic_master/get/department')
+                .then(function (response) {
+                    raw.data_department = response.data
                 })
-            })
-        axios.get('/basic_master/get/location')
-            .then(function (response) {
-                raw.data_location = response.data
-            })
-            .catch(function (error) {
-                console.log(error)
-                raw.$buefy.snackbar.open({
-                    duration: 4000,
-                    message: 'Unable to fetch data for Location',
-                    type: 'is-light',
-                    position: 'is-top-right',
-                    actionText: 'Close',
-                    queue: true,
-                    onAction: () => {
-                        this.isActive = false;
-                    }
+                .catch(function (error) {
+                    console.log(error)
+                    raw.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: 'Unable to fetch data for Department',
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
                 })
-            })
+            axios.get('/basic_master/get/location')
+                .then(function (response) {
+                    raw.data_location = response.data
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    raw.$buefy.snackbar.open({
+                        duration: 4000,
+                        message: 'Unable to fetch data for Location',
+                        type: 'is-light',
+                        position: 'is-top-right',
+                        actionText: 'Close',
+                        queue: true,
+                        onAction: () => {
+                            this.isActive = false;
+                        }
+                    })
+                })
         }
         else {
             this.$buefy.snackbar.open({
@@ -139,7 +145,7 @@ const ActivityForm = ({
 
     },
     methods: {
-       
+
         getActivity(option) {
             if (option != null) {
                 this.activity_list = option
@@ -174,7 +180,7 @@ const ActivityForm = ({
                     this.loader = true
 
                     let selectedData = []
-                    let self = this 
+                    let self = this
                     console.log(this.activity_list)
                     axios.post('/transaction/add/activity', JSON.stringify(this.activity_list), {
                         headers: {
@@ -199,8 +205,8 @@ const ActivityForm = ({
 
                                 console.log('Error sending JSON data - activity list')
                             }
-                    })
-                    
+                        })
+
                 }
             }
             catch (error) {
@@ -235,7 +241,7 @@ const ActivityForm = ({
                 }
             })
 
-            console.log(index_list , dependency_list)
+            console.log(index_list, dependency_list)
             let self = this
             // Date set up form index & dependency list
             this.activity_list.task_items.forEach(function (task, index) {
@@ -245,17 +251,17 @@ const ActivityForm = ({
 
                 }
                 else {
-                    let depends = dependency_list[index]-1
+                    let depends = dependency_list[index] - 1
                     if (depends in index_list) {
-                        let previous_date = moment(self.activity_list.task_items[depends].end_date , 'DD-MM-YYYY')
+                        let previous_date = moment(self.activity_list.task_items[depends].end_date, 'DD-MM-YYYY')
                         task.start_date = previous_date.format("DD-MM-YYYY")
-                        task.end_date =  previous_date.add(Number(task.days) , 'days').format("DD-MM-YYYY")
+                        task.end_date = previous_date.add(Number(task.days), 'days').format("DD-MM-YYYY")
                     }
 
                 }
 
-                
-            console.log( task.start_date , task.end_date)
+
+                console.log(task.start_date, task.end_date)
             })
 
 

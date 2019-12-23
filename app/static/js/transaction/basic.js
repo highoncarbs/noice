@@ -25,6 +25,10 @@ const BasicForm = ({
             loader: false,
             data_product_category: [],
             data_team_leader: [],
+            fileNameList: [],
+            ogData: {},
+            ogFiles: [],
+
 
         }
 
@@ -53,32 +57,14 @@ const BasicForm = ({
                 self.form.trans_id = response.data.new_id
             })
 
-        try {
 
-            let saved = JSON.parse(localStorage.getItem('basic'))
-
-            if (saved.length != 0) {
-
-                if (saved[0] != null) {
-                    this.form = saved[0]
-                }
-                if (saved[2] != null) {
-
-                    this.files = saved[1]
-                    this.imageUrlArray = saved[2]
-                }
-
-            }
-
-        }
-        catch (error) {
-            console.log("Error in getting data from localStorage.")
-        }
 
         let raw = this
         axios.get('/basic_master/get/product_category')
             .then(function (response) {
                 raw.data_product_category = response.data
+                self.setProductCategory(self.form['finished_product_category'])
+
             })
             .catch(function (error) {
                 console.log(error)
@@ -97,6 +83,8 @@ const BasicForm = ({
         axios.get('/basic_master/get/leader')
             .then(function (response) {
                 raw.data_team_leader = response.data
+                self.setTeamLeader(self.form['team_leader'])
+
             })
             .catch(function (error) {
                 console.log(error)
@@ -112,8 +100,67 @@ const BasicForm = ({
                     }
                 })
             })
+
+        // Loads locally saved data 
+        try {
+
+            let saved = JSON.parse(localStorage.getItem('basic'))
+
+            if (saved.length != 0) {
+
+                if (saved[0] != null) {
+                    this.form = saved[0]
+
+                    let upload_folder = saved[2]
+                    axios.post('/transaction/get/basic/files/folder', upload_folder)
+                        .then(function (response) {
+                            console.log(response)
+                            if (response.data) {
+
+                                self.images = response.data
+
+                                self.images.forEach(function (item) {
+                                    let tempURL = self.getStatic(item)
+                                    self.createFileObject(String(tempURL))
+
+                                    // inject an image with the src url
+
+
+                                    // when the file is read it triggers the onload 
+                                    // event above.
+                                })
+
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: "Unable to load files",
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
+
+
+                        })
+                }
+
+
+            }
+
+        }
+        catch (error) {
+            console.log("Error in getting data from localStorage.")
+        }
     },
     computed: {
+
         autocompleteProductCategory() {
 
             if (this.data_product_category.length != 0) {
@@ -138,6 +185,87 @@ const BasicForm = ({
         },
     },
     methods: {
+        getProductCategory(option) {
+            if (option != null) {
+                this.form.finished_product_category = option.id
+                this.ogData.finished_product_category = option.id
+                this.finished_product_category = option.name
+            }
+            else {
+                this.form.finished_product_category = null
+            }
+        },
+
+        getTeamLeader(option) {
+            if (option != null) {
+                this.form.team_leader = option.id
+                this.ogData.team_leader = option.id
+                this.team_leader = option.name
+            }
+            else {
+                this.form.team_leader = null
+            }
+        },
+        setTeamLeader(id) {
+            if (id != null) {
+                let selected = this.data_team_leader.filter(item => { return item.id === id })
+                this.form.team_leader = selected[0].id
+                this.team_leader = selected[0].name
+            }
+            else {
+                this.form.team_leader = null
+            }
+        },
+        setProductCategory(id) {
+            let self = this
+            if (id) {
+
+                let selected = this.data_product_category.filter((item) => { return item.id === id })
+                this.form.finished_product_category = selected[0].id
+                this.finished_product_category = selected[0].name
+            }
+            else {
+                this.form.finished_product_category = null
+            }
+        },
+        async createFileObject(filedata) {
+            this.loader = true;
+
+            let filename = String(filedata).split("\\");
+            let response = await fetch(String(filedata));
+            let data = await response.blob();
+            let metadata = {
+                type: 'image/jpeg'
+            };
+
+            this.fileNameList.push(filename[filename.length - 1])
+            this.ogFiles.push(filename[filename.length - 1])
+
+            // generate a new FileReader object
+            var reader = new FileReader()
+            let file = new File([data], filename[filename.length - 1], metadata);
+            this.files.push(file)
+            let self = this;
+            reader.onload = function (event) {
+                const imageUrl = event.target.result;
+                // const thumb = document.querySelectorAll('.thumb')[index];
+                self.imageUrlArray.push(imageUrl);
+            }
+
+            // when the file is read it triggers the onload 
+            // event above.
+            reader.readAsDataURL(file);
+            this.loader = false;
+        },
+        getStatic(filedata) {
+            if (filedata) {
+                let fileSrc = String('\\static') + String(filedata).split('\static')[1]
+                return fileSrc
+            }
+            else {
+                return null
+            }
+        },
         showAddData(val) {
             let self = this
             this.$buefy.dialog.prompt({
@@ -247,22 +375,7 @@ const BasicForm = ({
         },
 
 
-        getProductCategory(option) {
-            if (option != null) {
-                this.form.finished_product_category = option.id
-            }
-            else {
-                this.form.finished_product_category = null
-            }
-        },
-        getTeamLeader(option) {
-            if (option != null) {
-                this.form.team_leader = option.id
-            }
-            else {
-                this.form.team_leader = null
-            }
-        },
+
 
         listUploads(e) {
             this.showUploads = true;

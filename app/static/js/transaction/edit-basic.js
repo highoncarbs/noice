@@ -252,15 +252,7 @@ const BasicForm = ({
                 this.form.finished_product_category = null
             }
         },
-        getStatic(filedata) {
-            if (filedata) {
-                let fileSrc = String('\\static') + String(filedata).split('\static')[1]
-                return fileSrc
-            }
-            else {
-                return null
-            }
-        },
+     
         getTeamLeader(option) {
             console.log(option)
             if (option != null) {

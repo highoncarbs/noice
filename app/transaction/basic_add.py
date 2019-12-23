@@ -231,3 +231,14 @@ def get_basic_files(id):
         for file in f:
             images.append(os.path.join(r, file))
     return jsonify(images)
+
+@bp.route('/get/basic/files/folder', methods=['POST'])
+@login_required
+def get_basic_files_folder():
+    
+    data = request.json['upload_folder']
+    images = []
+    for r, d, f in os.walk(data):
+        for file in f:
+            images.append(os.path.join(r, file))
+    return jsonify(images)
