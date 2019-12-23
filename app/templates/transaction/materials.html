@@ -40,8 +40,7 @@
                                 :data="dataRawGoods" field="gen_name" @select="setRawGoods">
                                 <template slot-scope="props">
                                     <p class="is-size-6">[[ props.option.gen_name ]]</p>
-                                    <p class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.alt_name ]]
-                                    </p>
+                                   
                                 </template>
 
                             </b-autocomplete>
@@ -102,8 +101,7 @@
                                 :data="dataFinishedGoods" field="gen_name" @select="setFinishedGoods">
                                 <template slot-scope="props">
                                     <p class="is-size-6">[[ props.option.gen_name ]]</p>
-                                    <p class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.alt_name ]]
-                                    </p>
+                                   
                                 </template>
 
                             </b-autocomplete>
@@ -161,9 +159,7 @@
                                 placeholder="Select Accessories Material" :keep-first='true' :open-on-focus='true'
                                 :data="dataAccessoriesGoods" field="name" @select="setAccessoriesGoods">
                                 <template slot-scope="props">
-                                    <p class="is-size-6">[[ props.option.name ]] - <span
-                                            class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
-                                            ]]</span></p>
+                                    <p class="is-size-6">[[ props.option.gen_name ]] </p>
 
                                 </template>
 
@@ -225,9 +221,7 @@
                                 placeholder="Select OtherMaterials Material" :keep-first='true' :open-on-focus='true'
                                 :data="dataOtherMaterialsGoods" field="name" @select="setOtherMaterial">
                                 <template slot-scope="props">
-                                    <p class="is-size-6">[[ props.option.name ]] - <span
-                                            class="is-size-6 has-text-grey has-text-weight-bold">[[ props.option.desc
-                                            ]]</span></p>
+                                    <p class="is-size-6">[[ props.option.gen_name ]]</p>
 
                                 </template>
 
