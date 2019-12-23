@@ -51,7 +51,7 @@ class FinishedGoods(db.Model):
         print_technique = self.print_technique
         design_number = self.design_number
         uom = self.uom
-        goods_name = "{} / {} / {} / {}".format(
+        goods_name = "{}/{}/{}/{}".format(
             product_category[0].name, fabric_combination[0].name, print_technique[0].name, design_number[0].name)
         return goods_name
 
@@ -114,7 +114,7 @@ class FinishedGoodsSchema(ma.ModelSchema):
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
-        goods_name = "{} / {} / {} / {}".format(
+        goods_name = "{}/{}/{}/{}".format(
             obj.product_category[0].name, obj.fabric_combination[0].name, obj.print_technique[0].name, obj.design_number[0].name)
         return goods_name
 
@@ -236,7 +236,7 @@ class RawGoodsSchema(ma.ModelSchema):
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
-        goods_name = "{} - {} - {} - {} - {} - {}".format(
+        goods_name = "{}/{}/{}/{}/{}/{}".format(
             obj.yarn[0].name, obj.fabric_process[0].name, obj.fabric_width[0].name, obj.fabric_dye[0].name, obj.raw_material_category[0].name, obj.fabric_construction[0].name)
         return goods_name
 
@@ -279,7 +279,7 @@ class AccessoriesSchema(ma.ModelSchema):
     gen_name = fields.Method("get_goods_name")
 
     def get_goods_name(self, obj):
-        goods_name = "{} - {}".format(
+        goods_name = "{}/{}".format(
             obj.name, obj.desc)
         return goods_name
 
@@ -325,7 +325,7 @@ class OtherMaterialsSchema(ma.ModelSchema):
         model = OtherMaterials
 
     def get_goods_name(self, obj):
-        goods_name = "{} - {}".format(
+        goods_name = "{}/{}".format(
             obj.name, obj.desc)
         return goods_name
 
