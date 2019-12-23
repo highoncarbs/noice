@@ -34,13 +34,13 @@ def add_yarn():
         print(payload)
         if len(payload['name']) != 0:
 
-            check_data = Yarn.query.filter_by(name=payload['name'])
+            check_data = Yarn.query.filter_by(name=payload['name'].lower())
             if check_data.first():
                 return jsonify({'message': 'Product Category - '+check_data.first().name+' already exists.'})
             else:
                 try:
                     new_data = Yarn(
-                        payload['name'])
+                        payload['name'].lower())
 
                     db.session.add(new_data)
                     db.session.commit()
@@ -68,14 +68,14 @@ def edit_yarn():
         if payload['name'] is not None:
 
             check_data = Yarn.query.filter_by(
-                name=payload['name']).first()
-            if check_data and check_data.name != payload['name']:
+                name=payload['name'].lower()).first()
+            if check_data and check_data.name != payload['name'].lower():
                 return jsonify({'message': 'Design Number - '+check_data.name+' already exists.'})
             else:
                 try:
                     new_data = Yarn.query.filter_by(
                         id=payload['id']).first()
-                    new_data.name = payload['name']
+                    new_data.name = payload['name'].lower()
                     db.session.commit()
                     return jsonify({'success': 'Data Updated'})
 

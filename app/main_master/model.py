@@ -237,7 +237,7 @@ class RawGoodsSchema(ma.ModelSchema):
 
     def get_goods_name(self, obj):
         goods_name = "{}/{}/{}/{}/{}/{}".format(
-            obj.yarn[0].name, obj.fabric_process[0].name, obj.fabric_width[0].name, obj.fabric_dye[0].name, obj.raw_material_category[0].name, obj.fabric_construction[0].name)
+             obj.raw_material_category[0].name , obj.yarn[0].name,  obj.fabric_construction[0].name , obj.fabric_process[0].name, obj.fabric_width[0].name, obj.fabric_dye[0].name)
         return goods_name
 
     class meta:

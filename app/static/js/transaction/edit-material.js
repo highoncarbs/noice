@@ -419,33 +419,5 @@ const MaterialForm = ({
                     }
                 })
         },
-
-        next() {
-            try {
-
-
-                this.$router.push('/edit-activity')
-
-            }
-            catch (error) {
-                console.log('Error sending JSON data - activity list')
-            }
-        },
-        previous() {
-            try {
-                // if (this.activity_list.length != 0) {
-
-                //     localStorage.setItem('activity', JSON.stringify(this.activity_list))
-                // }
-                this.$router.push('/edit-basic')
-            }
-            catch (error) {
-                console.log('Unable to save data - ' + String(error))
-            }
-        }
-
-
-
-
     }
 })

@@ -424,17 +424,5 @@ const ActivityForm = ({
                 this.activity_list = []
             }
         },
-        previous() {
-            try {
-
-                this.$router.push('/view-activity')
-
-            }
-            catch (error) {
-                console.log('Unable to save data - ' + String(error))
-            }
-        }
-
-
     }
 })
