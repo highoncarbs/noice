@@ -4,7 +4,7 @@
 {% include 'components/progress-bar.html' %}
 {% include 'components/status-card.html' %}
 
-<div id="reports_master" >
+<div id="reports_master">
     <div class="container" v-cloak>
         <p class="is-size-4 has-text-weight-bold">Reports</p>
         <br>
@@ -79,10 +79,26 @@
 
         </div>
         <br>
+
+        <!-- Image Viewer -->
+        <div class="modal animated is-active fadeIn" v-show="viewUpload">
+            <div class="modal-background" @click="viewUpload = !viewUpload"></div>
+            <div class="modal-content">
+                <figure class="image">
+                    <img :src="fileSrc" alt="">
+                </figure>
+                <button class="modal-close is-large" aria-label="close" @click="viewUpload = !viewUpload"></button>
+
+            </div>
+
+        </div>
+        <!-- END image View -->
+
         <table class="table is-fullwidth is-bordered is-hoverable">
             <thead>
                 <tr>
                     <th>S.No.</th>
+                    <th>Image</th>
                     <th>Date</th>
                     <th>Product Category</th>
                     <th>Leader</th>
@@ -92,8 +108,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item , index) in filteredTransaction" @dblclick="getStatus(item.id , index)">
+                <tr v-for="(item , index) in filteredTransaction">
                     <td>[[ item.id]]</td>
+                    <td style="cursor: pointer;" class="has-text-link has-text-weight-semibold is-underline"
+                        @click="viewBig(item.id)">
+                        View
+                    </td>
                     <td>[[ formatDate(item.basic[0].start_date) ]]</td>
                     <td>[[ item.basic[0].finished_product_category[0].name ]]</td>
                     <td>[[ item.basic[0].team_leader[0].name ]]</td>
@@ -108,6 +128,11 @@
                     </td>
                     <td>
                         <div class="buttons">
+                            <a class="button is-small" @click="getStatus(item.id , index)">
+                                <span class="icon">
+                                    <feather type="activity" size="1rem"></feather>
+                                </span>
+                            </a>
                             <a class="button is-small" :href="'/transaction/view/'+ item.id">
                                 <span class="icon">
                                     <feather type="eye" size="1rem"></feather>
@@ -138,13 +163,17 @@
 
 
                         <div class="content">
-                            <p class="has-text-weight-bold is-size-5">Delete Transaction - [[ filteredTransaction[curr_index].id ]]</p>
+                            <p class="has-text-weight-bold is-size-5">Delete Transaction - [[
+                                filteredTransaction[curr_index].id ]]</p>
                             <br>
                             <div class="has-text-weight-bold">
 
-                                <p > <span class="has-text-grey has-text-weight-normal">Start date : </span> [[ formatDate(filteredTransaction[curr_index].basic[0].start_date) ]]</p>
-                                <p> <span class="has-text-grey has-text-weight-normal">Product Category : </span> [[ filteredTransaction[curr_index].basic[0].finished_product_category[0].name ]]</p>
-                                <p> <span class="has-text-grey has-text-weight-normal">Team Leader : </span>   [[ filteredTransaction[curr_index].basic[0].team_leader[0].name ]]</p>
+                                <p> <span class="has-text-grey has-text-weight-normal">Start date : </span> [[
+                                    formatDate(filteredTransaction[curr_index].basic[0].start_date) ]]</p>
+                                <p> <span class="has-text-grey has-text-weight-normal">Product Category : </span> [[
+                                    filteredTransaction[curr_index].basic[0].finished_product_category[0].name ]]</p>
+                                <p> <span class="has-text-grey has-text-weight-normal">Team Leader : </span> [[
+                                    filteredTransaction[curr_index].basic[0].team_leader[0].name ]]</p>
                             </div>
 
                         </div>

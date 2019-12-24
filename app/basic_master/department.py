@@ -70,12 +70,15 @@ def edit_department():
 
             check_data = Department.query.filter_by(
                 name=payload['name'].lower()).first()
+
             if check_data and check_data.name != payload['name'].lower():
                 return jsonify({'message': 'Data - '+check_data.name+' already exists.'})
             else:
                 try:
                     new_data = Department.query.filter_by(
                         id=payload['id']).first()
+                    print(new_data.task_department_act)  
+
                     new_data.name = payload['name'].lower()
                     db.session.commit()
                     return jsonify({'success': 'Data Updated'})
@@ -100,18 +103,17 @@ def delete_department():
         payload = request.json
         check_data = Department.query.filter_by(id=payload['id'])
         if check_data.first():
-            # if len(check_data.first().company_location) is int(0):
-
-            try:
-                check_data.delete()
-                db.session.commit()
-                return jsonify({'success': 'Data deleted'})
-            except Exception as e:
-                db.session.rollback()
-                db.session.close()
-                return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
-            # else:
-            #     return jsonify({'message': 'Cannot delete data. Being used by other master.'})
+            if len(check_data.first().task_department_act) is int(0):
+                try:
+                    check_data.delete()
+                    db.session.commit()
+                    return jsonify({'success': 'Data deleted'})
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.close()
+                    return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
+            else:
+                return jsonify({'message': 'Cannot delete data. Being used by other master.'})
 
         else:
             return jsonify({'message': 'Data does not exist.'})

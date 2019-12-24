@@ -99,17 +99,18 @@ def delete_print_technique():
         payload = request.json
         check_data = PrintTechnique.query.filter_by(id=payload['id'])
         if check_data.first():
+            if len(check_data.first().print_technique_goods) is int(0):
 
-            try:
-                check_data.delete()
-                db.session.commit()
-                return jsonify({'success': 'Data deleted'})
-            except Exception as e:
-                db.session.rollback()
-                db.session.close()
-                return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
-            # else:
-            #     return jsonify({'message': 'Cannot delete data. Being used by other master.'})
+                try:
+                    check_data.delete()
+                    db.session.commit()
+                    return jsonify({'success': 'Data deleted'})
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.close()
+                    return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
+            else:
+                return jsonify({'message': 'Cannot delete data. Being used by other master.'})
 
         else:
             return jsonify({'message': 'Data does not exist.'})

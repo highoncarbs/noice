@@ -15,7 +15,9 @@ new Vue({
             trans_id: null,
             progress_data_item: [],
             delete_modal: false,
-            curr_index: null
+            curr_index: null,
+            viewUpload: false,
+            fileSrc: ""
         }
     },
     delimiters: ['[[', ']]'],
@@ -52,18 +54,38 @@ new Vue({
                 }
                 )
             }
-            
+
             return data;
 
         }
     },
     methods: {
+        viewBig(id) {
+            let self = this
+            axios.get('/transaction/get/basic/files/one/' + String(id))
+                .then(function (response) {
+                    console.log(response.data)
+                    self.fileSrc = self.getStatic(response.data)
+                    if (self.fileSrc != null) {
+                        self.viewUpload = !this.viewUpload
+                    }
+                })
+        },
+        getStatic(path) {
+            if (path != "") {
+                let fileSrc = String('\\static') + String(path).split('\static')[1]
+                console.log('static ---' + fileSrc)
+                return fileSrc
+            }
+            else {
+                return null
+            }
+        },
         formatDate(data) {
             let date = String(data).split("-")
             return date[2] + '-' + date[1] + '-' + date[0]
         },
         getStatus(id, index) {
-            console.log(id, index)
             this.status_card_view = true
             this.trans_id = id
             this.progress_data_item = this.transactions[index].activity[0].task_items_act
@@ -94,7 +116,7 @@ new Vue({
 
                             self.delete_modal = !self.delete_modal
                             self.curr_index = null
-                            self.transactions.splice(self.curr_index , 1)
+                            self.transactions.splice(self.curr_index, 1)
                         }
                         else {
                             self.$buefy.snackbar.open({

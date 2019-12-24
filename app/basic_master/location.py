@@ -45,8 +45,8 @@ def add_location():
 
                     db.session.add(new_data)
                     db.session.commit()
-                    json_data = { 'id' : new_data.id , 'name' : new_data.name}
-                    return jsonify({'success': 'Data Added', 'data' : json_data})
+                    json_data = {'id': new_data.id, 'name': new_data.name}
+                    return jsonify({'success': 'Data Added', 'data': json_data})
 
                 except Exception as e:
                     print(str(e))
@@ -64,7 +64,7 @@ def add_location():
 @login_required
 def edit_location():
     if request.method == 'POST':
-        
+
         payload = request.json
         if payload['name'] is not None:
 
@@ -100,18 +100,18 @@ def delete_location():
         payload = request.json
         check_data = Location.query.filter_by(id=payload['id'])
         if check_data.first():
-            # if len(check_data.first().company_location) is int(0):
+            if len(check_data.first().task_location_act) is int(0):
 
-            try:
-                check_data.delete()
-                db.session.commit()
-                return jsonify({'success': 'Data deleted'})
-            except Exception as e:
-                db.session.rollback()
-                db.session.close()
-                return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
-            # else:
-            #     return jsonify({'message': 'Cannot delete data. Being used by other master.'})
+                try:
+                    check_data.delete()
+                    db.session.commit()
+                    return jsonify({'success': 'Data deleted'})
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.close()
+                    return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
+            else:
+                return jsonify({'message': 'Cannot delete data. Being used by other master.'})
 
         else:
             return jsonify({'message': 'Data does not exist.'})

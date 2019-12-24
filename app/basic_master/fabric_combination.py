@@ -36,7 +36,7 @@ def add_fabric_combination():
 
             check_data = FabricCombination.query.filter_by(name=payload['name'].lower())
             if check_data.first():
-                return jsonify({'message': 'Product Category - '+check_data.first().name+' already exists.'})
+                return jsonify({'message': 'Data - '+check_data.first().name+' already exists.'})
             else:
                 try:
                     new_data = FabricCombination(
@@ -99,18 +99,18 @@ def delete_fabric_combination():
         payload = request.json
         check_data = FabricCombination.query.filter_by(id=payload['id'])
         if check_data.first():
-            # if len(check_data.first().company_location) is int(0):
+            if len(check_data.first().fabric_combination_goods) is int(0):
 
-            try:
-                check_data.delete()
-                db.session.commit()
-                return jsonify({'success': 'Data deleted'})
-            except Exception as e:
-                db.session.rollback()
-                db.session.close()
-                return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
-            # else:
-            #     return jsonify({'message': 'Cannot delete data. Being used by other master.'})
+                try:
+                    check_data.delete()
+                    db.session.commit()
+                    return jsonify({'success': 'Data deleted'})
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.close()
+                    return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
+            else:
+                return jsonify({'message': 'Cannot delete data. Being used by other master.'})
 
         else:
             return jsonify({'message': 'Data does not exist.'})

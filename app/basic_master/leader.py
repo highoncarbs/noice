@@ -45,9 +45,9 @@ def add_leader():
 
                     db.session.add(new_data)
                     db.session.commit()
-                    json_data = { 'id' : new_data.id , 'name' : new_data.name}
+                    json_data = {'id': new_data.id, 'name': new_data.name}
                     return jsonify({'success': 'Data Added', 'data': json_data})
-                    
+
                 except Exception as e:
                     print(str(e))
                     db.session.rollback()
@@ -64,7 +64,7 @@ def add_leader():
 @login_required
 def edit_leader():
     if request.method == 'POST':
-        
+
         payload = request.json
         if payload['name'] is not None:
 
@@ -100,18 +100,18 @@ def delete_leader():
         payload = request.json
         check_data = Leader.query.filter_by(id=payload['id'])
         if check_data.first():
-            # if len(check_data.first().company_location) is int(0):
+            if len(check_data.first().transaction_leader) is int(0):
 
-            try:
-                check_data.delete()
-                db.session.commit()
-                return jsonify({'success': 'Data deleted'})
-            except Exception as e:
-                db.session.rollback()
-                db.session.close()
-                return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
-            # else:
-            #     return jsonify({'message': 'Cannot delete data. Being used by other master.'})
+                try:
+                    check_data.delete()
+                    db.session.commit()
+                    return jsonify({'success': 'Data deleted'})
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.close()
+                    return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
+            else:
+                return jsonify({'message': 'Cannot delete data. Being used by other master.'})
 
         else:
             return jsonify({'message': 'Data does not exist.'})

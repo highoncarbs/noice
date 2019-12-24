@@ -18,7 +18,7 @@
 
 
 
-                            <img v-bind:src="getStatic(row)" class="image is-128x128 is-inline-block"
+                            <img v-bind:src="getStatic(row)" :id="index" :class="{ 'image is-128x128 is-inline-block ' : index!=0 , 'image has-margin-bottom': index == 0 }"
                                 style="height: auto !important; margin-right:0.5rem; cursor: pointer"
                                 @click="setUpload(row)">
 
@@ -126,3 +126,9 @@
 
     </div>
 </template>
+
+<style>
+.has-margin-bottom {
+    margin-bottom : 0.5rem;
+}
+</style>

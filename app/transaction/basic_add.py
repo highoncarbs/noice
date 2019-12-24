@@ -232,6 +232,17 @@ def get_basic_files(id):
             images.append(os.path.join(r, file))
     return jsonify(images)
 
+@bp.route('/get/basic/files/one/<id>', methods=['GET'])
+@login_required
+def get_basic_files_primary(id):
+    trans = Transaction.query.filter_by(id=int(id)).first()
+    data = trans.basic[0].upload_folder
+    images = []
+    for r, d, f in os.walk(data):
+        for file in f[:1]:
+            images.append(os.path.join(r, file))
+    return jsonify(images[0])
+
 @bp.route('/get/basic/files/folder', methods=['POST'])
 @login_required
 def get_basic_files_folder():

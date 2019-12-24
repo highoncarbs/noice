@@ -241,7 +241,6 @@ const ActivityForm = ({
                 }
             })
 
-            console.log(index_list, dependency_list)
             let self = this
             // Date set up form index & dependency list
             this.activity_list.task_items.forEach(function (task, index) {
@@ -261,7 +260,6 @@ const ActivityForm = ({
                 }
 
 
-                console.log(task.start_date, task.end_date)
             })
 
 
