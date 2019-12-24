@@ -49,8 +49,7 @@ def get_transaction_report(id):
 @login_required
 def get_transaction_last():
 
-    data = Transaction.query.order_by(Transaction.id.desc()).lastrowid
-    # data = Transaction.query.order_by(Transaction.id.desc()).first().id
+    data = Transaction.query.order_by(Transaction.id.desc()).first().id
     return jsonify({'new_id' : int(data+1)})
 
 @bp.route('/delete/<id>', methods=['POST'])
