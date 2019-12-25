@@ -5,7 +5,7 @@ new Vue({
             filter: {
                 start_date: null,
                 end_date: null,
-                status: null,
+                status: "",
                 category: null,
                 leader: null,
             },
@@ -17,7 +17,11 @@ new Vue({
             delete_modal: false,
             curr_index: null,
             viewUpload: false,
-            fileSrc: ""
+            fileSrc: "",
+            data_product_category: [],
+            data_team_leader: [],
+            finished_product_category: "",
+            team_leader: "",
         }
     },
     delimiters: ['[[', ']]'],
@@ -29,8 +33,69 @@ new Vue({
                     self.transactions = JSON.parse(response.data)
                 }
             })
+        
+            axios.get('/basic_master/get/product_category')
+            .then(function (response) {
+                self.data_product_category = response.data
+
+            })
+            .catch(function (error) {
+                console.log(error)
+                self.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Product Category',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
+        axios.get('/basic_master/get/leader')
+            .then(function (response) {
+                self.data_team_leader = response.data
+            })
+            .catch(function (error) {
+                console.log(error)
+                self.$buefy.snackbar.open({
+                    duration: 4000,
+                    message: 'Unable to fetch data for Team Leader',
+                    type: 'is-light',
+                    position: 'is-top-right',
+                    actionText: 'Close',
+                    queue: true,
+                    onAction: () => {
+                        this.isActive = false;
+                    }
+                })
+            })
     },
     computed: {
+
+        autocompleteProductCategory() {
+
+            if (this.data_product_category.length != 0) {
+                return this.data_product_category.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.finished_product_category) >= 0
+                })
+            }
+        },
+        autocompleteTeamLeader() {
+
+            if (this.data_team_leader.length != 0) {
+                return this.data_team_leader.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.team_leader) >= 0
+                })
+            }
+        },
         filteredTransaction() {
             let data = this.transactions
             if (this.filter.start_date) {
@@ -54,12 +119,58 @@ new Vue({
                 }
                 )
             }
+            if (this.filter.status) {
+                return this.transactions.filter(item => {
+
+                    if (item.flag == this.filter.status) {
+                        return item
+                    }
+                }
+                )
+            }
+            if (this.filter.leader) {
+                return this.transactions.filter(item => {
+
+                    if (item.basic[0].team_leader[0].name == this.filter.leader) {
+                        return item
+                    }
+                }
+                )
+            }
+            if (this.filter.category) {
+                return this.transactions.filter(item => {
+
+                    if (item.basic[0].finished_product_category[0].name == this.filter.category) {
+                        return item
+                    }
+                }
+                )
+            }
 
             return data;
 
         }
     },
     methods: {
+        getProductCategory(option) {
+            if (option != null) {
+                this.filter.category = option.name
+                this.finished_product_category = option.name
+            }
+            else {
+                this.filter.category = null
+            }
+        },
+
+        getTeamLeader(option) {
+            if (option != null) {
+                this.filter.leader = option.name
+                this.team_leader = option.name
+            }
+            else {
+                this.filter.leader = null
+            }
+        },
         viewBig(id) {
             let self = this
             axios.get('/transaction/get/basic/files/one/' + String(id))

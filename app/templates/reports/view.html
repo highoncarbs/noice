@@ -40,15 +40,27 @@
 
                             <label for="" class="label">Status</label>
 
-                            <input type="text" class="input" v-model="filter.status" placeholder="Select Status">
+                            <div class="select">
+                                <select v-model="filter.status">
+                                    <option value="">ALL</option>
+                                    <option value="wip">WIP</option>
+                                    <option value="pass">PASS</option>
+                                    <option value="hold">HOLD</option>
+                                    <option value="reject">REJECT</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
 
                             <label for="" class="label">Category</label>
-                            <input type="text" class="input" v-model="filter.category" placeholder="Search Category">
-
+                            <b-autocomplete v-model="finished_product_category" placeholder="Select Product Category"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteProductCategory"
+                                field="name" @select="getProductCategory">
+                               
+                                <template slot="empty">No results for [[ finished_product_category ]]</template>
+                            </b-autocomplete>
                         </div>
                     </div>
                     <div class="field">
@@ -56,8 +68,12 @@
 
                             <label for="" class="label">Leader</label>
 
-                            <input type="text" class="input" v-model="filter.leader" placeholder="Search Leader">
-                        </div>
+                            <b-autocomplete v-model="team_leader" placeholder="Select Team Leader"
+                            :keep-first='true' :open-on-focus='true' :data="autocompleteTeamLeader"
+                            field="name" @select="getTeamLeader">
+                           
+                            <template slot="empty">No results for [[ finished_product_category ]]</template>
+                        </b-autocomplete>                        </div>
                     </div>
                     <div class="field">
                         <div class="control">
