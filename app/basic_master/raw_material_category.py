@@ -34,13 +34,13 @@ def add_raw_material_category():
         print(payload)
         if len(payload['name']) != 0:
 
-            check_data = RawMaterialCategory.query.filter_by(name=payload['name'].lower())
+            check_data = RawMaterialCategory.query.filter_by(name=payload['name'].lower().strip())
             if check_data.first():
                 return jsonify({'message': 'Data - '+check_data.first().name+' already exists.'})
             else:
                 try:
                     new_data = RawMaterialCategory(
-                        payload['name'].lower())
+                        payload['name'].lower().strip())
 
                     db.session.add(new_data)
                     db.session.commit()
@@ -67,14 +67,14 @@ def edit_raw_material_category():
         if payload['name'] is not None:
 
             check_data = RawMaterialCategory.query.filter_by(
-                name=payload['name'].lower()).first()
-            if check_data and check_data.name != payload['name'].lower():
+                name=payload['name'].lower().strip()).first()
+            if check_data and check_data.name != payload['name'].lower().strip():
                 return jsonify({'message': 'Data - '+check_data.name+' already exists.'})
             else:
                 try:
                     new_data = RawMaterialCategory.query.filter_by(
                         id=payload['id']).first()
-                    new_data.name = payload['name'].lower()
+                    new_data.name = payload['name'].lower().strip()
                     db.session.commit()
                     json_data = { 'id' : new_data.id , 'name' : new_data.name}
                     return jsonify({'success': 'Data Added', 'data' : json_data})

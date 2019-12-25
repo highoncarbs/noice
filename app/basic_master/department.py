@@ -35,13 +35,13 @@ def add_department():
         print(payload)
         if len(payload['name']) != 0:
 
-            check_data = Department.query.filter_by(name=payload['name'].lower())
+            check_data = Department.query.filter_by(name=payload['name'].lower().strip())
             if check_data.first():
                 return jsonify({'message': 'Product Category - '+check_data.first().name+' already exists.'})
             else:
                 try:
                     new_data = Department(
-                        payload['name'].lower())
+                        payload['name'].lower().strip())
 
                     db.session.add(new_data)
                     db.session.commit()
@@ -69,9 +69,9 @@ def edit_department():
         if payload['name'] is not None:
 
             check_data = Department.query.filter_by(
-                name=payload['name'].lower()).first()
+                name=payload['name'].lower().strip()).first()
 
-            if check_data and check_data.name != payload['name'].lower():
+            if check_data and check_data.name != payload['name'].lower().strip():
                 return jsonify({'message': 'Data - '+check_data.name+' already exists.'})
             else:
                 try:
@@ -79,7 +79,7 @@ def edit_department():
                         id=payload['id']).first()
                     print(new_data.task_department_act)  
 
-                    new_data.name = payload['name'].lower()
+                    new_data.name = payload['name'].lower().strip()
                     db.session.commit()
                     return jsonify({'success': 'Data Updated'})
 

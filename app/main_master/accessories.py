@@ -52,7 +52,7 @@ def add_accessories():
             try:
                 uom = Uom.query.filter_by(id = int(payload['uom'])).first()
                 new_data = Accessories(
-                    payload['name'].lower(), payload['desc'].lower(), payload['uom'])
+                    payload['name'].lower().strip(), payload['desc'].lower(), payload['uom'])
                 new_data.uom.append(uom)
                 if len(file) != 0:
                     file = request.files['image']
@@ -123,7 +123,7 @@ def edit_accessories():
                 uom = Uom.query.filter_by(id=int(payload['uom'])).first()
 
                 temp_image = new_data.image
-                new_data.name = payload['name'].lower()
+                new_data.name = payload['name'].lower().strip()
                 new_data.desc = payload['desc'].lower().lower()
                 new_data.uom_id = uom.id
                 new_data.uom = []

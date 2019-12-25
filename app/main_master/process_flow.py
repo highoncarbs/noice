@@ -47,7 +47,7 @@ def add_process_flow():
             try:
 
                 new_data = ProcessFlow(
-                    payload['name'].lower())
+                    payload['name'].lower().strip())
 
                 for key, item in enumerate(payload['task_list']):
                     print(key, item['department']['id'])
@@ -92,7 +92,7 @@ def edit_process_flow():
                 new_data = ProcessFlow.query.filter_by(
                     id=payload['id']).first()
                 temp_image = new_data.image
-                new_data.name = payload['name'].lower()
+                new_data.name = payload['name'].lower().strip()
                 new_data.desc = payload['desc']
 
                 db.session.commit()
