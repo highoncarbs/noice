@@ -11,15 +11,7 @@
         <div id="filters">
             <div class="field is-grouped is-horizontal notification">
                 <div class="field-body">
-                    <!-- <div class="field">
-                        <div class="control">
-
-                            <div class="buttons has-addons">
-                                <button class="button">Open</button>
-                                <button class="button">Closed</button>
-                            </div>
-                        </div>
-                    </div> -->
+                  
                     <div class="field">
                         <div class="control">
 
@@ -157,6 +149,11 @@
                             <a class="button is-small" :href="'/transaction/edit/'+ item.id">
                                 <span class="icon">
                                     <feather type="edit" size="1rem"></feather>
+                                </span>
+                            </a>
+                            <a class="button is-small" @click="printReport(item.id)">
+                                <span class="icon">
+                                    <feather type="printer" size="1rem"></feather>
                                 </span>
                             </a>
                             <button class="is-danger button is-small" @click="setModal(index)">

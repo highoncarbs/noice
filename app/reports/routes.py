@@ -9,3 +9,8 @@ from app import db, ma
 @login_required
 def view_reports():
     return render_template('reports/view.html')
+
+@bp.route('/print/<id>', methods=['GET'])
+@login_required
+def print_reports(id):
+    return render_template('reports/transaction_print.html')

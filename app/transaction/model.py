@@ -339,7 +339,7 @@ class TransactionSchema(ma.ModelSchema):
     
     basic = ma.Nested(TransactionBasicSchema ,  many=True)
     activity = ma.Nested(TransactionActivitySchema ,  many=True)
-    materials = ma.Nested(TransactionMaterialsSchema )
+    materials = ma.Nested(TransactionMaterialsSchema , many=True )
     flag =  field_for(Transaction, 'flag', dump_only=True)
     date =  field_for(Transaction, 'date', dump_only=True)
     finished_goods_code =  field_for(Transaction, 'finished_goods_code', dump_only=True)

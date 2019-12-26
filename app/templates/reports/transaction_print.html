@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'base/head.html'%}
+
+{% include 'transaction/view-basic-print.html' %}
+{% include 'transaction/view-materials-print.html' %}
+{% include 'transaction/view-activity-print.html' %}
+<body>
+
+
+    <div id="transaction-print" class="container" v-cloak>
+
+        
+        <p class="title">Transaction - [[ pp_num ]]</p>
+        <br>
+        <basic></basic>
+        <hr>
+        <materials></materials>
+        <activity></activity>
+    </div>
+
+    
+</body>
+
+</html>
+<script src="{{ url_for('static' , filename ='js/transaction/view-basic.js' )}}"></script>
+<script src="{{ url_for('static' , filename ='js/transaction/view-material.js' )}}"></script>
+<script src="{{ url_for('static' , filename ='js/transaction/view-activity.js' )}}"></script>
+
+<script>
+  
+
+    new Vue({
+        el: "#transaction-print",
+        components: {
+            'basic': BasicForm,
+            'materials': MaterialForm,
+            'activity': ActivityForm,
+            
+        },
+        delimiters: ["[[", "]]"],
+        data: function () {
+            return {
+                pp_num: null,
+                data: null,
+                form: null,
+            }
+        },
+        mounted() {
+            try {
+                let path_array = window.location.pathname.split("/")
+                let pp_num = path_array[path_array.length - 1]
+                this.pp_num = pp_num
+                let self = this
+
+
+                // axios.get('/transaction/get/' + String(pp_num))
+                //     .then(function (response) {
+                //         self.data = JSON.parse(response.data)
+                //         self.form = self.data[0].basic[0]
+                //     })
+            }
+            catch (error) {
+                console.log(error)
+            }
+        },
+        }).$mount('#transaction-print')
+</script>

@@ -152,6 +152,10 @@ new Vue({
         }
     },
     methods: {
+        printReport(id) {
+
+            window.location.href = '/reports/print/'+String(id)            
+        },
         getProductCategory(option) {
             if (option != null) {
                 this.filter.category = option.name

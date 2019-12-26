@@ -33,6 +33,15 @@ def get_transaction():
     json_data = schema.dumps(data)
     return jsonify(json_data)
 
+@bp.route('/get/<id>', methods=['GET'])
+@login_required
+def get_transaction_by_id(id):
+
+    schema = TransactionSchema(many=True)
+    data = Transaction.query.filter_by(id = int(id))
+    json_data = schema.dumps(data)
+    return jsonify(json_data)
+
 @bp.route('/get/report/<id>', methods=['GET'])
 @login_required
 def get_transaction_report(id):
