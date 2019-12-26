@@ -226,8 +226,13 @@ def update_basic(id):
 def get_basic_files(id):
     trans = Transaction.query.filter_by(id=int(id)).first()
     data = trans.basic[0].upload_folder
-    images = []
+    images = [] 
+    sorted_files_re = os.listdir(data).sort(key=lambda t:  t)
+    # sorted_files = sorted(os.listdir(data) ,key=lambda t: int( filter(str.isdigit , t)))
+    # print(sorted_files_re)
     for r, d, f in os.walk(data):
+        f.sort()
+        print(f)
         for file in f:
             images.append(os.path.join(r, file))
     return jsonify(images)

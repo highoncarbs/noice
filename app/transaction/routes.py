@@ -30,10 +30,7 @@ def get_transaction():
     mat_Schema = TransactionMaterialsSchema(many=True)
     data = Transaction.query.all()
     mat_data = TransactionMaterials.query.filter_by(id=1).first()
-    # print(mat_data)
-    # print(mat_Schema.dumps(mat_data))
     json_data = schema.dumps(data)
-    print(json_data)
     return jsonify(json_data)
 
 @bp.route('/get/report/<id>', methods=['GET'])
