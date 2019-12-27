@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     <p> [[ activity_list.task_items ]]</p>
-                    <tr  v-for="(row , index) in activity_list.task_items_act"
+                    <tr v-for="(row , index) in activity_list.task_items_act"
                         :class="{'has-background-info' : row.flag == 'done'}">
 
                         <td>[[ index +1]]</td>
@@ -48,14 +48,14 @@
                         <td>[[ row.days ]]</td>
 
 
-                        <td v-html="row.depends"></td>
+                        <td>[[ row.depends_on ]]</td>
                         <td>
-                            <p v-html="row.start_date"></p>
+                            <p>[[ formatDate(row.start_date) ]]</p>
                         </td>
                         <td>
-                            <p v-html="row.end_date"></p>
+                            <p>[[ formatDate(row.end_date) ]]</p>
                         </td>
-                        <td v-html="activity_list.task_items_act[index].remarks">
+                        <td> [[row.remarks ]]
                         </td>
                         <td v-if="row.flag == 'not'">
                             <button class="button is-small is-link is-outlined " @click="doneRow(index)">
@@ -77,71 +77,6 @@
                 </tbody>
             </table>
             <br>
-            <div class="box">
-                <p class="is-size-5 has-text-weight-bold">Final Decision</p>
-                <br>
-                <div class="columns">
-                    <div class="column is-7">
-
-
-                        <div class="field is-grouped ">
-                            <div class="field">
-
-                                <div class="control">
-                                    <!-- <label for="" class="label">Decision</label> -->
-                                    <b-field label="Descision">
-                                        <b-select placeholder="Select Decision" required v-model="report.status">
-                                            <option value="rework">Rework</option>
-                                            <option value="reject">Reject</option>
-                                            <option value="hold">Hold</option>
-                                            <option value="pass">Pass</option>
-                                        </b-select>
-                                    </b-field>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field is-grouped is-grouped-multiline">
-
-                            <div class="control">
-                                <label for="" class="label">Date</label>
-                                <input type="date" class="input" v-model="report.date">
-                            </div>
-
-                            <div class="control">
-                                <label for="" class="label">Finished Goods Code No.</label>
-                                <input type="text" class="input" v-model="report.finished_goods_code">
-                            </div>
-                            <div class="control">
-                                <label for="" class="label">Production Quantity </label>
-                                <input type="text" class="input" v-model="report.quantity">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="field">
-                            <div class="control">
-                                <label for="" class="label">Report </label>
-                                <textarea type="text" class="input textarea" v-model="report.report"></textarea>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="column">
-                        <div v-if="saved_image != null ">
-                            <label class="label">Saved Image</label>
-                            <figure class="image" style="width: 200px;">
-                                <img :src="saved_image" alt="">
-                            </figure>
-
-                        </div>
-                        <br>
-                        <label class="label">Upload Image</label>
-                        
-                    </div>
-                </div>
-
-            </div>
-
-         
         </div>
     </div>
 </template>

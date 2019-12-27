@@ -18,7 +18,8 @@
 
 
 
-                            <img v-bind:src="getStatic(row)" :id="index" :class="{ 'image is-128x128 is-inline-block ' : index!=0 , 'image has-margin-bottom': index == 0 }"
+                            <img v-bind:src="getStatic(row)" :id="index"
+                                :class="{ 'image is-128x128 is-inline-block ' : index!=0 , 'image has-margin-bottom': index == 0 }"
                                 style="height: auto !important; margin-right:0.5rem; cursor: pointer"
                                 @click="setUpload(row)">
 
@@ -29,6 +30,12 @@
                 <div class="column is-7">
                     <div class="field">
                         <div class="field is-grouped">
+                            <div class="control">
+                                <label for="" class="label">PPD No.</label>
+                                <p class="button is-static has-text-black has-text-weight-bold">
+                                    [[ pp_num ]]
+                                </p>
+                            </div>
                             <div class="control">
 
                                 <label for="" class="label">Date</label>
@@ -80,14 +87,14 @@
                         </div>
                     </div>
                     <br>
-                   
+
 
 
                 </div>
 
 
 
-             
+
             </div>
 
 
@@ -97,7 +104,7 @@
 </template>
 
 <style>
-.has-margin-bottom {
-    margin-bottom : 0.5rem;
-}
+    .has-margin-bottom {
+        margin-bottom: 0.5rem;
+    }
 </style>
