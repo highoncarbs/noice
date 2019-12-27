@@ -99,6 +99,11 @@ const ActivityForm = ({
         }
     },
     methods: {
+        formatDate(data) {
+            let date = String(data).split("-")
+            console.log(date[2] + '-' + date[1] + '-' + date[0].slice(2,4))
+            return date[2] + '-' + date[1] + '-' + date[0].slice(2, 4)
+        },
         getStatic(filedata) {
             if (filedata != null) {
                 let fileSrc = String('\\static') + String(filedata).split('\static')[1]

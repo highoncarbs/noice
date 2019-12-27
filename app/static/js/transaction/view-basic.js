@@ -20,7 +20,8 @@ const BasicForm = ({
             imageData: "",
             viewUpload: false,
             loader: false,
-            fileSrc: null
+            fileSrc: null,
+            pp_num: null
         }
 
     },
@@ -55,7 +56,7 @@ const BasicForm = ({
         try {
             let path_array = window.location.pathname.split("/")
             let pp_num = path_array[path_array.length - 1]
-
+            this.pp_num = pp_num
             let self = this
             axios.get('/transaction/get/basic/' + String(pp_num))
                 .then(function (response) {
