@@ -137,7 +137,7 @@
 
             </div>
 
-            <div class="control is-expanded">
+            <div class="control">
                 <label for="" class="label">Yarn</label>
                 <b-autocomplete v-model="form.yarn" placeholder="Select Yarn" :keep-first='true' :open-on-focus='true'
                     :data="autocompleteYarn" field="name" @select="getYarn">
@@ -169,7 +169,7 @@
             </div>
 
 
-            <div class="control is-expanded">
+            <div class="control">
                 <label for="" class="label">Fabric Process</label>
                 <b-autocomplete v-model="form.fabric_process" placeholder="Select Fabric Process" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteFabricProcess" field="name" @select="getFabricProcess">
@@ -184,7 +184,7 @@
                     Required</small>
 
             </div>
-            <div class="control is-expanded">
+            <div class="control">
                 <label for="" class="label">Fabric Width</label>
                 <b-autocomplete v-model="form.fabric_width" placeholder="Select Fabric Width" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteFabricWidth" field="name" @select="getFabricWidth">
@@ -198,7 +198,7 @@
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_width">Data Required</small>
 
             </div>
-            <div class="control is-expanded">
+            <div class="control">
                 <label for="" class="label">Fabric Dye</label>
                 <b-autocomplete v-model="form.fabric_dye" placeholder="Select Fabric Dye" :keep-first='true'
                     :open-on-focus='true' :data="autocompleteFabricDye" field="name" @select="getFabricDye">
@@ -212,7 +212,7 @@
                 <small class="tag is-danger is-light is-underline" v-if="form.errors.fabric_dye">Data Required</small>
 
             </div>
-            <div class="control is-expanded">
+            <div class="control is-narrow">
                 <label for="" class="label">Uom</label>
                 <b-autocomplete v-model="form.uom" placeholder="Select Uom" :keep-first='true' :open-on-focus='true'
                     :data="autocompleteUom" field="name" @select="getUom">

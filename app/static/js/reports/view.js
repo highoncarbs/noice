@@ -230,8 +230,8 @@ new Vue({
                             })
 
                             self.delete_modal = !self.delete_modal
-                            self.curr_index = null
                             self.transactions.splice(self.curr_index, 1)
+                            self.curr_index = null
                         }
                         else {
                             self.$buefy.snackbar.open({

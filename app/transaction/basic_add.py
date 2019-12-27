@@ -171,6 +171,7 @@ def update_basic(id):
                     if os.path.exists(foldertemp):
                         shutil.rmtree(
                             foldertemp, ignore_errors=False, onerror=None)
+                            
                     if (len(array_file) != 0):
 
                         for index, file in enumerate(array_file.items()):
