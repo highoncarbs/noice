@@ -79,7 +79,9 @@ def add_activity():
                         id=int(item['department'][0]['id'])).first()
                     location = Location.query.filter_by(
                         id=int(item['location'][0]['id'])).first()
-                    if 'depends' not in item.keys():
+                    if item['depends'] is ""  :
+                        item['depends'] = 0
+                    if 'depends' not in item.keys() :
                         item['depends'] = 0
                     if 'remarks' not in item.keys():
                         item['remarks'] = ""
