@@ -32,7 +32,6 @@
                     <th>Dep. On</th>
                     <th>Start date</th>
                     <th>End date</th>
-                    <th>Remark</th>
                     <th>Actions</th>
                 </thead>
                 <tbody>
@@ -55,8 +54,7 @@
                         <td>
                             <p>[[ formatDate(row.end_date) ]]</p>
                         </td>
-                        <td> [[row.remarks ]]
-                        </td>
+                        
                         <td v-if="row.flag == 'not'">
                             <button class="button is-small is-link is-outlined " @click="doneRow(index)">
                                 <span class="icon icon-btn">
