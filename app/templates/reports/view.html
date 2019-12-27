@@ -11,7 +11,7 @@
         <div id="filters">
             <div class="field is-grouped is-horizontal notification">
                 <div class="field-body">
-                  
+
                     <div class="field">
                         <div class="control">
 
@@ -50,7 +50,7 @@
                             <b-autocomplete v-model="finished_product_category" placeholder="Select Product Category"
                                 :keep-first='true' :open-on-focus='true' :data="autocompleteProductCategory"
                                 field="name" @select="getProductCategory">
-                               
+
                                 <template slot="empty">No results for [[ finished_product_category ]]</template>
                             </b-autocomplete>
                         </div>
@@ -60,12 +60,13 @@
 
                             <label for="" class="label">Leader</label>
 
-                            <b-autocomplete v-model="team_leader" placeholder="Select Team Leader"
-                            :keep-first='true' :open-on-focus='true' :data="autocompleteTeamLeader"
-                            field="name" @select="getTeamLeader">
-                           
-                            <template slot="empty">No results for [[ finished_product_category ]]</template>
-                        </b-autocomplete>                        </div>
+                            <b-autocomplete v-model="team_leader" placeholder="Select Team Leader" :keep-first='true'
+                                :open-on-focus='true' :data="autocompleteTeamLeader" field="name"
+                                @select="getTeamLeader">
+
+                                <template slot="empty">No results for [[ finished_product_category ]]</template>
+                            </b-autocomplete>
+                        </div>
                     </div>
                     <div class="field">
                         <div class="control">
@@ -137,29 +138,46 @@
                     <td>
                         <div class="buttons">
                             <a class="button is-small" @click="getStatus(item.id , index)">
-                                <span class="icon">
-                                    <feather type="activity" size="1rem"></feather>
-                                </span>
+                                <abbr title="Quick View">
+                                    <span class="icon">
+                                        <feather type="activity" size="1rem"></feather>
+                                    </span>
+                                </abbr>
                             </a>
                             <a class="button is-small" :href="'/transaction/view/'+ item.id">
+                                <abbr title="View">
+
                                 <span class="icon">
                                     <feather type="eye" size="1rem"></feather>
                                 </span>
+                                </abbr>
                             </a>
                             <a class="button is-small" :href="'/transaction/edit/'+ item.id">
+                                <abbr title="Edit">
+
                                 <span class="icon">
                                     <feather type="edit" size="1rem"></feather>
                                 </span>
+                                </abbr>
+
                             </a>
                             <a class="button is-small" @click="printReport(item.id)">
+                                <abbr title="Printer">
+
                                 <span class="icon">
                                     <feather type="printer" size="1rem"></feather>
                                 </span>
+                                </abbr>
+
                             </a>
                             <button class="is-danger button is-small" @click="setModal(index)">
+                                <abbr title="Delete">
+
                                 <span class="icon ">
                                     <feather type="x" size="1rem"></feather>
                                 </span>
+                                </abbr>
+
                             </button>
                         </div>
                     </td>
@@ -209,7 +227,7 @@
             </div>
 
         </div>
-        <status-card :id="trans_id" :view="status_card_view" :progress_data="progress_data_item"></status-card>
+        <status-card :id="trans_id" :view="status_card_view"  v-on:closemodal="status_card_view = !status_card_view"  :progress_data="progress_data_item"></status-card>
     </div>
 </div>
 

@@ -2,7 +2,7 @@
     <div>
 
         <div class="modal" :class="{ 'is-active' : view}">
-            <div class="modal-background" @click="view = !view"></div>
+            <div class="modal-background" @click="closeModal"></div>
             <div class="modal-content">
                 <div class="box">
                     <p class="is-size-5 has-text-weight-bold">Transaction - [[ id ]]</p>
@@ -70,7 +70,7 @@
                                 <td> [[ row.name]]</td>
 
 
-                                <td v-html="row.remarks">
+                                <td v-html="formatDate(row.end_date)">
                                 </td>
                                 <td v-if="row.flag == 'not'">
                                     <button class="button is-small is-link is-outlined " @click="doneRow(index)">
@@ -93,7 +93,7 @@
                     </table>
                 </div>
             </div>
-            <button @click="view = !view" class="modal-close is-large" aria-label="close"></button>
+            <button @click="closeModal" class="modal-close is-large" aria-label="close"></button>
         </div>
     </div>
 
@@ -128,89 +128,93 @@
             }
         },
         methods: {
+            closeModal() {
+                this.view = !this.view
+                this.$emit('closemodal')
+            },
             formatDate(data) {
                 let date = String(data).split("-")
-                return date[2] + '-' + date[1] + '-' + date[0]
+                return date[2] + '-' + date[1] + '-' + date[0].slice(2,4)
             },
             notRow(index) {
-            let self = this
-            let item_id = this.progress_data[index]
-            axios.post('/transaction/update/activity/item/not/' + String(item_id.id))
-                .then(function (response) {
-                    if (response.data.success) {
+                let self = this
+                let item_id = this.progress_data[index]
+                axios.post('/transaction/update/activity/item/not/' + String(item_id.id))
+                    .then(function (response) {
+                        if (response.data.success) {
 
-                        self.$buefy.snackbar.open({
-                            duration: 4000,
-                            message: "Activity updated",
-                            type: 'is-light',
-                            position: 'is-top-right',
-                            actionText: 'Close',
-                            queue: true,
-                            onAction: () => {
-                                this.isActive = false;
-                            }
-                        })
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: "Activity updated",
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
 
-                        item_id.flag = "not"
+                            item_id.flag = "not"
 
-                    }
-                    if (response.data.message) {
-                        self.$buefy.snackbar.open({
-                            duration: 4000,
-                            message: response.data.message,
-                            type: 'is-light',
-                            position: 'is-top-right',
-                            actionText: 'Close',
-                            queue: true,
-                            onAction: () => {
-                                this.isActive = false;
-                            }
-                        })
+                        }
+                        if (response.data.message) {
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.message,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
 
-                    }
-                })
+                        }
+                    })
 
-        },
-        doneRow(index) {
-            let self = this
-            console.log(index, this.activity_list)
-            let item_id = this.progress_data[index]
-            axios.post('/transaction/update/activity/item/' + String(item_id.id))
-                .then(function (response) {
-                    if (response.data.success) {
+            },
+            doneRow(index) {
+                let self = this
+                console.log(index, this.activity_list)
+                let item_id = this.progress_data[index]
+                axios.post('/transaction/update/activity/item/' + String(item_id.id))
+                    .then(function (response) {
+                        if (response.data.success) {
 
-                        self.$buefy.snackbar.open({
-                            duration: 4000,
-                            message: "Activity marked as <b>Done </b>!",
-                            type: 'is-light',
-                            position: 'is-top-right',
-                            actionText: 'Close',
-                            queue: true,
-                            onAction: () => {
-                                this.isActive = false;
-                            }
-                        })
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: "Activity marked as <b>Done </b>!",
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
 
-                        item_id.flag = "done"
+                            item_id.flag = "done"
 
-                    }
-                    if (response.data.message) {
-                        self.$buefy.snackbar.open({
-                            duration: 4000,
-                            message: response.data.message,
-                            type: 'is-light',
-                            position: 'is-top-right',
-                            actionText: 'Close',
-                            queue: true,
-                            onAction: () => {
-                                this.isActive = false;
-                            }
-                        })
+                        }
+                        if (response.data.message) {
+                            self.$buefy.snackbar.open({
+                                duration: 4000,
+                                message: response.data.message,
+                                type: 'is-light',
+                                position: 'is-top-right',
+                                actionText: 'Close',
+                                queue: true,
+                                onAction: () => {
+                                    this.isActive = false;
+                                }
+                            })
 
-                    }
-                })
+                        }
+                    })
 
-        },
+            },
         }
 
     })
