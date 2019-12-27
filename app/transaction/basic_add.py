@@ -171,7 +171,7 @@ def update_basic(id):
                     if os.path.exists(foldertemp):
                         shutil.rmtree(
                             foldertemp, ignore_errors=False, onerror=None)
-                            
+
                     if (len(array_file) != 0):
 
                         for index, file in enumerate(array_file.items()):
@@ -229,8 +229,7 @@ def get_basic_files(id):
     data = trans.basic[0].upload_folder
     images = [] 
     sorted_files_re = os.listdir(data).sort(key=lambda t:  t)
-    # sorted_files = sorted(os.listdir(data) ,key=lambda t: int( filter(str.isdigit , t)))
-    # print(sorted_files_re)
+   
     for r, d, f in os.walk(data):
         f.sort()
         print(f)
@@ -245,6 +244,7 @@ def get_basic_files_primary(id):
     data = trans.basic[0].upload_folder
     images = []
     for r, d, f in os.walk(data):
+        f.sort()
         for file in f[:1]:
             images.append(os.path.join(r, file))
     return jsonify(images[0])
@@ -256,6 +256,7 @@ def get_basic_files_folder():
     data = request.json['upload_folder']
     images = []
     for r, d, f in os.walk(data):
+        f.sort()
         for file in f:
             images.append(os.path.join(r, file))
     return jsonify(images)
