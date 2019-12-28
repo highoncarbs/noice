@@ -43,7 +43,9 @@
             <tbody>
                 <tr v-for="(row , index) in taskList">
                     <td> [[ index+1 ]] </td>
-                    <td> [[ row.name ]] </td>
+                    <td>
+                        <input type="text" v-model="row.name" class="input">
+                    </td>
                     <td> [[ row.department.name ]] </td>
                     <td> [[ row.location.name ]] </td>
                     <td>
@@ -135,14 +137,14 @@
 
         </table>
         <hr>
-        <div class="field" >
-        <div class="control">
-            <button @click="getLastRow" class="button is-info is-outlined"><span class="icon icon-btn">
-                    <feather type="copy" size="1.3rem"></feather>
-                </span>
-                Copy from last
-            </button>
-        </div>
+        <div class="field">
+            <div class="control">
+                <button @click="getLastRow" class="button is-info is-outlined"><span class="icon icon-btn">
+                        <feather type="copy" size="1.3rem"></feather>
+                    </span>
+                    Copy from last
+                </button>
+            </div>
         </div>
         <div class="field is-grouped is-grouped-multiline">
 
