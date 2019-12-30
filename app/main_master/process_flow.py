@@ -102,18 +102,14 @@ def edit_process_flow_by_id(id):
                     id=int(id)).first()
                 print(new_data)
                 new_data.name = payload['name'].lower().strip()
+                new_data.task_items = []
                 for key,item in enumerate(payload['task_list']):
-                    if 'id' in item.keys():
-                        task_item = TaskItem.query.filter_by(id=int(item['id'])).first()
-                        task_item.name = item['name']
-                        task_item.days = item['days']
-                    else:
-                        department = Department.query.filter_by(
-                        id=int(item['department']['id'])).first()
-                        location = Location.query.filter_by(
-                        id=int(item['location']['id'])).first()
-                        new_data.task_items.append(
-                        TaskItem(int(key), item['name'], department, location, item['days']))
+                    department = Department.query.filter_by(
+                    id=int(item['department']['id'])).first()
+                    location = Location.query.filter_by(
+                    id=int(item['location']['id'])).first()
+                    new_data.task_items.append(
+                    TaskItem(int(key), item['name'], department, location, item['days']))
 
                 db.session.commit()
                 return jsonify({'success': 'Data Updated'})
