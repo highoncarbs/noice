@@ -26,6 +26,16 @@ def get_process_flow():
         json_data = data_schema.dump(data)
         return jsonify(json_data)
 
+@bp.route('/get/process_flow/<id>', methods=['GET'])
+@login_required
+def get_process_flow_by_id(id):
+
+        data_schema = ProcessFlowSchema()
+        data = ProcessFlow.query.filter_by(id = int(id)).first()
+        json_data = data_schema.dump(data)
+        print(json_data)
+        return json_data
+
 
 @bp.route('/get/process_flow/last', methods=['GET'])
 @login_required
@@ -81,19 +91,29 @@ def add_process_flow():
         return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
-@bp.route('/edit/process_flow', methods=['POST'])
+@bp.route('/edit/process_flow/<id>', methods=['POST'])
 @login_required
-def edit_process_flow():
-    if request.method == 'POST':
-        payload = json.loads(request.form['data'])
-
+def edit_process_flow_by_id(id):
+        payload = json.loads(request.data)
+        print(payload['name'])
         if payload:
             try:
                 new_data = ProcessFlow.query.filter_by(
-                    id=payload['id']).first()
-                temp_image = new_data.image
+                    id=int(id)).first()
+                print(new_data)
                 new_data.name = payload['name'].lower().strip()
-                new_data.desc = payload['desc']
+                for key,item in enumerate(payload['task_list']):
+                    if 'id' in item.keys():
+                        task_item = TaskItem.query.filter_by(id=int(item['id'])).first()
+                        task_item.name = item['name']
+                        task_item.days = item['days']
+                    else:
+                        department = Department.query.filter_by(
+                        id=int(item['department']['id'])).first()
+                        location = Location.query.filter_by(
+                        id=int(item['location']['id'])).first()
+                        new_data.task_items.append(
+                        TaskItem(int(key), item['name'], department, location, item['days']))
 
                 db.session.commit()
                 return jsonify({'success': 'Data Updated'})
@@ -106,9 +126,6 @@ def edit_process_flow():
                 return jsonify({'message': 'Something unexpected happened. Check logs', 'log': str(e)})
         else:
             return jsonify({'message': 'Empty Data.'})
-
-    else:
-        return jsonify({'message': 'Invalid HTTP method . Use POST instead.'})
 
 
 @bp.route('/delete/process_flow', methods=['POST'])

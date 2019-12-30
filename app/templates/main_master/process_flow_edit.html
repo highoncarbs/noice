@@ -137,15 +137,7 @@
 
         </table>
         <hr>
-        <div class="field">
-            <div class="control">
-                <button @click="getLastRow" class="button is-info is-outlined"><span class="icon icon-btn">
-                        <feather type="copy" size="1.3rem"></feather>
-                    </span>
-                    Copy from last
-                </button>
-            </div>
-        </div>
+
         <div class="field is-grouped is-grouped-multiline">
 
             <div class="control">
@@ -174,91 +166,11 @@
         </div>
 
     </div>
-    <div class="animated fadeIn" id="data_view" v-if="!view">
-        <div class="control">
-            <label for="" class="label has-text-white">View</label>
-            <button class="button" @click="view = !view"><span class="icon icon-btn">
-                    <feather type="plus" szie="1.3rem"></feather>
-                </span>
-                Add
-            </button>
-        </div>
-        <br>
-        <div v-if="process_flow_list.length == 0">
-            <p class="has-text-centered">
-                <span class="icon">
-                    <feather type="info" size="1.5rem"></feather>
-                </span>
-                <br>
-                <p class="is-size-5">Theres nothing to see here. Go add some data</p>
-            </p>
 
-        </div>
-        <div v-for="( row , index) in process_flow_list" v-if="process_flow_list.length != 0">
-
-            <b-collapse class="card" aria-id="contentIdForA11y3" :open="false" style="cursor: pointer;">
-                <div slot="trigger" slot-scope="props" class="card-header" role="button"
-                    aria-controls="contentIdForA11y3">
-                    <p class="card-header-title">
-                        [[ row.name ]]
-                        <span class="has-text-grey" style="padding: 0 1rem"> : </span>
-                        <span class="has-text-grey has-text-weight-normal"> [[ row.task_items.length]] Activities</span>
-                    </p>
-                    <a class="card-header-icon">
-                        <span class="icon" v-if="props.open">
-                            <feather size="1.3rem" type="chevron-down"></feather>
-                        </span>
-                        <span class="icon" v-if="!props.open">
-                            <feather size="1.3rem" type="chevron-up"></feather>
-                        </span>
-
-                    </a>
-                </div>
-                <div class="card-content">
-                    <div class="content">
-                        <table class="table is-fullwidth is-bordered">
-                            <thead>
-                                <th>No.</th>
-                                <th>Process Name</th>
-                                <th>Department</th>
-                                <th>Location</th>
-                                <th>Days</th>
-                            </thead>
-                            <tbody>
-                                <template>
-                                    <tr v-for="(item , index) in row.task_items">
-                                        <td> [[ item.task_id+1 ]] </td>
-                                        <td>[[ item.name ]] </td>
-                                        <td>[[ item.department[0].name ]]</td>
-                                        <td>[[ item.location[0].name ]]</td>
-                                        <td>[[ item.days ]]</td>
-                                    </tr>
-                                </template>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <footer class="card-footer">
-                    <a class="card-footer-item" @click="editData(row.id , index)">
-                        <span class="icon icon-btn">
-                            <feather type="edit" size="1.3rem"></feather>
-                        </span>
-                        Edit</a>
-                    <a class="card-footer-item has-text-danger" @click="deleteData(row.id , index)">
-                        <span class="icon icon-btn">
-                            <feather type="trash" size="1.3rem"></feather>
-                        </span>
-                        Delete</a>
-                </footer>
-            </b-collapse>
-            <br>
-        </div>
-    </div>
 
 
 </div>
 
-<script src="{{ url_for('static' , filename='js/main_master/process_flow.js')}}"></script>
+<script src="{{ url_for('static' , filename='js/main_master/process_flow_edit.js')}}"></script>
 
 {% endblock %}

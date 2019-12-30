@@ -4,6 +4,7 @@ new Vue({
         return {
             process_flow_name: null,
             taskList: [],
+            pp_num: null,
             query_department: '',
             query_location: '',
             task: {
@@ -25,6 +26,29 @@ new Vue({
     },
     mounted() {
         let raw = this
+        try {
+            let path_array = window.location.pathname.split("/")
+            let pp_num = path_array[path_array.length - 1]
+            this.pp_num = pp_num
+            console.log('pp_num - ' + pp_num)
+            let self = this
+            
+            axios.get('/main_master/get/process_flow/' + String(pp_num))
+                .then(function (response) {
+                    console.log(response.data)
+                    self.process_flow_name = response.data.name
+                    
+                    self.taskList = response.data.task_items
+                    self.taskList.forEach(function (item) {
+                        item.department = item.department[0] 
+                        item.location = item.location[0] 
+                    })
+                })
+        
+        }
+        catch (error) {
+
+        }
         axios.get('/basic_master/get/department')
             .then(function (response) {
                 raw.data_department = response.data
@@ -162,7 +186,7 @@ new Vue({
                     data = response.data
                     raw.process_flow_name = data.name
                     data.task_items.forEach(function (item) {
-                        
+
                         raw.task.name = item.name
                         raw.task.days = item.days
                         raw.task.department = item.department[0]
@@ -170,7 +194,7 @@ new Vue({
                         raw.addRow()
                     })
 
-                   
+
                 })
         },
         checkRow() {
@@ -216,7 +240,7 @@ new Vue({
                 department: null,
                 location: null,
                 days: null,
-                error : {}
+                error: {}
             }
             this.errors = false
 
@@ -234,16 +258,16 @@ new Vue({
 
             if (this.checkData()) {
                 let payload = JSON.stringify({ 'name': this.process_flow_name, 'task_list': this.taskList })
-                axios.post('/main_master/add/process_flow', payload, {
+                axios.post('/main_master/edit/process_flow/'+String(raw.pp_num), payload, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
                     .then(function (response) {
                         if (response.data.success) {
-                            raw.pushAndClearRow();
-                            raw.process_flow_name = null
-                            raw.taskList = []
+                            // raw.pushAndClearRow();
+                            // raw.process_flow_name = null
+                            // raw.taskList = []
                             raw.$buefy.snackbar.open({
                                 duration: 4000,
                                 message: response.data.success,
@@ -277,28 +301,7 @@ new Vue({
             this.taskList.splice(index, 1)
         },
         showView() {
-            this.data_error = false
-            this.view = !this.view
-            let raw = this
-            axios.get('/main_master/get/process_flow')
-                .then(function (response) {
-                    raw.process_flow_list = response.data
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    raw.$buefy.snackbar.open({
-                        duration: 4000,
-                        message: 'Unable to fetch Process Flow List',
-                        type: 'is-light',
-                        position: 'is-top-right',
-                        actionText: 'Close',
-                        queue: true,
-                        onAction: () => {
-                            this.isActive = false;
-                        }
-                    })
-                })
-
+            window.location.href="/main_master/process_flow"
         },
         deleteData(data_id, index) {
             let raw = this
@@ -321,9 +324,6 @@ new Vue({
                     }
                 })
 
-        },
-        editData(data_id, index) {
-            window.location.href = "/main_master/process_flow/edit/"+String(data_id)
         }
     }
 })

@@ -30,3 +30,8 @@ def view_other_materials():
 @login_required
 def view_process_flow():
     return render_template('main_master/process_flow.html')
+
+@bp.route('/process_flow/edit/<id>', methods=['GET'])
+@login_required
+def edit_process_flow(id):
+    return render_template('main_master/process_flow_edit.html')
