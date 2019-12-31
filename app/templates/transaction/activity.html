@@ -58,14 +58,14 @@
                         <td v-if=" row.task_id != null "> [[ row.department[0].name ]]</td>
                         <td v-if=" row.task_id == null">
                             <b-autocomplete v-model="row.query_department" placeholder="Select Department"
-                                :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment(row.query_department)" field="name"
                                 @select="option => activity_list.task_items[index].department = [option]">
                             </b-autocomplete>
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.location[0].name ]]</td>
                         <td v-if=" row.task_id == null">
                             <b-autocomplete v-model="row.query_location" placeholder="Select Location"
-                                :keep-first='true' :open-on-focus='true' :data="autocompleteLocation" field="name"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteLocation(row.query_location)" field="name"
                                 @select="option => activity_list.task_items[index].location = [option]">
                             </b-autocomplete>
                         </td>

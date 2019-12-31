@@ -32,28 +32,7 @@ const ActivityForm = ({
             }
 
         },
-        autocompleteDepartment() {
 
-            if (this.data_department.length != 0) {
-                return this.data_department.filter((option) => {
-                    return option.name
-                        .toString()
-                        .toLowerCase()
-                        .indexOf(this.query_department.toLowerCase()) >= 0
-                })
-            }
-        },
-        autocompleteLocation() {
-
-            if (this.data_location.length != 0) {
-                return this.data_location.filter((option) => {
-                    return option.name
-                        .toString()
-                        .toLowerCase()
-                        .indexOf(this.query_location.toLowerCase()) >= 0
-                })
-            }
-        },
 
     },
 
@@ -146,6 +125,28 @@ const ActivityForm = ({
     },
     methods: {
 
+        autocompleteDepartment(query) {
+
+            if (this.data_department.length != 0) {
+                return this.data_department.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(String(query).toLowerCase()) >= 0
+                })
+            }
+        },
+        autocompleteLocation(query) {
+
+            if (this.data_location.length != 0) {
+                return this.data_location.filter((option) => {
+                    return option.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(String(query).toLowerCase()) >= 0
+                })
+            }
+        },
         getActivity(option) {
             if (option != null) {
                 this.activity_list = option

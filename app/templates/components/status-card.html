@@ -10,35 +10,6 @@
                     <p class="is-size-7 has-text-weight-bold">PROGRESS BAR</p>
                     <progress-bar :datalist="progress_data"></progress-bar>
                     <br>
-                    <div class="notification">
-
-                        <label for="" class="label">Finished Goods Code</label>
-                        <p v-if="result.finished_goods_code == null">None</p>
-
-                        <p v-if="result.finished_goods_code  != null ">[[ result.finished_goods_code ]]</p>
-                    </div>
-
-                    <br>
-                    <table class="table is-bordered is-fullwidth">
-                        <thead>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Report</th>
-
-                        </thead>
-                        <tbody>
-                            <td>[[ formatDate(result.date) ]] </td>
-                            <td>
-                                <p class="tag is-black has-text-weight-bold is-normal">
-                                    [[ result.flag.toUpperCase() ]]
-                                </p>
-                            </td>
-                            <td>
-                                [[ result.report]]
-                            </td>
-                        </tbody>
-                    </table>
-                    <br>
                     <p class="is-size-6 has-text-weight-bold">Activity List</p>
                     <br>
                     <table class="table is-fullwidth is-bordered table-expanded is-narrow">
@@ -91,6 +62,35 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="notification">
+
+                        <label for="" class="label">Finished Goods Code</label>
+                        <p v-if="result.finished_goods_code == null">None</p>
+
+                        <p v-if="result.finished_goods_code  != null ">[[ result.finished_goods_code ]]</p>
+                    </div>
+
+                    
+                    <table class="table is-bordered is-fullwidth">
+                        <thead>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Report</th>
+
+                        </thead>
+                        <tbody>
+                            <td>[[ formatDate(result.date) ]] </td>
+                            <td>
+                                <p class="tag is-black has-text-weight-bold is-normal">
+                                    [[ result.flag.toUpperCase() ]]
+                                </p>
+                            </td>
+                            <td>
+                                [[ result.report]]
+                            </td>
+                        </tbody>
+                    </table>
+                    <br>
                 </div>
             </div>
             <button @click="closeModal" class="modal-close is-large" aria-label="close"></button>
