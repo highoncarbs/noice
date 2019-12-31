@@ -55,41 +55,42 @@
                         <td v-if=" row.task_id != null "> [[ row.name]]</td>
                         <td v-if=" row.task_id == null">
                             <input type="text" placeholder="Enter activity"
-                                v-model="activity_list.task_items[index].name" class="input">
+                                v-model="row.name" class="input">
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.department[0].name ]]</td>
                         <td v-if=" row.task_id == null">
                             <b-autocomplete v-model="query_department" placeholder="Select Department"
                                 :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
-                                @select="option => activity_list.task_items[index].department = [option]">
+                                @select="option => row.department = [option]">
                             </b-autocomplete>
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.location[0].name ]]</td>
                         <td v-if=" row.task_id == null">
                             <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
                                 :open-on-focus='true' :data="autocompleteLocation" field="name"
-                                @select="option => activity_list.task_items[index].location = [option]">
+                                @select="option => row.location = [option]">
                             </b-autocomplete>
                         </td>
-                        <td v-if=" row.task_id != null ">[[ row.days ]]</td>
-                        <td v-if=" row.task_id == null">
-                            <input type="text" placeholder="1" v-model="activity_list.task_items[index].days"
-                                v-on:blur="setUpDates" class="input">
+                        <td >
+                            <input type="text" placeholder="1" v-model="row.days"
+                            v-on:blur="setUpDates" class="input">
+                        
+                       
                         </td>
 
 
-                        <td><input type="text" class="input is-narrow" v-model="activity_list.task_items[index].depends"
+                        <td><input type="text" class="input is-narrow" v-model="row.depends"
                                 v-on:blur="setUpDates" v-on:input="setUpDates" v-on:keyup="setUpDates"
                                 v-on:change="setUpDates" placeholder="?"></td>
                         <td>
-                            <p v-html="activity_list.task_items[index].start_date" placeholder="Start Date"></p>
+                            <p v-html="row.start_date" placeholder="Start Date"></p>
                         </td>
                         <td>
-                            <p v-html="activity_list.task_items[index].end_date" placeholder=" End Date"></p>
+                            <p v-html="row.end_date" placeholder=" End Date"></p>
                         </td>
                         <td>
                             <input type="text" placeholder="Enter Remarks"
-                                v-model="activity_list.task_items[index].remarks" class="input">
+                                v-model="row.remarks" class="input">
                         </td>
                         <td>
                             <div class="buttons">
