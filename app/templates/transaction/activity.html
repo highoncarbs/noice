@@ -52,10 +52,8 @@
                     <tr v-for="(row , index) in activity_list.task_items">
 
                         <td>[[ index +1]]</td>
-                        <td v-if=" row.task_id != null "> [[ row.name]]</td>
-                        <td v-if=" row.task_id == null">
-                            <input type="text" placeholder="Enter activity"
-                                v-model="activity_list.task_items[index].name" class="input">
+                        <td>
+                            <input type="text" placeholder="Enter activity" v-model="row.name" class="input">
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.department[0].name ]]</td>
                         <td v-if=" row.task_id == null">
@@ -66,8 +64,8 @@
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.location[0].name ]]</td>
                         <td v-if=" row.task_id == null">
-                            <b-autocomplete v-model="row.query_location" placeholder="Select Location" :keep-first='true'
-                                :open-on-focus='true' :data="autocompleteLocation" field="name"
+                            <b-autocomplete v-model="row.query_location" placeholder="Select Location"
+                                :keep-first='true' :open-on-focus='true' :data="autocompleteLocation" field="name"
                                 @select="option => activity_list.task_items[index].location = [option]">
                             </b-autocomplete>
                         </td>
