@@ -63,7 +63,7 @@ const ActivityForm = ({
         if (localStorage.getItem('basic')) {
 
             if (localStorage.getItem('activity')) {
-                
+
                 let activitySaved = JSON.parse(localStorage.getItem('activity'))[1]
                 raw.activity_list = activitySaved
                 raw.base_activity = activitySaved['name']
@@ -162,7 +162,9 @@ const ActivityForm = ({
                 department: [],
                 location: [],
                 name: null,
-                task_id: null
+                task_id: null,
+                query_department: '',
+                query_location: '',
 
             }
             let temp_list = this.activity_list.task_items

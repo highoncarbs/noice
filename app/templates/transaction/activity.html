@@ -55,42 +55,41 @@
                         <td v-if=" row.task_id != null "> [[ row.name]]</td>
                         <td v-if=" row.task_id == null">
                             <input type="text" placeholder="Enter activity"
-                                v-model="row.name" class="input">
+                                v-model="activity_list.task_items[index].name" class="input">
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.department[0].name ]]</td>
                         <td v-if=" row.task_id == null">
-                            <b-autocomplete v-model="query_department" placeholder="Select Department"
+                            <b-autocomplete v-model="row.query_department" placeholder="Select Department"
                                 :keep-first='true' :open-on-focus='true' :data="autocompleteDepartment" field="name"
-                                @select="option => row.department = [option]">
+                                @select="option => activity_list.task_items[index].department = [option]">
                             </b-autocomplete>
                         </td>
                         <td v-if=" row.task_id != null "> [[ row.location[0].name ]]</td>
                         <td v-if=" row.task_id == null">
-                            <b-autocomplete v-model="query_location" placeholder="Select Location" :keep-first='true'
+                            <b-autocomplete v-model="row.query_location" placeholder="Select Location" :keep-first='true'
                                 :open-on-focus='true' :data="autocompleteLocation" field="name"
-                                @select="option => row.location = [option]">
+                                @select="option => activity_list.task_items[index].location = [option]">
                             </b-autocomplete>
                         </td>
-                        <td >
-                            <input type="text" placeholder="1" v-model="row.days"
-                            v-on:blur="setUpDates" class="input">
-                        
-                       
+                        <td>
+                            <input type="text" placeholder="1" v-model="row.days" v-on:blur="setUpDates" class="input">
+
+
                         </td>
 
 
-                        <td><input type="text" class="input is-narrow" v-model="row.depends"
+                        <td><input type="text" class="input is-narrow" v-model="activity_list.task_items[index].depends"
                                 v-on:blur="setUpDates" v-on:input="setUpDates" v-on:keyup="setUpDates"
                                 v-on:change="setUpDates" placeholder="?"></td>
                         <td>
-                            <p v-html="row.start_date" placeholder="Start Date"></p>
+                            <p v-html="activity_list.task_items[index].start_date" placeholder="Start Date"></p>
                         </td>
                         <td>
-                            <p v-html="row.end_date" placeholder=" End Date"></p>
+                            <p v-html="activity_list.task_items[index].end_date" placeholder=" End Date"></p>
                         </td>
                         <td>
                             <input type="text" placeholder="Enter Remarks"
-                                v-model="row.remarks" class="input">
+                                v-model="activity_list.task_items[index].remarks" class="input">
                         </td>
                         <td>
                             <div class="buttons">
@@ -124,7 +123,7 @@
                     <button class="button is-black" @click="next" :disabled="loader">
                         Next
                         <span class="icon icon-btn-l">
-                            <feather type="refresh-cw" v-if="loader"  size="1.3rem" animation="spin"></feather>
+                            <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
                             <feather type="arrow-right" v-if="!loader" size="1.3rem"></feather>
                         </span>
                     </button>
