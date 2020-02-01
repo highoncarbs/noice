@@ -14,6 +14,12 @@ def home():
     return redirect(url_for('reports.view_reports'))
 
 
+@bp.route('/overview' , methods=['GET' , 'POST'])
+@login_required
+def overview():
+    return render_template('base/overview.html')
+
+
 
 # # Sentry verification
 

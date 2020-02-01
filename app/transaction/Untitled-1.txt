@@ -1,0 +1,377 @@
+from app import db
+from app import ma
+from datetime import datetime
+from marshmallow_sqlalchemy import field_for
+from marshmallow import fields
+from app.basic_master.model import Department , DepartmentSchema , LocationSchema , Location ,Uom , UomSchema  , ProductCategory , ProductCategorySchema , Leader , LeaderSchema
+from app.main_master.model import RawGoods, RawGoodsSchema, FinishedGoods \
+    , FinishedGoodsSchema , Accessories , AccessoriesSchema , OtherMaterials , OtherMaterialsSchema
+
+class TimestampMixin(object):
+    created = db.Column(
+        db.DateTime,  default=datetime.utcnow)
+    updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
+
+base = db.Model
+
+
+# TransactionProd Basic
+
+class TransactionProdBasic( base):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date, nullable=False)
+    days = db.Column(db.Integer, nullable=False)
+    qty = db.Column(db.Integer, nullable=False , default= 0)
+    finished_product_category = db.relationship("ProductCategory",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_category" , secondary ="transaction_prod_category")
+    desc = db.Column(db.String(250), nullable=False)
+    sample = db.Column(db.String(5), nullable=False , default="No")
+    upload_folder = db.Column(db.String(250))
+    flag = db.Column(db.String(15), default="draft")
+    team_leader = db.relationship("Leader",
+                                cascade="all, delete",
+                                backref="transaction_prod_leader" , secondary ="transaction_prod_leader")
+    team_members = db.Column(db.String(250) , default=None)
+    grid = db.Column(db.String(500) , default=None)
+    transaction_prod_id = db.Column(db.Integer , db.ForeignKey('transaction_prod.id' , ondelete="CASCADE"))
+
+    def __init__(self, start_date, days, finished_product_category, desc, team_leader, team_members, qty , sample , grid ):
+        self.start_date = start_date
+        self.days = days
+        self.finished_product_category.append(finished_product_category)
+        self.desc = desc
+        self.team_leader.append(team_leader)
+        self.team_members = team_members
+        self.qty = qty
+        self.sample = sample
+        self.grid = grid
+
+db.Table('transaction_prod_category',
+         db.Column('transaction_prod_basic_id', db.Integer, db.ForeignKey('transaction_prod_basic.id', ondelete='SET NULL')),
+         db.Column('product_category_id', db.Integer, db.ForeignKey('product_category.id', ondelete='SET NULL'))
+         )
+db.Table('transaction_prod_leader',
+         db.Column('transaction_prod_basic_id', db.Integer, db.ForeignKey('transaction_prod_basic.id', ondelete='SET NULL')),
+         db.Column('leader_id', db.Integer, db.ForeignKey('leader.id', ondelete='SET NULL'))
+         )
+
+class TransactionProdBasicSchema(ma.ModelSchema):
+    id = field_for(TransactionProdBasic, 'id', dump_only=True)
+    start_date = field_for(TransactionProdBasic, 'start_date', dump_only=True)
+    days = field_for(TransactionProdBasic, 'days', dump_only=True)
+    finished_product_category = ma.Nested(ProductCategorySchema , many=True)
+    desc = field_for(TransactionProdBasic, 'desc', dump_only=True)
+    qty = field_for(TransactionProdBasic, 'qty', dump_only=True)
+    grid = field_for(TransactionProdBasic, 'grid', dump_only=True)
+    sample = field_for(TransactionProdBasic, 'sample', dump_only=True)
+    upload_folder = field_for(TransactionProdBasic, 'upload_folder', dump_only=True)
+    flag = field_for(TransactionProdBasic, 'flag', dump_only=True)
+    team_leader = ma.Nested(LeaderSchema , many=True)
+    team_members = field_for(TransactionProdBasic, 'team_members', dump_only=True)
+   
+    class meta:
+        model = TransactionProdBasic
+        
+
+# TransactionProd Activity
+
+class TransactionProdActivity(base):
+    id = db.Column(db.Integer, primary_key=True)
+    task_items_act_prod = db.relationship("TaskItemActProd",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_activity")
+    transaction_prod_id = db.Column(db.Integer , db.ForeignKey('transaction_prod.id' , ondelete="CASCADE")  )
+
+        
+
+
+class TaskItemActProd(base):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer)
+    transaction_prod_activity_id = db.Column(db.Integer,
+                                db.ForeignKey('transaction_prod_activity.id', ondelete='SET NULL'))
+    department = db.relationship(Department,  secondary='task_department_act_prod',
+                               backref='task_department_act_prod', cascade='all ,delete', lazy='joined')
+    location = db.relationship(Location, secondary='task_location_act_prod',
+                               backref='task_location_act_prod', cascade='all ,delete', lazy='joined')
+    days = db.Column(db.Integer , nullable = False , default = 1)
+    depends_on = db.Column(db.Integer, nullable=False, default=0)
+    remarks = db.Column(db.String(250), default=None)
+    name= db.Column(db.String(250), default=None , nullable=False)
+    flag = db.Column(db.String(250), default="not", nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+
+
+
+    def __init__(self, task_id , name , department , location ,days , depends_on , remarks , start_date , end_date , flag):
+        self.task_id= task_id
+        self.name= name
+        self.depends_on= depends_on
+        self.remarks= remarks
+        self.department.append(department)
+        self.location.append(location)
+        self.days = days
+        self.start_date =start_date
+        self.end_date= end_date
+        self.flag = flag
+
+    activity = db.relationship(TransactionProdActivity, lazy="joined")
+
+db.Table('task_department_act_prod',
+         db.Column('task_id', db.Integer, db.ForeignKey('task_item_act_prod.id', ondelete='SET NULL')),
+         db.Column('department_id', db.Integer, db.ForeignKey('department.id', ondelete='SET NULL'))
+         )
+
+db.Table('task_location_act_prod',
+         db.Column('task_id', db.Integer, db.ForeignKey('task_item_act_prod.id', ondelete='SET NULL')),
+         db.Column('location_id', db.Integer, db.ForeignKey('location.id', ondelete='SET NULL'))
+         )
+
+class TaskItemActProdSchema(ma.ModelSchema):
+    id = field_for(TaskItemActProd, 'id', dump_only=True)
+    task_id = field_for(TaskItemActProd, 'task_id', dump_only=True)
+    days = field_for(TaskItemActProd, 'days', dump_only=True)
+    flag = field_for(TaskItemActProd, 'flag', dump_only=True)
+    name = field_for(TaskItemActProd, 'name', dump_only=True)
+    remarks= field_for(TaskItemActProd, 'remarks', dump_only=True)
+    depends_on = field_for(TaskItemActProd, 'depends_on', dump_only=True)
+    start_date= field_for(TaskItemActProd, 'start_date', dump_only=True)
+    end_date= field_for(TaskItemActProd, 'end_date', dump_only=True)
+    department = ma.Nested(DepartmentSchema ,  many=True)
+    location = ma.Nested(LocationSchema ,  many=True)
+
+    class meta:
+        model = TaskItemActProd
+
+class TransactionProdActivitySchema(ma.ModelSchema):
+    id = field_for(TransactionProdActivity, 'id', dump_only=True)
+    task_items_act = ma.Nested(TaskItemActProdSchema ,  many=True)
+
+    class meta:
+        model = TransactionProdActivity
+
+
+class TransactionProdMaterials(base):
+    id = db.Column(db.Integer, primary_key=True)
+    finished_materials = db.relationship("FinishedItemProd",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_materials_finished")
+    raw_materials = db.relationship("RawItemProd",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_materials_raw")
+    accessories_materials = db.relationship("AccessoriesItemProd",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_materials_accessories")
+    other_materials = db.relationship("OtherMaterialsItemProd",
+                                 cascade="all, delete",
+                                 backref="transaction_prod_materials_other")
+                                 
+    transaction_prod_id = db.Column(db.Integer , db.ForeignKey('transaction_prod.id' , ondelete="CASCADE"))
+
+
+
+
+
+class FinishedProdItem(base):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_prod_materials_id = db.Column(db.Integer,
+                                db.ForeignKey('transaction_prod_materials.id', ondelete='SET NULL'))
+    finished_prod_mat = db.relationship(FinishedGoods,  secondary='finished_prod_mat',
+                               backref='finished_prod_mat', cascade='all ,delete', lazy='joined')
+    quantity = db.Column(db.Float , nullable = False , default = 1)
+
+
+    def __init__(self, finished_mat , quantity):
+        self.finished_prod_mat.append(finished_prod_mat)
+        self.quantity = quantity
+
+    material = db.relationship(TransactionProdMaterials, lazy="joined")
+
+db.Table('finished_prod_mat',
+         db.Column('item_id', db.Integer, db.ForeignKey('finished_prod_item.id', ondelete='SET NULL')),
+         db.Column('finished_goods_id', db.Integer, db.ForeignKey('finished_goods.id', ondelete='SET NULL'))
+         )
+
+
+
+class AccessoriesProdItem(base):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_prod_materials_id = db.Column(db.Integer,
+                                db.ForeignKey('transaction_prod_materials.id', ondelete='SET NULL'))
+    accessories_prod_mat = db.relationship(Accessories,  secondary='accessories_prod_mat',
+                               backref='accessories_prod_mat', cascade='all ,delete', lazy='joined')
+    quantity = db.Column(db.Float , nullable = False , default = 1)
+
+
+    def __init__(self, accessories_mat , quantity):
+        self.accessories_prod_mat.append(accessories_prod_mat)
+        self.quantity = quantity
+
+    material = db.relationship(TransactionProdMaterials, lazy="joined")
+
+db.Table('accessories_prod_mat',
+         db.Column('item_id', db.Integer, db.ForeignKey('accessories_prod_item.id', ondelete='SET NULL')),
+         db.Column('accessories_id', db.Integer, db.ForeignKey('accessories.id', ondelete='SET NULL'))
+         )
+
+
+class OtherMaterialsItemProd(base):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_prod_materials_id = db.Column(db.Integer,
+                                db.ForeignKey('transaction_prod_materials.id', ondelete='SET NULL'))
+    other_mat = db.relationship(OtherMaterials,  secondary='other_mat_prod',
+                               backref='other_mat_prod', cascade='all ,delete', lazy='joined')
+    
+    quantity = db.Column(db.Float , nullable = False , default = 1)
+
+
+    def __init__(self, other_mat , quantity):
+        self.other_mat.append(other_mat)
+        self.quantity = quantity
+
+    material = db.relationship(TransactionProdMaterials, lazy="joined")
+
+db.Table('other_mat_prod',
+         db.Column('item_id', db.Integer, db.ForeignKey('other_materials_item.id', ondelete='SET NULL')),
+         db.Column('other_materials_id', db.Integer, db.ForeignKey('other_materials.id', ondelete='SET NULL'))
+         )
+
+
+class RawItemProd(base):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_prod_materials_id = db.Column(db.Integer,
+                                db.ForeignKey('transaction_prod_materials.id', ondelete='SET NULL'))
+    raw_mat = db.relationship(RawGoods,  secondary='raw_mat',
+                               backref='raw_mat', cascade='all ,delete', lazy='joined')
+    quantity = db.Column(db.Float , nullable = False , default = 1)
+
+
+    def __init__(self, raw_mat , quantity):
+        self.raw_mat.append(raw_mat)
+        self.quantity = quantity
+
+    material = db.relationship(TransactionProdMaterials, lazy="joined")
+
+db.Table('raw_mat',
+         db.Column('item_id', db.Integer, db.ForeignKey('raw_item.id', ondelete='SET NULL')),
+         db.Column('raw_goods_id', db.Integer, db.ForeignKey('raw_goods.id', ondelete='SET NULL'))
+         )
+
+
+class RawItemProdSchema(ma.ModelSchema):
+    id = field_for(RawItemProd, 'id', dump_only=True)
+    
+    quantity = field_for(RawItemProd, 'quantity', dump_only=True)
+    raw_mat = ma.Nested(RawGoodsSchema ,  many=True)
+    
+    class meta:
+        model = RawItemProd
+
+
+
+
+
+
+class FinishedItemProdSchema(ma.ModelSchema):
+    id = field_for(FinishedItemProd, 'id', dump_only=True)
+    
+    quantity = field_for(FinishedItemProd, 'quantity', dump_only=True)
+    finished_mat = ma.Nested(FinishedGoodsSchema ,  many=True)
+    
+    class meta:
+        model = FinishedItemProd
+
+
+
+
+class AccessoriesItemProdSchema(ma.ModelSchema):
+    id = field_for(AccessoriesItemProd, 'id', dump_only=True)
+    
+    quantity = field_for(AccessoriesItemProd, 'quantity', dump_only=True)
+    accessories_mat = ma.Nested(AccessoriesSchema ,  many=True)
+    
+    class meta:
+        model = AccessoriesItemProd
+
+
+
+
+
+class OtherMaterialsItemProdSchema(ma.ModelSchema):
+    id = field_for(OtherMaterialsItemProd, 'id', dump_only=True)
+    
+    quantity = field_for(OtherMaterialsItemProd, 'quantity', dump_only=True)
+    other_mat = ma.Nested(OtherMaterialsSchema ,  many=True)
+    
+    class meta:
+        model = OtherMaterialsItemProd
+
+
+
+
+class TransactionProdMaterialsSchema(ma.ModelSchema):
+    id = field_for(TransactionProdMaterials, 'id', dump_only=True)
+    
+    finished_materials = ma.Nested(FinishedItemProdSchema ,  many=True)
+    raw_materials = ma.Nested(RawItemProdSchema ,  many=True)
+    accessories_materials = ma.Nested(AccessoriesItemProdSchema ,  many=True )
+    other_materials = ma.Nested(OtherMaterialsItemProdSchema, many=True)
+
+    class meta:
+        model = TransactionProdMaterials
+
+
+class TransactionProd(base):
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    basic = db.relationship('TransactionProdBasic' , backref="transaction_prod" , cascade='all ,delete')
+    activity = db.relationship('TransactionProdActivity' , backref="transaction_prod" , cascade='all ,delete')
+    material = db.relationship('TransactionProdMaterials', backref="transaction_prod" ,  cascade='all ,delete')
+    flag = db.Column(db.String(15), default="wip")
+    date = db.Column(db.Date,  default = None)
+    finished_goods_code = db.Column(db.String(250) , default = None, unique=True)
+    quantity = db.Column(db.Float , default = None)
+    report = db.Column(db.String(1000), default = None)
+    image= db.Column(db.String(250) , default = None)
+
+
+class TransactionProdSchema(ma.ModelSchema):
+    id = field_for(TransactionProd, 'id', dump_only=True)
+    
+    basic = ma.Nested(TransactionProdBasicSchema ,  many=True)
+    activity = ma.Nested(TransactionProdActivitySchema ,  many=True)
+    materials = ma.Nested(TransactionProdMaterialsSchema , many=True )
+    flag =  field_for(TransactionProd, 'flag', dump_only=True)
+    date =  field_for(TransactionProd, 'date', dump_only=True)
+    finished_goods_code =  field_for(TransactionProd, 'finished_goods_code', dump_only=True)
+    quantity =  field_for(TransactionProd, 'quantity', dump_only=True)
+    report =  field_for(TransactionProd, 'report', dump_only=True)
+    image =  field_for(TransactionProd, 'image', dump_only=True)
+  
+
+    class meta:
+        model = TransactionProd
+class TransactionProdReportSchema(ma.ModelSchema):
+    id = field_for(TransactionProd, 'id', dump_only=True)
+  
+    flag =  field_for(TransactionProd, 'flag', dump_only=True)
+    date =  field_for(TransactionProd, 'date', dump_only=True)
+    finished_goods_code =  field_for(TransactionProd, 'finished_goods_code', dump_only=True)
+    quantity =  field_for(TransactionProd, 'quantity', dump_only=True)
+    report =  field_for(TransactionProd, 'report', dump_only=True)
+    image =  field_for(TransactionProd, 'image', dump_only=True)
+  
+
+    class meta:
+        model = TransactionProd
+
+
+

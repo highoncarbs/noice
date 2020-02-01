@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'base/head.html'%}
+
+<body class="">
+    <section class="section" id="bellow">
+        <div class="container">
+
+            <div>
+                <nav class="level is-mobile">
+                    <div class="level-left">
+
+                        <p  class="level-item button">
+                            <span class="icon icon-btn">
+                                <feather type="user" size="1.3rem"></feather>
+                            </span>
+                            {{ current_user.username }}
+                        </p>
+                    </div>
+                    <p class="is-size-3 libre level-item brand ">Jai Texart</p>
+                        <div class="level-right">
+    
+                            <a href="{{url_for('auth.logout')}}" class="level-item button is-danger">
+                                <span class="icon icon-btn">
+                                    <feather type="log-out" size="1.3rem"></feather>
+                                </span>
+                                    Log Out
+                            </a>
+                        </div>
+
+                </nav>
+            </div>
+            <br>
+            <br>
+            <p class="has-text-centered-touch has-text-grey-light is-size-5">
+                APPS
+            </p>
+            <hr>
+
+            <div class="columns is-variable is-5">
+                <div class="column">
+                    <a href="{{url_for('reports.view_reports')}}">
+
+                        <div class="box box-button">
+                            <p class="is-size-4 has-text-weight-bold">Sample</p>
+                            <p class="is-size-6 has-text-grey">App for product sampling</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="column">
+                    <a href="{{url_for('production.new_transaction')}}" class="is-disabled">
+
+                        <div class="box box-button">
+                            <p class="is-size-4 has-text-weight-bold">Production</p>
+                            <p class="is-size-6 has-text-grey">App for Production Orders</p>
+
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            
+            <div class="columns is-variable is-5">
+                <div class="column is-6">
+                    <a href="https://hafta.jaitexart.org">
+
+                        <div class="box box-button">
+                            <p class="is-size-4 has-text-weight-bold">Hafta</p>
+                            <p class="is-size-6 has-text-grey">App for HR and Payroll</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <br>
+
+</body>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#bellow',
+        data() {
+            return {};
+        },
+       
+    })
+
+    Vue.component('vue-feather', VueFeather);
+</script>

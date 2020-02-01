@@ -1,0 +1,184 @@
+<template id="basic_form">
+
+
+    <div class="animated fadeIn">
+
+        <div class="container">
+
+            <p class="is-size-5 has-text-weight-bold">Basic Information</p>
+            <br>
+            <div class="columns is-variable is-6">
+
+
+                <div class="column is-5">
+                    <div class="box">
+                        <div class="field is-grouped is-grouped-multiline">
+
+                            <div class="control">
+
+                                <div class="file ">
+                                    <label class="file-label">
+                                        <input class="file-input" @change.prevent="listUploads" accept="image/*"
+                                            type="file" name="ref-file" multiple>
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <feather type="upload" size="1rem"></feather>
+                                            </span>
+                                            <span class="file-label">
+                                                Choose a file…
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button" @click="clearUploads">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+
+                        <p v-if="loader" class="has-text-weight-bold has-text-grey">
+                            <span class="icon icon-btn">
+                                <feather type="rotate-cw" animation="spin"></feather>
+                            </span>
+                            Upload reference pictures here.
+                        </p>
+                        <ul>
+                            <p v-if="files.length == 0 && !loader" class="has-text-weight-bold has-text-grey">
+                                <span class="icon icon-btn">
+                                    <feather type="info"></feather>
+                                </span>
+                                Upload reference pictures here.
+                            </p>
+                            <ul>
+                                <article class="media" v-for="(file , index) in files">
+
+                                    <figure class="media-left">
+                                        <p class="image is-128x128" style="height: auto !important;">
+
+                                            <img class="image-preview"
+                                                v-bind:src="imageUrlArray | getIndexedImage(index)">
+                                        </p>
+
+
+                                    </figure>
+                                    <div class="media-content">
+                                        <div class="content">
+
+                                            <p class="has-text-weight-bold">
+                                                <span class="has-text-grey">[[ index +1 ]].</span> 
+                                                <br>
+                                                <span class="has-text-grey has-text-weight-normal">File size:
+                                                    [[file.size |
+                                                    formatBytes ]]
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                    <div class="media-right">
+                                        <button class="delete" @click.prevent="deleteItem(index)"></button>
+                                    </div>
+                                </article>
+                            </ul>
+                    </div>
+                </div>
+
+                <div class="column is-7">
+                    <div class="field">
+                        <div class="field is-grouped">
+                            <div class="control">
+
+                                <label for="" class="label">Date</label>
+                                <input type="date" v-model="form.start_date" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+
+                            <div class="control">
+                                <label for="" class="label">Finished Product Category</label>
+                                <b-autocomplete v-model="finished_product_category"
+                                    placeholder="Select Product Category" :keep-first='true' :open-on-focus='true'
+                                    :data="autocompleteProductCategory" field="name" @select="getProductCategory">
+                                </b-autocomplete>
+
+                            </div>
+                        </div>
+                        <div class="field">
+
+                            <div class="control">
+                                <label for="" class="label">Description</label>
+                                <textarea type="text" class="input textarea" v-model="form.desc"
+                                    placeholder="Enter Description for this transaction"></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="field is-grouped is-grouped-multiline">
+
+                            <div class="control">
+                                <label for="" class="label">Team Leader</label>
+                                <b-autocomplete v-model="team_leader" placeholder="Select Team Leader"
+                                    :keep-first='true' :open-on-focus='true' :data="autocompleteTeamLeader" field="name"
+                                    @select="getTeamLeader">
+                                    <template slot="header">
+                                        <a @click="showAddData('leader')">
+                                            <span> Add new... </span>
+                                        </a>
+                                    </template>
+                                    <template slot="empty">No results for [[ team_leader ]]</template>
+                                </b-autocomplete>
+                               
+                            </div>
+                            <div class="control is-expanded">
+                                <label for="" class="label">Other Members</label>
+                                <input type="text" class="input" v-model="form.team_members"
+                                    placeholder="Select other Team Members">
+                                <!-- Tag Inputs  -->
+                            </div>
+                        </div>
+                        <div class="field is-grouped is-grouped-multiline">
+                            <div class="control">
+                                <label for="" class="label">Days Required</label>
+                                <input type="text" class="input" v-on:input="getDate" placeholder="Enter Days"
+                                    v-model="form.days">
+                            </div>
+                            <div class="control">
+                                <label for="" class="label">Target Date</label>
+                                <input type="date" class="input" v-model="form.target_date">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field is-grouped is-grouped-multiline">
+
+                        <div class="control">
+
+
+                            <button class="button is-black" @click="next" :disabled="loader">
+                                Update
+                                <span class="icon icon-btn-l">
+                                    <feather type="refresh-cw" v-if="loader" size="1.3rem" animation="spin"></feather>
+
+                                    <feather type="refresh-cw" v-if="!loader" size="1.3rem"></feather>
+                                </span>
+                            </button>
+
+                        </div>
+                        <div class="control">
+                            <button class="button is-text">
+                                Plan activity next
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</template>

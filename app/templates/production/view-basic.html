@@ -1,0 +1,134 @@
+<template id="basic_form">
+
+
+    <div class="animated fadeIn">
+
+        <div class="container">
+
+            <p class="is-size-5 has-text-weight-bold">Basic Information</p>
+            <br>
+            <div class="columns is-variable is-6">
+                <div class="column is-5">
+                    <div class="box">
+
+
+
+                        <span class="" v-for="(row , index) in images">
+
+
+
+
+                            <img v-bind:src="getStatic(row)" :id="index" :class="{ 'image is-128x128 is-inline-block ' : index!=0 , 'image has-margin-bottom': index == 0 }"
+                                style="height: auto !important; margin-right:0.5rem; cursor: pointer"
+                                @click="setUpload(row)">
+
+                        </span>
+
+                    </div>
+                </div>
+                <div class="column is-7">
+                    <div class="field">
+                        <div class="field is-grouped">
+                            <div class="control">
+
+                                <label for="" class="label">Date</label>
+                                <input type="date" v-model="form.start_date" class="input" readonly>
+                            </div>
+                        </div>
+                        <div class="field">
+
+                            <div class="control">
+                                <label for="" class="label">Finished Product Category</label>
+                                <input type="text" class="input" readonly
+                                    v-model="form.finished_product_category[0].name"
+                                    placeholder="Enter Finished Product">
+                            </div>
+                        </div>
+                        <div class="field">
+
+                            <div class="control">
+                                <label for="" class="label">Description</label>
+                                <textarea type="text" class="input textarea" v-model="form.desc"
+                                    placeholder="Enter Description for this transaction" readonly></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="field is-grouped is-grouped-multiline">
+
+                            <div class="control">
+                                <label for="" class="label">Team Leader</label>
+                                <input type="text" class="input" readonly v-model="form.team_leader[0].name"
+                                    placeholder="Select Team Leader">
+                            </div>
+                            <div class="control is-expanded">
+                                <label for="" class="label">Other Members</label>
+                                <input type="text" class="input" readonly v-model="form.team_members"
+                                    placeholder="Select other Team Members">
+                                <!-- Tag Inputs  -->
+                            </div>
+                        </div>
+                        <div class="field is-grouped is-grouped-multiline">
+                            <div class="control">
+                                <label for="" class="label">Days Required</label>
+                                <input type="text" class="input" readonly v-on:input="getDate" placeholder="Enter Days"
+                                    v-model="form.days">
+                            </div>
+                            <div class="control">
+                                <label for="" class="label">Target Date</label>
+                                <input type="date" class="input" readonly v-model="form.target_date">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field is-grouped is-grouped-multiline">
+
+                        <div class="control">
+
+
+                            <button class="button is-black" @click="next">
+                                Next
+                                <span class="icon icon-btn-l">
+                                    <feather type="arrow-right" size="1.3rem"></feather>
+                                </span>
+                            </button>
+
+                        </div>
+                        <div class="control">
+                            <button class="button is-text">
+                                Plan activity next
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Image Viewer -->
+                <div class="modal animated is-active fadeIn" v-show="viewUpload">
+                    <div class="modal-background" @click="viewUpload = !viewUpload"></div>
+                    <div class="modal-content">
+                        <figure class="image">
+                            <img :src="getStatic(fileSrc)" alt="">
+                        </figure>
+                        <button class="modal-close is-large" aria-label="close"
+                            @click="viewUpload = !viewUpload"></button>
+
+                    </div>
+
+                </div>
+                <!-- END image View -->
+            </div>
+
+
+        </div>
+
+    </div>
+</template>
+
+<style>
+.has-margin-bottom {
+    margin-bottom : 0.5rem;
+}
+</style>
