@@ -24,7 +24,7 @@ class TransactionBasic( base):
     finished_product_category = db.relationship("ProductCategory",
                                  cascade="all, delete",
                                  backref="transaction_category" , secondary ="transaction_category")
-    desc = db.Column(db.String(250), nullable=False)
+    desc = db.Column(db.String(3000), nullable=False)
     upload_folder = db.Column(db.String(250))
     flag = db.Column(db.String(15), default="draft")
     team_leader = db.relationship("Leader",
