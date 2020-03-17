@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, redirect, url_for, request, session, jsonify, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.transaction import bp
-from app.basic_master.model import ProductCategory , Leader
+from app.basic_master.model import ProductCategory, Leader
 from app.transaction.model import Transaction, TransactionBasic, TransactionBasicSchema
 from werkzeug import secure_filename
 import shutil
@@ -64,7 +64,7 @@ def add_basic():
                     array_file = request.files
                     for index, file in enumerate(array_file.items()):
                         try:
-                        # if file and allowed_file(file.filename):
+                            # if file and allowed_file(file.filename):
                             if file:
 
                                 if os.path.exists(foldertemp):
@@ -159,9 +159,18 @@ def update_basic(id):
 
                     foldertemp = payload['upload_folder']
                     array_file = request.files
+                    print(foldertemp)
                     if os.path.exists(foldertemp):
-                        shutil.rmtree(
-                            foldertemp, ignore_errors=False, onerror=None)
+                        for filename in os.listdir(foldertemp):
+                            file_path = os.path.join(foldertemp, filename)
+                            try:
+                                if os.path.isfile(file_path) or os.path.islink(file_path):
+                                    os.unlink(file_path)
+                                elif os.path.isdir(file_path):
+                                    shutil.rmtree(file_path)
+                            except Exception as e:
+                                print('Failed to delete %s. Reason: %s' %
+                                (file_path, e))
 
                 if len(request.files) != 0:
                     gen_folder_name = unique_prefix+'_'+str(
@@ -169,8 +178,12 @@ def update_basic(id):
                     foldertemp = payload['upload_folder']
                     array_file = request.files
                     if os.path.exists(foldertemp):
-                        shutil.rmtree(
-                            foldertemp, ignore_errors=False, onerror=None)
+                        print(foldertemp)
+                        try:
+                            shutil.rmtree(
+                                foldertemp, ignore_errors=False, onerror=None)
+                        except Exception as e:
+                            print(str(e))
 
                     if (len(array_file) != 0):
 
@@ -181,14 +194,14 @@ def update_basic(id):
 
                                     if os.path.exists(foldertemp):
                                         filetemp = os.path.join(
-                                            foldertemp, str(index))
+                                            foldertemp, str(index)+'_'+ str(uuid.uuid4()))
                                         file[1].save(filetemp)
 
                                     else:
 
                                         os.makedirs(foldertemp)
                                         filetemp = os.path.join(
-                                            foldertemp,  str(index))
+                                            foldertemp,  str(index)+'_'+str(uuid.uuid4()))
                                         file[1].save(filetemp)
 
                                 else:
@@ -227,15 +240,16 @@ def update_basic(id):
 def get_basic_files(id):
     trans = Transaction.query.filter_by(id=int(id)).first()
     data = trans.basic[0].upload_folder
-    images = [] 
+    images = []
     sorted_files_re = os.listdir(data).sort(key=lambda t:  t)
-   
+
     for r, d, f in os.walk(data):
         f.sort()
         print(f)
         for file in f:
             images.append(os.path.join(r, file))
     return jsonify(images)
+
 
 @bp.route('/get/basic/files/one/<id>', methods=['GET'])
 @login_required
@@ -249,10 +263,11 @@ def get_basic_files_primary(id):
             images.append(os.path.join(r, file))
     return jsonify(images[0])
 
+
 @bp.route('/get/basic/files/folder', methods=['POST'])
 @login_required
 def get_basic_files_folder():
-    
+
     data = request.json['upload_folder']
     images = []
     for r, d, f in os.walk(data):
